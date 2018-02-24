@@ -1,0 +1,23 @@
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.card {
+  margin: 20vh auto;
+  width: 400px;
+  vertical-align: middle
+}
+
+.card .mat-card-header-text {
+  width: 100%
+}
+
+a {
+  font-size: 10px;
+}

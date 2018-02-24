@@ -1,0 +1,30 @@
+<mat-card class="card">
+  <mat-card-header>
+    <mat-card-subtitle>Enter the ticker symbol of the stock you want to see.</mat-card-subtitle>
+  </mat-card-header>
+  <form class="login-form" #f="ngForm" name="user" (ngSubmit)="submit(f)">
+    <mat-form-field class="col-xs-12">
+      <input name="ticker" ngModel matInput type="text" placeholder="ticker">
+    </mat-form-field>
+    <div>
+      <button mat-raised-button color="primary">Search</button>
+    </div>
+  </form>
+</mat-card>
+
+<div *ngIf="security" class="col-xs-12">
+  <mat-card class="card">
+    {{ security.data.name }}
+  </mat-card>
+
+  <div class="col-xs-12">
+      <mat-card class="col-xs-3">
+        <mat-card-title>PE</mat-card-title>
+        <mat-card-subtitle>{{ security.trailing.PE }}</mat-card-subtitle>
+      </mat-card>
+      <mat-card class="col-xs-3">
+          <mat-card-title>EPS</mat-card-title>
+          <mat-card-subtitle>{{ security.trailing.eps }}</mat-card-subtitle>
+        </mat-card>
+  </div>
+</div>

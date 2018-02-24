@@ -1,0 +1,18 @@
+<mat-card class="card">
+  <mat-card-header>
+    <mat-card-subtitle>Please enter your email and password.</mat-card-subtitle>
+  </mat-card-header>
+  <form class="login-form" #user="ngForm" name="user" (ngSubmit)="submit(user)">
+    <mat-form-field class="col-xs-12">
+      <input name="email" ngModel matInput type="text" placeholder="email">
+    </mat-form-field>
+
+    <mat-form-field class="col-xs-12">
+      <input name="password" ngModel matInput type="password" placeholder="Password">
+    </mat-form-field>
+    <div>
+      <button mat-raised-button color="primary">Login</button>
+    </div>
+    <a routerLink="/register">Don't have an account? Register here.</a>
+  </form>
+</mat-card>
