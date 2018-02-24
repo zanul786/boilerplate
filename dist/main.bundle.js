@@ -87,21 +87,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var platform_browser_1 = __webpack_require__("../../../platform-browser/esm5/platform-browser.js");
 var core_1 = __webpack_require__("../../../core/esm5/core.js");
-var router_1 = __webpack_require__("../../../router/esm5/router.js");
 var http_1 = __webpack_require__("../../../http/esm5/http.js");
 var forms_1 = __webpack_require__("../../../forms/esm5/forms.js");
 var material_module_1 = __webpack_require__("../../../../../src/app/material.module.ts");
 var app_component_1 = __webpack_require__("../../../../../src/app/app.component.ts");
-var posts_component_1 = __webpack_require__("../../../../../src/app/posts/posts.component.ts");
 var user_service_1 = __webpack_require__("../../../../../src/app/user.service.ts");
 var auth_module_1 = __webpack_require__("../../../../../src/app/auth/auth.module.ts");
-var security_module_1 = __webpack_require__("../../../../../src/app/security/security.module.ts");
-var ROUTES = [
-    {
-        path: 'posts',
-        component: posts_component_1.PostsComponent
-    }
-];
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -109,16 +100,13 @@ var AppModule = /** @class */ (function () {
         core_1.NgModule({
             declarations: [
                 app_component_1.AppComponent,
-                posts_component_1.PostsComponent
             ],
             imports: [
                 material_module_1.MaterialModule,
                 auth_module_1.AuthModule,
-                security_module_1.SecurityModule,
                 platform_browser_1.BrowserModule,
                 forms_1.FormsModule,
                 http_1.HttpModule,
-                router_1.RouterModule.forRoot(ROUTES)
             ],
             providers: [user_service_1.UserService],
             bootstrap: [app_component_1.AppComponent]
@@ -201,6 +189,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("../../../core/esm5/core.js");
 var http_1 = __webpack_require__("../../../http/esm5/http.js");
+__webpack_require__("../../../../rxjs/_esm5/add/operator/map.js");
 var AuthService = /** @class */ (function () {
     function AuthService(http) {
         var _this = this;
@@ -431,269 +420,6 @@ var MaterialModule = /** @class */ (function () {
     return MaterialModule;
 }());
 exports.MaterialModule = MaterialModule;
-
-
-/***/ }),
-
-/***/ "../../../../../src/app/posts/posts.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../src/app/posts/posts.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"container\">\n  <div class=\"row\" *ngFor=\"let post of posts\">\n    <div class=\"card card-block\">\n      <h4 class=\"card-title\">{{ post.title }}</h4>\n      <p class=\"card-text\">{{post.body}}</p>\n      <a href=\"#\" class=\"card-link\">Card link</a>\n      <a href=\"#\" class=\"card-link\">Another link</a>\n    </div>\n  </div>\n</div>"
-
-/***/ }),
-
-/***/ "../../../../../src/app/posts/posts.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("../../../core/esm5/core.js");
-var posts_service_1 = __webpack_require__("../../../../../src/app/posts/posts.service.ts");
-var PostsComponent = /** @class */ (function () {
-    function PostsComponent(postService) {
-        this.postService = postService;
-        this.posts = [];
-    }
-    PostsComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.postService.getAllPosts()
-            .subscribe(function (posts) { return _this.posts = posts; });
-    };
-    PostsComponent = __decorate([
-        core_1.Component({
-            selector: 'app-posts',
-            template: __webpack_require__("../../../../../src/app/posts/posts.component.html"),
-            styles: [__webpack_require__("../../../../../src/app/posts/posts.component.css")]
-        }),
-        __metadata("design:paramtypes", [posts_service_1.PostsService])
-    ], PostsComponent);
-    return PostsComponent;
-}());
-exports.PostsComponent = PostsComponent;
-
-
-/***/ }),
-
-/***/ "../../../../../src/app/posts/posts.service.ts":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("../../../core/esm5/core.js");
-var http_1 = __webpack_require__("../../../http/esm5/http.js");
-__webpack_require__("../../../../rxjs/_esm5/add/operator/map.js");
-var PostsService = /** @class */ (function () {
-    function PostsService(http) {
-        this.http = http;
-    }
-    // Get all posts from the API
-    PostsService.prototype.getAllPosts = function () {
-        return this.http.get('/api/posts')
-            .map(function (res) { return res.json(); });
-    };
-    PostsService = __decorate([
-        core_1.Injectable(),
-        __metadata("design:paramtypes", [http_1.Http])
-    ], PostsService);
-    return PostsService;
-}());
-exports.PostsService = PostsService;
-
-
-/***/ }),
-
-/***/ "../../../../../src/app/security/security.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, ".example-form {\n  min-width: 150px;\n  max-width: 500px;\n  width: 100%;\n}\n\n.example-full-width {\n  width: 100%;\n}\n\n.card {\n  margin: 20vh auto;\n  width: 400px;\n  vertical-align: middle\n}\n\n.card .mat-card-header-text {\n  width: 100%\n}\n\na {\n  font-size: 10px;\n}", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../src/app/security/security.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<mat-card class=\"card\">\n  <mat-card-header>\n    <mat-card-subtitle>Enter the ticker symbol of the stock you want to see.</mat-card-subtitle>\n  </mat-card-header>\n  <form class=\"login-form\" #f=\"ngForm\" name=\"user\" (ngSubmit)=\"submit(f)\">\n    <mat-form-field class=\"col-xs-12\">\n      <input name=\"ticker\" ngModel matInput type=\"text\" placeholder=\"ticker\">\n    </mat-form-field>\n    <div>\n      <button mat-raised-button color=\"primary\">Search</button>\n    </div>\n  </form>\n</mat-card>\n\n<div *ngIf=\"security\" class=\"col-xs-12\">\n  <mat-card class=\"card\">\n    {{ security.data.name }}\n  </mat-card>\n\n  <div class=\"col-xs-12\">\n      <mat-card class=\"col-xs-3\">\n        <mat-card-title>PE</mat-card-title>\n        <mat-card-subtitle>{{ security.trailing.PE }}</mat-card-subtitle>\n      </mat-card>\n      <mat-card class=\"col-xs-3\">\n          <mat-card-title>EPS</mat-card-title>\n          <mat-card-subtitle>{{ security.trailing.eps }}</mat-card-subtitle>\n        </mat-card>\n  </div>\n</div>\n"
-
-/***/ }),
-
-/***/ "../../../../../src/app/security/security.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("../../../core/esm5/core.js");
-var security_service_1 = __webpack_require__("../../../../../src/app/security/security.service.ts");
-var SecurityComponent = /** @class */ (function () {
-    function SecurityComponent(securityService) {
-        var _this = this;
-        this.securityService = securityService;
-        this.submit = function (form) {
-            var ticker = form.value.ticker;
-            console.log(form.value);
-            _this.securityService.getData(ticker)
-                .subscribe(function (data) {
-                _this.security = data;
-                console.log(_this.security);
-            });
-        };
-    }
-    SecurityComponent.prototype.ngOnInit = function () {
-    };
-    SecurityComponent = __decorate([
-        core_1.Component({
-            selector: 'app-security',
-            template: __webpack_require__("../../../../../src/app/security/security.component.html"),
-            styles: [__webpack_require__("../../../../../src/app/security/security.component.css")]
-        }),
-        __metadata("design:paramtypes", [security_service_1.SecurityService])
-    ], SecurityComponent);
-    return SecurityComponent;
-}());
-exports.SecurityComponent = SecurityComponent;
-
-
-/***/ }),
-
-/***/ "../../../../../src/app/security/security.module.ts":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("../../../core/esm5/core.js");
-var common_1 = __webpack_require__("../../../common/esm5/common.js");
-var security_component_1 = __webpack_require__("../../../../../src/app/security/security.component.ts");
-var router_1 = __webpack_require__("../../../router/esm5/router.js");
-var material_module_1 = __webpack_require__("../../../../../src/app/material.module.ts");
-var forms_1 = __webpack_require__("../../../forms/esm5/forms.js");
-var security_service_1 = __webpack_require__("../../../../../src/app/security/security.service.ts");
-var ROUTES = [
-    {
-        path: 'security',
-        component: security_component_1.SecurityComponent
-    },
-];
-var SecurityModule = /** @class */ (function () {
-    function SecurityModule() {
-    }
-    SecurityModule = __decorate([
-        core_1.NgModule({
-            imports: [
-                material_module_1.MaterialModule,
-                common_1.CommonModule,
-                forms_1.FormsModule,
-                router_1.RouterModule.forRoot(ROUTES)
-            ],
-            providers: [security_service_1.SecurityService],
-            declarations: [security_component_1.SecurityComponent]
-        })
-    ], SecurityModule);
-    return SecurityModule;
-}());
-exports.SecurityModule = SecurityModule;
-
-
-/***/ }),
-
-/***/ "../../../../../src/app/security/security.service.ts":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("../../../core/esm5/core.js");
-var http_1 = __webpack_require__("../../../http/esm5/http.js");
-var SecurityService = /** @class */ (function () {
-    function SecurityService(http) {
-        var _this = this;
-        this.http = http;
-        this.BASE_URL = "/api/security";
-        this.getData = function (security) {
-            return _this.http.get(_this.BASE_URL, { params: { security: security } })
-                .map(function (res) { return res.json(); });
-        };
-    }
-    SecurityService = __decorate([
-        core_1.Injectable(),
-        __metadata("design:paramtypes", [http_1.Http])
-    ], SecurityService);
-    return SecurityService;
-}());
-exports.SecurityService = SecurityService;
 
 
 /***/ }),

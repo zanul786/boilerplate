@@ -8,21 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var platform_browser_1 = require("@angular/platform-browser");
 var core_1 = require("@angular/core");
-var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
 var material_module_1 = require("./material.module");
 var app_component_1 = require("./app.component");
-var posts_component_1 = require("./posts/posts.component");
 var user_service_1 = require("./user.service");
 var auth_module_1 = require("./auth/auth.module");
-var security_module_1 = require("./security/security.module");
-var ROUTES = [
-    {
-        path: 'posts',
-        component: posts_component_1.PostsComponent
-    }
-];
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -30,16 +21,13 @@ var AppModule = /** @class */ (function () {
         core_1.NgModule({
             declarations: [
                 app_component_1.AppComponent,
-                posts_component_1.PostsComponent
             ],
             imports: [
                 material_module_1.MaterialModule,
                 auth_module_1.AuthModule,
-                security_module_1.SecurityModule,
                 platform_browser_1.BrowserModule,
                 forms_1.FormsModule,
                 http_1.HttpModule,
-                router_1.RouterModule.forRoot(ROUTES)
             ],
             providers: [user_service_1.UserService],
             bootstrap: [app_component_1.AppComponent]
