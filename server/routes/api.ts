@@ -6,7 +6,6 @@ export const api = express.Router();
 const axios = require('axios');
 const API = 'https://jsonplaceholder.typicode.com';
 
-import { SecurityRouter } from './security';
 import { AuthRouter } from './auth';
 
 /* GET api listing. */
@@ -14,7 +13,6 @@ api.get('/', (req, res) => {
   res.send('api works');
 });
 
-api.use('/security', new SecurityRouter().router);
 api.use('/auth', new AuthRouter().router);
 
 api.use((err, req, res, next) => {
