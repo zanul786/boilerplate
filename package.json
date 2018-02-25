@@ -4,12 +4,9 @@
   "license": "MIT",
   "scripts": {
     "start": "ng build && tsc --project lib && NODE_ENV=production nodemon server/lib/index.js",
-
     "front": "ng build --watch",
     "build": "ng build --prod --aot",
-
     "server": "tsc --project lib && NODE_ENV=development node server/lib/index.js",
-
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
