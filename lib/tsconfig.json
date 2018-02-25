@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/server",
+    "outDir": "../server",
     "sourceMap": true,
     "allowJs": true,
     "declaration": false,
@@ -15,9 +15,6 @@
     "lib": [
       "es2017",
       "dom"
-    ],
-    "includes": [
-      "./routes/**/*"
     ]
   }
 }
