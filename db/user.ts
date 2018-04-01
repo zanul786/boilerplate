@@ -9,6 +9,7 @@ export const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  roles: [String],
   name: {
     first: {
       type: String,
@@ -43,4 +44,8 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.virtual('fullName').get(function() {
   return `${this.name.first} ${this.name.last}`;
+});
+
+UserSchema.virtual('isAdmin').get(function() {
+  return this.roles.includes('Admin');
 });
