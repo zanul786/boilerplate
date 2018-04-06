@@ -1,17 +1,12 @@
 import * as express from 'express';
 import * as status from 'http-status';
-export const api = express.Router();
 
-// declare axios for making http requests
-const axios = require('axios');
-const API = 'https://jsonplaceholder.typicode.com';
-
+import { AdminRouter } from './admin/admin';
 import { AuthRouter } from './auth';
 
-/* GET api listing. */
-api.get('/', (req, res) => {
-  res.send('api works');
-});
+export const api = express.Router();
+
+api.use('/admin', new AdminRouter().router);
 
 api.use('/auth', new AuthRouter().router);
 
