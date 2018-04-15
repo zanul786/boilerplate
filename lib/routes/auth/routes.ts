@@ -8,7 +8,7 @@ import * as jwt from 'jwt-simple';
 import { ErrorService } from '../../services/error';
 
 // Internal Dependencies
-import { User } from '../../../db';
+import { User } from '../../db';
 
 // Helpers
 import { getJwtPayload } from './helpers';

@@ -1,7 +1,7 @@
 import * as status from 'http-status';
 import * as StandardError from 'standard-error';
 import * as jwt from 'jwt-simple';
-import { User } from '../../db';
+import { User } from '../db';
 
 export class Middleware {
   JWT_SECRET: string;
