@@ -5,7 +5,7 @@ import * as http from 'http';
 import * as bodyParser from 'body-parser';
 
 // Get DB
-import * as models from '../db';
+import * as models from './db';
 
 // Get our API routes
 import { api } from './routes/api';
@@ -17,14 +17,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Point static path to dist
-app.use(express.static(path.join(__dirname, '../../dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Set our api routes
 app.use('/api', api);
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../dist/index.html'));
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 /**

@@ -10,7 +10,6 @@ export class AuthService {
 
   register = (user) => {
     const PATH = `${this.BASE_URL}/register`;
-
     return this.http.post(PATH, { user })
       .map(res => res.json());
   }

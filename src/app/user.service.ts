@@ -12,17 +12,24 @@ export class UserService implements OnInit {
     email: string;
   };
 
-  constructor(private authService: AuthService) { }
+  state: 'LOGGED_IN' | 'NOT_LOGGED_IN';
+
+  constructor(private authService: AuthService) {
+
+  }
 
   ngOnInit = () => {
+
   }
 
   setUser = (user) => {
     this.user = user;
+    this.state = 'LOGGED_IN';
   }
 
   unsetUser = () => {
     this.user = null;
+    this.state = 'NOT_LOGGED_IN';
   }
 
 
