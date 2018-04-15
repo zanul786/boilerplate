@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "ng build && tsc --project lib && NODE_ENV=production nodemon server/lib/index.js",
+    "start": "ng build && tsc --project lib && NODE_ENV=production node server/index.js",
     "front": "ng build --watch",
     "build": "ng build --prod --aot",
     "tsc-watch": "tsc --project lib --watch",
-    "server": "NODE_ENV=development nodemon server/lib/index.js",
+    "server": "NODE_ENV=development nodemon server/index.js",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

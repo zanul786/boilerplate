@@ -11,6 +11,9 @@ import { UserService } from './user.service';
 
 import { AuthModule } from './auth/auth.module';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from './token.interceptor';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +25,14 @@ import { AuthModule } from './auth/auth.module';
     FormsModule,
     HttpModule,
   ],
-  providers: [UserService],
+  providers: [
+    UserService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
