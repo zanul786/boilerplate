@@ -14,8 +14,10 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "services": ["./services/*"],
       "lib/*": ["./*"],
-      "db/*": ["./db/*"]
+      "db/*": ["./db/*"],
+      "interfaces": ["./interfaces"]
     },
     "lib": [
       "es2017",
