@@ -24,6 +24,7 @@ import { TokenInterceptor } from './token.interceptor';
     BrowserModule,
     FormsModule,
     HttpModule,
+    RouterModule
   ],
   providers: [
     UserService,

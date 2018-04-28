@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { MaterialModule } from '../material.module';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 // Services
 import { AuthService } from './auth.service';
@@ -25,6 +26,7 @@ const ROUTES = [
     MaterialModule,
     CommonModule,
     FormsModule,
+    HttpClientModule,
     RouterModule.forRoot(ROUTES)
   ],
   declarations: [RegisterComponent, LoginComponent],
