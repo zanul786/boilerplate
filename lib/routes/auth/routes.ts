@@ -37,7 +37,7 @@ export class AuthRoutes {
 
       const hashedPassword = await bcrypt.hash(password, 8);
       const user = await User.create({ email, password: hashedPassword, name });
-      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET) });
+      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
     }
@@ -62,7 +62,7 @@ export class AuthRoutes {
         throw new StandardError({ message: 'Invalid email or password', code: status.CONFLICT });
       }
 
-      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET) });
+      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
     }

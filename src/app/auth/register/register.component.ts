@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { UserService } from '../../user.service';
 
 @Component({
   selector: 'app-register',
@@ -16,15 +17,14 @@ export class RegisterComponent {
     password?: string;
   } = { name: {} };
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private userService: UserService) { }
 
   submit = (form) => {
     this.user = form.value;
     this.authService
       .register(this.user)
-      .subscribe(user => {
-        console.log(user);
-        this.user = user;
+      .subscribe(({ user, token }) => {
+        return this.userService.setUser({ user, token })
       });
   }
 }

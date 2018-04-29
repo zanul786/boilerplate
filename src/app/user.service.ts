@@ -15,7 +15,7 @@ export class UserService implements OnInit {
 
   state: 'LOGGED_IN' | 'NOT_LOGGED_IN';
 
-  constructor(private authService: AuthService, private $window: Window) {
+  constructor(private authService: AuthService) {
 
   }
 
@@ -42,11 +42,11 @@ export class UserService implements OnInit {
   }
 
   setToken = (token) => {
-    return this.$window.localStorage.setItem(this.JWT_LOCALSTORAGE_KEY, token || '');
+    return window.localStorage.setItem(this.JWT_LOCALSTORAGE_KEY, token || '');
   }
 
   getToken = (): string => {
-    return this.$window.localStorage.getItem(this.JWT_LOCALSTORAGE_KEY);
+    return window.localStorage.getItem(this.JWT_LOCALSTORAGE_KEY) || '';
   }
 
   isAuthenticated = (): boolean => {

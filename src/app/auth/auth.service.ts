@@ -16,12 +16,12 @@ export class AuthService {
   register = (user) => {
     const PATH = `${this.BASE_URL}/register`;
     return this.http.post(PATH, { user })
-      .map((res: any) => res.data);
+      .map((res: any) => res);
   }
 
   login = (user) => {
     const PATH = `${this.BASE_URL}/login`;
     return this.http.post(PATH, { user })
-      .map((res: any) => res.data);
+      .map((res: any) => res);
   }
 }
