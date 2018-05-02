@@ -3,8 +3,12 @@ import * as status from 'http-status';
 
 import { AdminRouter } from './admin/admin';
 import { AuthRouter } from './auth';
+import { Middleware } from '../services/middleware';
+
+const middleware = new Middleware();
 
 export const api = express.Router();
+api.use(middleware.jwtDecoder);
 
 api.use('/admin', new AdminRouter().router);
 

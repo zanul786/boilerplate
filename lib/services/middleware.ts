@@ -16,6 +16,7 @@ export class Middleware {
         code: status.UNAUTHORIZED
       });
     }
+    next();
   }
 
   public jwtDecoder = async (req, res, next) => {
@@ -24,7 +25,7 @@ export class Middleware {
       return next();
     }
 
-    const decoded = jwt.decoded(authz, this.JWT_SECRET);
+    const decoded = jwt.decode(authz, this.JWT_SECRET);
 
     if (!decoded || !decoded.valid) {
       throw new StandardError({
@@ -44,6 +45,7 @@ export class Middleware {
 
     req.user = user;
     req.token = decoded;
+    next();
   }
 
   public requireAdmin = (req, res, next) => {
@@ -54,7 +56,7 @@ export class Middleware {
       });
     }
 
-    if (!req.user.isAdmin()) {
+    if (!req.user.isAdmin) {
       throw new StandardError({
         message: 'Admin authorization required',
         code: status.FORBIDDEN
