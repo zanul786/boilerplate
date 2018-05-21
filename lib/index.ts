@@ -6,12 +6,15 @@ import * as bodyParser from 'body-parser';
 
 // Get DB
 import * as models from './db';
+import * as dotenv from 'dotenv';
 
 // Get our API routes
 import { api } from './routes/api';
 try {
 
   const app = express();
+
+  dotenv.config();
 
   // Parsers for POST data
   app.use(bodyParser.json());

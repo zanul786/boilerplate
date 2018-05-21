@@ -1,5 +1,6 @@
 import { Component,
         AfterViewInit,
+        OnInit,
         OnDestroy,
         ViewChild,
         ElementRef,
@@ -12,17 +13,25 @@ import { PaymentService } from './payment.service';
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
-export class PaymentComponent implements AfterViewInit,  OnDestroy {
+export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
+  saveThisCard = false;
+
   @ViewChild('cardInfo') cardInfo: ElementRef;
 
   card: any;
   cardHandler = this.onChange.bind(this);
   error: string;
+  savedCardString: string;
 
-  constructor(private cd: ChangeDetectorRef, private paymentService: PaymentService) {}
+  constructor(private cd: ChangeDetectorRef,
+    private paymentService: PaymentService
+  ) {}
+
+  ngOnInit(){
+    this.getSavedCardDetails();
+  };
 
   ngAfterViewInit() {
-
     const style = {
       base: {
         lineHeight: '24px',
@@ -41,7 +50,6 @@ export class PaymentComponent implements AfterViewInit,  OnDestroy {
 
     this.card = elements.create('card', { style });
     this.card.mount(this.cardInfo.nativeElement);
-
     this.card.addEventListener('change', this.cardHandler);
   }
 
@@ -59,15 +67,30 @@ export class PaymentComponent implements AfterViewInit,  OnDestroy {
     this.cd.detectChanges();
   }
 
-    async onSubmit(form: NgForm) {
-      const { token, error } = await stripe.createToken(this.card);
-
-      if (error) {
-        console.log('Something is wrong:', error);
-      } else {
-        console.log('Success!', token);
-        this.paymentService
-        // ...send the token to the your backend to process the charge
-      }
+  async onSubmit(form: NgForm) {
+    const { token, error } = await stripe.createToken(this.card);
+    if (error) {
+      console.log('Something is wrong:', error);
+    } else {
+      this.paymentService
+      .createCharge(token, this.saveThisCard)
+      .subscribe(res => {
+        console.log(res);
+      });
     }
+  }
+
+  async createSavedCharge(form: NgForm) {
+      this.paymentService
+      .createSavedCharge()
+      .subscribe(res => {
+        console.log(res);
+      });
+  }
+
+  async getSavedCardDetails(){
+    this.paymentService.retrieveSavedCard().subscribe(card => {
+      this.savedCardString = `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
+    });
+  }
 }

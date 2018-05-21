@@ -24,7 +24,7 @@ export class RegisterComponent {
     this.authService
       .register(this.user)
       .subscribe(({ user, token }) => {
-        return this.userService.setUser({ user, token })
+        return this.userService.setUser({ user, token });
       });
   }
 }
