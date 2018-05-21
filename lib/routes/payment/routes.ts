@@ -23,15 +23,11 @@ export class PaymentRoutes {
                 await User.findOneAndUpdate({ 'email': loggerInUserDetails.email }, { $set: { stripeCustomerId: customer.id, defaultCardToken: customer.default_source} },
                     function (dbErr, user) {
                         loggerInUserDetails.stripeCustomerId = customer.id;
-
                         stripe.charges.create({
                             amount: chargeData.amount,
                             currency: 'usd',
                             customer: loggerInUserDetails.stripeCustomerId
                         }, async function (chargeErr, charge) {
-                            console.log(charge);
-                            console.log(chargeErr);
-
                             const payment = await Payment.create({
                                 'amount': charge.amount,
                                 'status': charge.status,
@@ -52,7 +48,7 @@ export class PaymentRoutes {
                 currency: 'usd',
                 source: chargeData.token.id
             }, async function (chargeErr, charge) {
-                console.log(charge);
+
                 const payment = await Payment.create({
                     'amount': charge.amount,
                     'status': charge.status,
@@ -62,6 +58,7 @@ export class PaymentRoutes {
                     'email': loggerInUserDetails.email,
                     'currency': charge.currency
                 });
+
                 res.json(payment);
             });
         }
@@ -72,12 +69,16 @@ export class PaymentRoutes {
 
         const stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
 
-        stripe.customers.retrieveCard(
-            loggerInUserDetails.stripeCustomerId,
-            loggerInUserDetails.defaultCardToken,
-            function(err, card) {
-                res.json(card);
-            });
+        if(loggerInUserDetails.defaultCardToken){
+            stripe.customers.retrieveCard(
+                loggerInUserDetails.stripeCustomerId,
+                loggerInUserDetails.defaultCardToken,
+                function(err, card) {
+                    res.json(card);
+                });
+        }else{
+            res.sendStatus(status.NO_CONTENT);
+        }
     }
 
     public static async chargeSavedCard(req, res, next){
@@ -85,7 +86,7 @@ export class PaymentRoutes {
         const chargeData = req.body.chargeData;
 
         const stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
-        
+
         stripe.charges.create({
             amount: chargeData.amount,
             currency: 'usd',
@@ -103,9 +104,5 @@ export class PaymentRoutes {
             });
             res.json(payment);
         });
-
-
     }
-
-
 }

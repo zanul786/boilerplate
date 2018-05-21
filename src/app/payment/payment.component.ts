@@ -15,6 +15,7 @@ import { PaymentService } from './payment.service';
 })
 export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   saveThisCard = false;
+  isSavedCardAvailable = false;
 
   @ViewChild('cardInfo') cardInfo: ElementRef;
 
@@ -90,7 +91,11 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   async getSavedCardDetails(){
     this.paymentService.retrieveSavedCard().subscribe(card => {
-      this.savedCardString = `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
+      if(card === null){}
+      else{
+        this.isSavedCardAvailable = true;
+        this.savedCardString = `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
+      }
     });
   }
 }

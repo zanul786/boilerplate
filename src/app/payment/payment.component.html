@@ -1,8 +1,8 @@
 <div class="PaymentTabContainer">
   <div class="container">
+
     <mat-tab-group>
-      <!--(click)="getSavedCardDetails()"-->
-      <mat-tab label="Saved Cards">
+      <mat-tab label="Saved Cards" *ngIf="isSavedCardAvailable">
         <form #savedCard="ngForm" (ngSubmit)="createSavedCharge(savedCard)" class="checkout">
           <div class="form-row">
               <p> {{savedCardString}} </p>
