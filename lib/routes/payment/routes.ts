@@ -19,7 +19,7 @@ export class PaymentRoutes {
                 },
                 source: chargeData.token.id,
                 email: loggerInUserDetails.email
-            }, async function (err, customer) {                
+            }).then( async function (customer) {                
                 await User.findOneAndUpdate({ 'email': loggerInUserDetails.email }, { $set: { stripeCustomerId: customer.id, defaultCardToken: customer.default_source} },
                     function (dbErr, user) {
                         loggerInUserDetails.stripeCustomerId = customer.id;
@@ -27,7 +27,7 @@ export class PaymentRoutes {
                             amount: chargeData.amount,
                             currency: 'usd',
                             customer: loggerInUserDetails.stripeCustomerId
-                        }, async function (chargeErr, charge) {
+                        }).then(async function(charge) {
                             const payment = await Payment.create({
                                 'amount': charge.amount,
                                 'status': charge.status,
@@ -47,8 +47,7 @@ export class PaymentRoutes {
                 amount: chargeData.amount,
                 currency: 'usd',
                 source: chargeData.token.id
-            }, async function (chargeErr, charge) {
-
+            }).then(async function (charge) {
                 const payment = await Payment.create({
                     'amount': charge.amount,
                     'status': charge.status,
@@ -58,7 +57,6 @@ export class PaymentRoutes {
                     'email': loggerInUserDetails.email,
                     'currency': charge.currency
                 });
-
                 res.json(payment);
             });
         }
@@ -72,8 +70,8 @@ export class PaymentRoutes {
         if(loggerInUserDetails.defaultCardToken){
             stripe.customers.retrieveCard(
                 loggerInUserDetails.stripeCustomerId,
-                loggerInUserDetails.defaultCardToken,
-                function(err, card) {
+                loggerInUserDetails.defaultCardToken).
+                then(function(card) {
                     res.json(card);
                 });
         }else{
@@ -91,7 +89,7 @@ export class PaymentRoutes {
             amount: chargeData.amount,
             currency: 'usd',
             customer: loggerInUserDetails.stripeCustomerId
-        }, async function (chargeErr, charge) {
+        }).then(async function (charge) {
             const payment = await Payment.create({
                 'amount': charge.amount,
                 'status': charge.status,
