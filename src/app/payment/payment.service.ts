@@ -13,16 +13,20 @@ export class PaymentService {
     const chargeData = {
       'token': token,
       'amount': 2000,
+      'currency': 'usd',
       'saveThisCard': saveThisCard
     };
     return this.http.post(PATH, { chargeData })
       .map((res: any) => res);
   }
 
-  createSavedCharge = () => {
+  createSavedCharge = (card) => {
+    console.log(card);
     const PATH = `${this.BASE_URL}/charge/savedCard`;
     const chargeData = {
-      'amount': 2000
+      'currency': 'usd',
+      'amount': 2000,
+      'source':card.id
     };
     return this.http.post(PATH, { chargeData })
       .map((res: any) => res);

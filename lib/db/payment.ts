@@ -31,6 +31,5 @@ export const PaymentSchema = mongoose.Schema({
     currency: {
         type: String,
         required: true
-    },
-    metaData: {}
+    }
 }, { timestamps: true });

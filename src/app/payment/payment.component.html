@@ -2,14 +2,17 @@
   <div class="container">
 
     <mat-tab-group>
-      <mat-tab label="Saved Cards" *ngIf="isSavedCardAvailable">
-        <form #savedCard="ngForm" (ngSubmit)="createSavedCharge(savedCard)" class="checkout">
-          <div class="form-row">
-              <p> {{savedCardString}} </p>
-              <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
-          </div>
-          <button type="submit">Pay</button>
-        </form>
+      <mat-tab label="Saved Cards" *ngIf="isSavedCardAvailable"  >
+        <div *ngFor="let card of savedCardArray">
+          <form #savedCard="ngForm" (ngSubmit)="createSavedCharge(card.index)" class="checkout">
+            <div class="form-row">
+                <input type="hidden" [(ngModel)]="card.index" name="index">
+                <p> {{card.savedCardString}} </p>
+                <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+            </div>
+            <button type="submit">Pay</button>
+          </form>
+        </div>
       </mat-tab>
 
       <mat-tab label="Debit/Credit Cards">

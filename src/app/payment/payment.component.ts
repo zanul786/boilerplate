@@ -6,7 +6,9 @@ import { Component,
         ElementRef,
         ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { PaymentService } from './payment.service';
+import Swal from 'sweetalert2'
+
+import { PaymentService } from './payment.service'; 
 
 @Component({
   selector: 'app-payment',
@@ -23,6 +25,8 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   cardHandler = this.onChange.bind(this);
   error: string;
   savedCardString: string;
+  savedCards: any;
+  savedCardArray : any;
 
   constructor(private cd: ChangeDetectorRef,
     private paymentService: PaymentService
@@ -71,30 +75,71 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   async onSubmit(form: NgForm) {
     const { token, error } = await stripe.createToken(this.card);
     if (error) {
-      console.log('Something is wrong:', error);
+      Swal(
+        'Error!',
+        error,
+        'error'
+      )
+  
     } else {
       this.paymentService
       .createCharge(token, this.saveThisCard)
       .subscribe(res => {
-        console.log(res);
-      });
+        if(res.status === 'succeeded' ){
+          Swal(
+            'Success!',
+            'Payment Successful.',
+            'success'
+          )
+        }else{
+          Swal(
+            'Error!',
+            'Unable to process this request! Contact Administrator.',
+            'error'
+          )
+        }
+    });
     }
   }
 
-  async createSavedCharge(form: NgForm) {
+  async createSavedCharge(cardIndex) {
       this.paymentService
-      .createSavedCharge()
+      .createSavedCharge(this.savedCards[cardIndex])
       .subscribe(res => {
-        console.log(res);
+        if(res.status === 'succeeded' ){
+          Swal(
+            'Success!',
+            'Payment Successful.',
+            'success'
+          )
+        }else{
+          Swal(
+            'Error!',
+            'Unable to process this request! Contact Administrator.',
+            'error'
+          )
+        }
       });
   }
 
   async getSavedCardDetails(){
-    this.paymentService.retrieveSavedCard().subscribe(card => {
-      if(card === null){}
-      else{
+    this.paymentService.retrieveSavedCard().subscribe(cards => {
+
+      if(cards && cards.length > 0) {
         this.isSavedCardAvailable = true;
-        this.savedCardString = `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
+        this.savedCards = cards;
+        const savedCardArray = [];
+
+        cards.forEach( function( card, index){
+          savedCardArray.push(
+            {
+              index : index,
+              savedCardString : `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
+            });
+        });
+        this.savedCardArray = savedCardArray;
+      }else{
+        this.isSavedCardAvailable = false;
       }
     });
   }

@@ -18,7 +18,7 @@ export const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  cardToken: [String],
+  cardTokens: [String],
   name: {
     first: {
       type: String,

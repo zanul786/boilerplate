@@ -2,105 +2,67 @@ import * as express from 'express';
 import * as status from 'http-status';
 import * as Stripe from 'stripe';
 import { User, Payment } from './../../db/index';
+import { stripeService } from './../../services/stripe-service';
 
 export class PaymentRoutes {
 
     public static async createCharge(req, res, next) {
-        const stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
 
         const loggerInUserDetails = req.user;
         const chargeData = req.body.chargeData;
 
         if (!loggerInUserDetails.stripeCustomerId && chargeData.saveThisCard) {
-            await stripe.customers.create({
-                metadata: {
-                    Id: loggerInUserDetails.id,
-                    UserName: `${loggerInUserDetails.fullName}`,
-                },
-                source: chargeData.token.id,
-                email: loggerInUserDetails.email
-            }).then( async function (customer) {                
-                await User.findOneAndUpdate({ 'email': loggerInUserDetails.email }, { $set: { stripeCustomerId: customer.id, defaultCardToken: customer.default_source} },
-                    function (dbErr, user) {
-                        loggerInUserDetails.stripeCustomerId = customer.id;
-                        stripe.charges.create({
-                            amount: chargeData.amount,
-                            currency: 'usd',
-                            customer: loggerInUserDetails.stripeCustomerId
-                        }).then(async function(charge) {
-                            const payment = await Payment.create({
-                                'amount': charge.amount,
-                                'status': charge.status,
-                                'stripeCustomerId': charge.customer,
-                                'chargeId': charge.id,
-                                'user': loggerInUserDetails._id,
-                                'transactionId': charge.balance_transaction,
-                                'email': loggerInUserDetails.email,
-                                'currency': charge.currency
-                            });
-                            res.json(payment);
-                        });
-                    });
-            });
-        } else{
-            await stripe.charges.create({
-                amount: chargeData.amount,
-                currency: 'usd',
-                source: chargeData.token.id
-            }).then(async function (charge) {
-                const payment = await Payment.create({
-                    'amount': charge.amount,
-                    'status': charge.status,
-                    'chargeId': charge.id,
-                    'user': loggerInUserDetails._id,
-                    'transactionId': charge.balance_transaction,
-                    'email': loggerInUserDetails.email,
-                    'currency': charge.currency
-                });
-                res.json(payment);
-            });
+            const customer = await stripeService.createCustomer(loggerInUserDetails, chargeData);
+            
+            const user = await User.update({ 'email': loggerInUserDetails.email},
+                                { '$push': { cardTokens : customer.id },
+                                            stripeCustomerId: customer.id, 
+                                            defaultCardToken: customer.default_source,
+                                }
+                            );
+
+            loggerInUserDetails.stripeCustomerId = customer.id;
+            const charge = await stripeService.createChargeWithSavedCard(loggerInUserDetails, chargeData);
+
+            const payment = await await stripeService.createPayment(loggerInUserDetails, charge);
+            res.json(payment);
+
+        }else if(loggerInUserDetails.stripeCustomerId && chargeData.saveThisCard) {
+            const chargeData = req.body.chargeData;
+            const customer = await stripeService.createSource(loggerInUserDetails, chargeData); 
+            const user = await User.update({ 'email': loggerInUserDetails.email},
+                                            { "$push": { "cardTokens": customer.id } });
+            const charge = await stripeService.createChargeWithSource(loggerInUserDetails, chargeData, customer)
+            const payment = await stripeService.createPayment(loggerInUserDetails, charge);
+            res.json(payment);
+        } else {
+            const charge = await stripeService.createChargeWithOutSavedCard(chargeData);
+            const payment = await stripeService.createPayment(loggerInUserDetails, charge);
+            res.json(payment);
         }
     }
 
     public static async retrieveSavedCard(req, res, next) {
         const loggerInUserDetails = req.user;
+        if(loggerInUserDetails.stripeCustomerId){
+            const cardList = await stripeService.listAllCards(loggerInUserDetails);
 
-        const stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
-
-        if(loggerInUserDetails.defaultCardToken){
-            stripe.customers.retrieveCard(
-                loggerInUserDetails.stripeCustomerId,
-                loggerInUserDetails.defaultCardToken).
-                then(function(card) {
-                    res.json(card);
-                });
-        }else{
+            if (cardList && cardList.data && cardList.data.length > 0) {
+                res.json(cardList.data);
+            } else {
+                res.sendStatus(status.NO_CONTENT);
+            }
+        }else {
             res.sendStatus(status.NO_CONTENT);
         }
     }
 
-    public static async chargeSavedCard(req, res, next){
+    public static async chargeSavedCard(req, res, next) {
         const loggerInUserDetails = req.user;
         const chargeData = req.body.chargeData;
-
-        const stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
-
-        stripe.charges.create({
-            amount: chargeData.amount,
-            currency: 'usd',
-            customer: loggerInUserDetails.stripeCustomerId
-        }).then(async function (charge) {
-            const payment = await Payment.create({
-                'amount': charge.amount,
-                'status': charge.status,
-                'stripeCustomerId': charge.customer,
-                'chargeId': charge.id,
-                'user': loggerInUserDetails._id,
-                'transactionId': charge.balance_transaction,
-                'email': loggerInUserDetails.email,
-                'currency': charge.currency
-            });
-            res.json(payment);
-        });
+        const charge = await stripeService.createChargeWithSavedCard(loggerInUserDetails, chargeData);
+        const payment = await stripeService.createPayment(loggerInUserDetails, charge);
+        res.json(payment);
     }
+    
 }
