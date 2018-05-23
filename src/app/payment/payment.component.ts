@@ -1,20 +1,24 @@
-import { Component,
-        AfterViewInit,
-        OnInit,
-        OnDestroy,
-        ViewChild,
-        ElementRef,
-        ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
-import { PaymentService } from './payment.service'; 
+import { PaymentService } from './payment.service';
+import { UserService } from './../user.service';
 
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
+
 export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   saveThisCard = false;
   isSavedCardAvailable = false;
@@ -22,17 +26,21 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('cardInfo') cardInfo: ElementRef;
 
   card: any;
+  emailAddress:any;
   cardHandler = this.onChange.bind(this);
   error: string;
   savedCardString: string;
   savedCards: any;
-  savedCardArray : any;
+  savedCardArray: any;
+  isLoggedIn : boolean
 
   constructor(private cd: ChangeDetectorRef,
-    private paymentService: PaymentService
-  ) {}
+    private paymentService: PaymentService,
+    private userService: UserService
+  ) { }
 
-  ngOnInit(){
+  ngOnInit() {
+    this.isLoggedIn = this.userService.isAuthenticated();
     this.getSavedCardDetails();
   };
 
@@ -74,45 +82,45 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   async onSubmit(form: NgForm) {
     const { token, error } = await stripe.createToken(this.card);
-    if (error) {
-      Swal(
-        'Error!',
-        error,
-        'error'
-      )
-  
+    if (error) { 
+      Swal('Error!',error,'error')
     } else {
-      this.paymentService
-      .createCharge(token, this.saveThisCard)
-      .subscribe(res => {
-        if(res.status === 'succeeded' ){
-          Swal(
-            'Success!',
-            'Payment Successful.',
-            'success'
-          )
-        }else{
-          Swal(
-            'Error!',
-            'Unable to process this request! Contact Administrator.',
-            'error'
-          )
-        }
-    });
+      if (this.isLoggedIn){
+        this.paymentService
+          .createCharge(token, this.saveThisCard)
+          .subscribe(res => {
+            if (res.status === 'succeeded') {
+              Swal('Success!','Payment Successful.','success')
+            } else {
+              Swal('Error!','Unable to process this request! Contact Administrator.','error')
+            }
+          });
+      } else{
+        this.paymentService
+        .chargeGuestCard(token, this.emailAddress)
+        .subscribe(res => {
+          if (res.status === 'succeeded') {
+            Swal('Success!','Payment Successful.','success')
+          } else {
+            Swal('Error!','Unable to process this request! Contact Administrator.','error')
+          }
+        });
+      }
+        
     }
   }
 
   async createSavedCharge(cardIndex) {
-      this.paymentService
+    this.paymentService
       .createSavedCharge(this.savedCards[cardIndex])
       .subscribe(res => {
-        if(res.status === 'succeeded' ){
+        if (res.status === 'succeeded') {
           Swal(
             'Success!',
             'Payment Successful.',
             'success'
           )
-        }else{
+        } else {
           Swal(
             'Error!',
             'Unable to process this request! Contact Administrator.',
@@ -122,25 +130,28 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
       });
   }
 
-  async getSavedCardDetails(){
-    this.paymentService.retrieveSavedCard().subscribe(cards => {
+  async getSavedCardDetails() {
+    if (this.isLoggedIn) {
+      this.paymentService.retrieveSavedCard().subscribe(cards => {
+        if (cards && cards.length > 0) {
+          this.isSavedCardAvailable = true;
+          this.savedCards = cards;
+          const savedCardArray = [];
 
-      if(cards && cards.length > 0) {
-        this.isSavedCardAvailable = true;
-        this.savedCards = cards;
-        const savedCardArray = [];
-
-        cards.forEach( function( card, index){
-          savedCardArray.push(
-            {
-              index : index,
-              savedCardString : `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
-            });
-        });
-        this.savedCardArray = savedCardArray;
-      }else{
-        this.isSavedCardAvailable = false;
-      }
-    });
+          cards.forEach(function (card, index) {
+            savedCardArray.push(
+              {
+                index: index,
+                savedCardString: `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
+              });
+          });
+          this.savedCardArray = savedCardArray;
+        } else {
+          this.isSavedCardAvailable = false;
+        }
+      });
+    } else {
+      this.isSavedCardAvailable = false;
+    }
   }
 }

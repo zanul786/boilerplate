@@ -44,7 +44,7 @@ export class PaymentRoutes {
 
     public static async retrieveSavedCard(req, res, next) {
         const loggerInUserDetails = req.user;
-        if(loggerInUserDetails.stripeCustomerId){
+        if(loggerInUserDetails && loggerInUserDetails.stripeCustomerId){
             const cardList = await stripeService.listAllCards(loggerInUserDetails);
 
             if (cardList && cardList.data && cardList.data.length > 0) {
@@ -64,5 +64,14 @@ export class PaymentRoutes {
         const payment = await stripeService.createPayment(loggerInUserDetails, charge);
         res.json(payment);
     }
+
+    public static async chargeGuestCard(req, res, next) {
+        const chargeData = req.body.chargeData;
+        const charge = await stripeService.createChargeWithOutSavedCard(chargeData);
+        const payment = await stripeService.createPayment({ email : chargeData.email},charge);
+        res.json(payment);
+    }
+
+
     
 }

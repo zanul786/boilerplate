@@ -74,7 +74,7 @@ class StripeService {
             'status': charge.status,
             'stripeCustomerId': loggerInUserDetails.stripeCustomerId || 0,
             'chargeId': charge.id,
-            'user': loggerInUserDetails._id,
+            'user': loggerInUserDetails._id || null,
             'cardToken': charge.source.id,
             'transactionId': charge.balance_transaction,
             'email': loggerInUserDetails.email,
