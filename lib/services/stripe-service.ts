@@ -1,4 +1,5 @@
 import * as Stripe from 'stripe';
+
 import { User, Payment } from './../db/index';
 
 class StripeService {
@@ -41,14 +42,14 @@ class StripeService {
         return charge;
     }
 
-    public createChargeWithSource = async (loggerInUserDetails, chargeData, customer) =>{
+    public createChargeWithSource = async (loggerInUserDetails, chargeData, source) =>{
         this.stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
 
         const charge = await this.stripe.charges.create({
             amount: chargeData.amount,
             currency: chargeData.currency,
             customer: loggerInUserDetails.stripeCustomerId,
-            source: customer.id
+            source: source.id
         });
         return charge;
     }
