@@ -1,28 +1,50 @@
-import { Component,
-        AfterViewInit,
-        OnDestroy,
-        ViewChild,
-        ElementRef,
-        ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
+import Swal from 'sweetalert2';
+
 import { PaymentService } from './payment.service';
+import { UserService } from './../user.service';
 
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
-export class PaymentComponent implements AfterViewInit,  OnDestroy {
+
+export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
+  saveThisCard = false;
+  isSavedCardAvailable = false;
+
   @ViewChild('cardInfo') cardInfo: ElementRef;
 
   card: any;
+  emailAddress:any;
   cardHandler = this.onChange.bind(this);
   error: string;
+  savedCardString: string;
+  savedCards: any;
+  savedCardArray: any;
+  isLoggedIn : boolean
 
-  constructor(private cd: ChangeDetectorRef, private paymentService: PaymentService) {}
+  constructor(private cd: ChangeDetectorRef,
+    private paymentService: PaymentService,
+    private userService: UserService
+  ) { }
+
+  ngOnInit() {
+    this.isLoggedIn = this.userService.isAuthenticated();
+    this.getSavedCardDetails();
+  };
 
   ngAfterViewInit() {
-
     const style = {
       base: {
         lineHeight: '24px',
@@ -41,7 +63,6 @@ export class PaymentComponent implements AfterViewInit,  OnDestroy {
 
     this.card = elements.create('card', { style });
     this.card.mount(this.cardInfo.nativeElement);
-
     this.card.addEventListener('change', this.cardHandler);
   }
 
@@ -59,15 +80,78 @@ export class PaymentComponent implements AfterViewInit,  OnDestroy {
     this.cd.detectChanges();
   }
 
-    async onSubmit(form: NgForm) {
-      const { token, error } = await stripe.createToken(this.card);
-
-      if (error) {
-        console.log('Something is wrong:', error);
-      } else {
-        console.log('Success!', token);
+  async onSubmit(form: NgForm) {
+    const { token, error } = await stripe.createToken(this.card);
+    if (error) { 
+      Swal('Error!',error,'error')
+    } else {
+      if (this.isLoggedIn){
         this.paymentService
-        // ...send the token to the your backend to process the charge
+          .createCharge(token, this.saveThisCard)
+          .subscribe(res => {
+            if (res.status === 'succeeded') {
+              Swal('Success!','Payment Successful.','success')
+            } else {
+              Swal('Error!','Unable to process this request! Contact Administrator.','error')
+            }
+          });
+      } else{
+        this.paymentService
+        .chargeGuestCard(token, this.emailAddress)
+        .subscribe(res => {
+          if (res.status === 'succeeded') {
+            Swal('Success!','Payment Successful.','success')
+          } else {
+            Swal('Error!','Unable to process this request! Contact Administrator.','error')
+          }
+        });
       }
+        
     }
+  }
+
+  async createSavedCharge(cardIndex) {
+    this.paymentService
+      .createSavedCharge(this.savedCards[cardIndex])
+      .subscribe(res => {
+        if (res.status === 'succeeded') {
+          Swal(
+            'Success!',
+            'Payment Successful.',
+            'success'
+          )
+        } else {
+          Swal(
+            'Error!',
+            'Unable to process this request! Contact Administrator.',
+            'error'
+          )
+        }
+      });
+  }
+
+  async getSavedCardDetails() {
+    if (this.isLoggedIn) {
+      this.paymentService.retrieveSavedCard().subscribe(cards => {
+        if (cards && cards.length > 0) {
+          this.isSavedCardAvailable = true;
+          this.savedCards = cards;
+          const savedCardArray = [];
+
+          cards.forEach(function (card, index) {
+            savedCardArray.push(
+              {
+                index: index,
+                savedCardString: `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
+              });
+          });
+          this.savedCardArray = savedCardArray;
+        } else {
+          this.isSavedCardAvailable = false;
+        }
+      });
+    } else {
+      this.isSavedCardAvailable = false;
+    }
+  }
 }

@@ -10,6 +10,15 @@ export const UserSchema = mongoose.Schema({
     required: true
   },
   roles: [String],
+  stripeCustomerId: {
+    type: String,
+    required: true
+  },
+  defaultCardToken: {
+    type: String,
+    required: true
+  },
+  cardTokens: [String],
   name: {
     first: {
       type: String,
