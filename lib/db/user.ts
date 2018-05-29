@@ -11,12 +11,10 @@ export const UserSchema = mongoose.Schema({
   },
   roles: [String],
   stripeCustomerId: {
-    type: String,
-    required: true
+    type: String
   },
   defaultCardToken: {
-    type: String,
-    required: true
+    type: String
   },
   cardTokens: [String],
   name: {

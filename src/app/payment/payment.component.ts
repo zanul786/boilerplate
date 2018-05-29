@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import { PaymentService } from './payment.service';
 import { UserService } from './../user.service';
 
+
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
@@ -86,24 +87,29 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
       Swal('Error!',error,'error')
     } else {
       if (this.isLoggedIn){
+        const chargeData = {
+          'token': token,
+          'amount': 2000,
+          'currency': 'usd',
+          'saveThisCard': this.saveThisCard
+        };
+    
         this.paymentService
-          .createCharge(token, this.saveThisCard)
+          .createCharge(chargeData)
           .subscribe(res => {
-            if (res.status === 'succeeded') {
-              Swal('Success!','Payment Successful.','success')
-            } else {
-              Swal('Error!','Unable to process this request! Contact Administrator.','error')
-            }
+            this.showMessageToUser(res);
           });
       } else{
+        const chargeData = {
+          'currency': 'usd',
+          'amount': 2000,
+          'token': token,
+          'email': this.emailAddress
+        };
         this.paymentService
-        .chargeGuestCard(token, this.emailAddress)
+        .chargeGuestCard(chargeData)
         .subscribe(res => {
-          if (res.status === 'succeeded') {
-            Swal('Success!','Payment Successful.','success')
-          } else {
-            Swal('Error!','Unable to process this request! Contact Administrator.','error')
-          }
+          this.showMessageToUser(res);
         });
       }
         
@@ -111,23 +117,25 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   async createSavedCharge(cardIndex) {
+    const chargeData = {
+      'currency': 'usd',
+      'amount': 2000,
+      'source':this.savedCards[cardIndex].id
+    };
+
     this.paymentService
-      .createSavedCharge(this.savedCards[cardIndex])
+      .createSavedCharge(chargeData)
       .subscribe(res => {
-        if (res.status === 'succeeded') {
-          Swal(
-            'Success!',
-            'Payment Successful.',
-            'success'
-          )
-        } else {
-          Swal(
-            'Error!',
-            'Unable to process this request! Contact Administrator.',
-            'error'
-          )
-        }
+        this.showMessageToUser(res);
       });
+  }
+
+  async showMessageToUser(res){
+    if (res.status === 'succeeded') {
+      Swal('Success!','Payment Successful.','success')
+    } else {
+      Swal('Error!' , res.failureMessage , 'error')
+    }
   }
 
   async getSavedCardDetails() {
@@ -136,16 +144,6 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
         if (cards && cards.length > 0) {
           this.isSavedCardAvailable = true;
           this.savedCards = cards;
-          const savedCardArray = [];
-
-          cards.forEach(function (card, index) {
-            savedCardArray.push(
-              {
-                index: index,
-                savedCardString: `${card.brand} card ending with ${card.last4} expiry:${card.exp_month}/${card.exp_year}`
-              });
-          });
-          this.savedCardArray = savedCardArray;
         } else {
           this.isSavedCardAvailable = false;
         }

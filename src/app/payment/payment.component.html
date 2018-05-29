@@ -3,11 +3,10 @@
 
     <mat-tab-group>
       <mat-tab label="Saved Cards" *ngIf="isSavedCardAvailable"  >
-        <div *ngFor="let card of savedCardArray">
-          <form #savedCard="ngForm" (ngSubmit)="createSavedCharge(card.index)" class="checkout">
+        <div *ngFor="let card of savedCards; let index = index">
+          <form #savedCard="ngForm" (ngSubmit)="createSavedCharge(index)" class="checkout">
             <div class="form-row">
-                <input type="hidden" [(ngModel)]="card.index" name="index">
-                <p> {{card.savedCardString}} </p>
+                <p> {{card.brand}} card ending with {{card.last4}} expiry:{{card.exp_month}}/{{card.exp_year}} </p>
                 <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
             </div>
             <button type="submit">Pay</button>

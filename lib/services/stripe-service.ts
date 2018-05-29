@@ -79,7 +79,10 @@ class StripeService {
             'cardToken': charge.source.id,
             'transactionId': charge.balance_transaction,
             'email': loggerInUserDetails.email,
-            'currency': charge.currency
+            'currency': charge.currency,
+            'failureCode': charge.failure_code, // When status is success, it will be NULL.
+            'failureMessage': charge.failure_message // When status is success, it will be NULL.
+
         });
         return payment;
     }
