@@ -7,7 +7,12 @@ export const UserSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: isPasswordRequired
+  },
+  oauth: {
+    type: String,
+    enum: ['FACEBOOK', 'GOOGLE', 'LINKEDIN'],
+    required: function() { return !this.password; }
   },
   roles: [String],
   name: {
@@ -22,7 +27,7 @@ export const UserSchema = mongoose.Schema({
   }
 }, { timestamps: true });
 
-
+function isPasswordRequired () { return !this.oauth; }
 UserSchema.pre('save', function(next) {
   const email = this.get('profile.email');
   if (email) {

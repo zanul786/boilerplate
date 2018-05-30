@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/operator/map';
-
+import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
 @Injectable()
-export class AuthService {
+export class BPAuthService {
   BASE_URL = `/api/auth`;
 
   constructor(private http: HttpClient) { }
@@ -14,14 +16,28 @@ export class AuthService {
   }
 
   register = (user) => {
-    const PATH = `${this.BASE_URL}/register`;
+    let route;
+    if (user.oauth) {
+      route = '/registerOauth';
+    } else {
+      route = '/register';
+    }
+    const PATH = `${this.BASE_URL}/${route}`;
     return this.http.post(PATH, { user })
-      .map((res: any) => res);
+      .map((res: any) => res)
+      .catch((error: any) => Observable.throw(error.error || 'Server error'));
   }
 
   login = (user) => {
-    const PATH = `${this.BASE_URL}/login`;
+    let route;
+    if (user.oauth) {
+      route = '/loginOauth';
+    } else {
+      route = '/login';
+    }
+    const PATH = `${this.BASE_URL}/${route}`;
     return this.http.post(PATH, { user })
-      .map((res: any) => res);
+      .map((res: any) => res)
+      .catch((error: any) => Observable.throw(error.error || 'Server error'));
   }
 }

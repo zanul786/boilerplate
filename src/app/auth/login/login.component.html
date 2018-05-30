@@ -14,5 +14,11 @@
       <button mat-raised-button color="primary">Login</button>
     </div>
     <a routerLink="/register">Don't have an account? Register here.</a>
+    
   </form>
+  <p>or</p>
+  <b class="text-center">Login using Social</b>
+    <hr>
+  <!-- <button (click)="socialSignIn('facebook')">Sign in with Facebook</button> -->
+  <button mat-raised-button color="accent" (click)="socialSignIn('google')">Google</button>
 </mat-card>

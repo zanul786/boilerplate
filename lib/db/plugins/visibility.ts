@@ -8,7 +8,7 @@ export const visibilityPlugin = (schema) => {
     .pre('findOne', addFiltersIfNotPresent)
     .pre('update', addFiltersIfNotPresent)
     .pre('findOneAndUpdate', addFiltersIfNotPresent);
-}
+};
 
 function addFiltersIfNotPresent (next) {
   if (this.options && this.options.getDeleted) {

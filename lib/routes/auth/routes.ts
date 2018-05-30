@@ -20,7 +20,7 @@ export class AuthRoutes {
   public static async register (req: express.Request, res: express.Response, next) {
     try {
 
-      const { email, password, name } = req.body.user;
+      const { email, password, oauth, name } = req.body.user;
 
       if (!email) {
         throw new StandardError({ message: 'Email is required', code: status.UNPROCESSABLE_ENTITY });
@@ -32,11 +32,31 @@ export class AuthRoutes {
 
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        throw new StandardError({ messgae: 'Email already in use', code: status.CONFLICT });
+        throw new StandardError({ message: 'Email already in use', code: status.CONFLICT });
       }
 
       const hashedPassword = await bcrypt.hash(password, 8);
-      const user = await User.create({ email, password: hashedPassword, name });
+      const user = await User.create({ email, password: hashedPassword, name, oauth});
+      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
+    } catch (error) {
+      next(error);
+    }
+  }
+  public static async registerOauth (req: express.Request, res: express.Response, next) {
+    try {
+
+      const { email, oauth, name } = req.body.user;
+
+      if (!email) {
+        throw new StandardError({ message: 'Email is required', code: status.UNPROCESSABLE_ENTITY });
+      }
+
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        throw new StandardError({ message: 'Email already in use', code: status.CONFLICT });
+      }
+
+      const user = await User.create({ email, oauth, name });
       res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
@@ -57,11 +77,36 @@ export class AuthRoutes {
         throw new StandardError({ message: 'Invalid email or password', code: status.CONFLICT });
       }
 
+      if (user.oauth) {
+        throw new StandardError({ message: `You have not registered through ${user.oauth} !`, code: status.CONFLICT });
+      }
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
         throw new StandardError({ message: 'Invalid email or password', code: status.CONFLICT });
       }
 
+      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
+    } catch (error) {
+      next(error);
+    }
+  }
+  public static async loginOauth (req: express.Request, res: express.Response, next) {
+    try {
+      const { email, oauth } = req.body.user;
+
+      if (!email) {
+        throw new StandardError({ message: 'Email  is requried', code: status.UNPROCESSABLE_ENTITY });
+      }
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        throw new StandardError({ message: 'Invalid email', code: status.CONFLICT });
+      }
+
+      if (!user.oauth) {
+        throw new StandardError({ message: `You have not registered through ${user.oauth} !`, code: status.CONFLICT });
+      }
       res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);

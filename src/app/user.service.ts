@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { AuthService } from './auth/auth.service';
+import { BPAuthService } from './auth/auth.service';
 
 @Injectable()
 export class UserService implements OnInit {
@@ -15,7 +15,7 @@ export class UserService implements OnInit {
 
   state: 'LOGGED_IN' | 'NOT_LOGGED_IN';
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: BPAuthService) {
 
   }
 
@@ -39,6 +39,7 @@ export class UserService implements OnInit {
   unsetUser = () => {
     this.user = null;
     this.state = 'NOT_LOGGED_IN';
+    this.setToken(null);
   }
 
   setToken = (token) => {
