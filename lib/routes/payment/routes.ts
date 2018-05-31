@@ -15,7 +15,7 @@ export class PaymentRoutes {
             const customer = await stripeService.createCustomer(loggerInUserDetails, chargeData);
             
             const user = await User.update({ 'email': loggerInUserDetails.email},
-                                { '$push': { cardTokens : customer.id },
+                                { '$push': { cardTokens : chargeData.token.card.id },
                                             stripeCustomerId: customer.id, 
                                             defaultCardToken: customer.default_source,
                                 }
@@ -29,7 +29,7 @@ export class PaymentRoutes {
 
         }else if(loggerInUserDetails.stripeCustomerId && chargeData.saveThisCard) {
             const chargeData = req.body.chargeData;
-            const source = await stripeService.createSource(loggerInUserDetails, chargeData); 
+            const source = await stripeService.createSource(loggerInUserDetails, chargeData);
             const user = await User.update({ 'email': loggerInUserDetails.email},
                                             { "$push": { "cardTokens": source.id } });
             const charge = await stripeService.createChargeWithSource(loggerInUserDetails, chargeData, source)

@@ -82,6 +82,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   async onSubmit(form: NgForm) {
+    
     const { token, error } = await stripe.createToken(this.card);
     if (error) { 
       Swal('Error!',error,'error')
