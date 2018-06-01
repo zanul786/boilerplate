@@ -6,10 +6,12 @@ dotenv.load();
 const twilioNumber = process.env.TWILIONUMBER;
 const accountSid   = process.env.ACCOUNTSID;
 const authToken    = process.env.AUTHTOKEN;
-const client = new Twilio(accountSid, authToken);
 
 export class MessageService {
-  constructor() {}
+  client: Twilio;
+  constructor() {
+    this.client = new Twilio(accountSid, authToken);
+  }
 
   public sendMessages = (number, message) => {
     const textContent = {
@@ -18,7 +20,7 @@ export class MessageService {
         from: twilioNumber
     };
 
-   return client.messages.create(textContent)
+   return this.client.messages.create(textContent)
     .then((res) => res);
   }
   // Validate E164 format
