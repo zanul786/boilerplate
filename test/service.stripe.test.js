@@ -4,10 +4,6 @@ const chai = require('chai');
 const expect = chai.expect;
 const { stripeService } = require('../server/services/stripe-service');
 const  Stripe = require('stripe');
-const dotenv = require('dotenv');
-
-
-dotenv.config();
 
 const CUSTOMER_DETAILS = {
     id:1,

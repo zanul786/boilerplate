@@ -1,15 +1,13 @@
 import * as Stripe from 'stripe';
-import * as dotevn from 'dotenv';
+import { config } from './../config';
 
 import { User, Payment } from './../db/index';
 
-dotevn.config();
 class StripeService {
     stripe: Stripe;
 
     constructor() {
-        console.log(process.env.STRIPE_SECRET_KEY)
-        this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+        this.stripe = new Stripe(config.STRIPE_SECRET_KEY);
     }
 
     public createCustomer = async (loggerInUserDetails, chargeData) => {
