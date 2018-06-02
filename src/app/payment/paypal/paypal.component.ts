@@ -1,4 +1,4 @@
-import { Component, AfterViewChecked } from '@angular/core';
+import { Component, AfterViewChecked, OnInit } from '@angular/core';
 
 declare let paypal: any;
 
@@ -40,8 +40,8 @@ export class PaypalComponent implements AfterViewChecked {
   public ngAfterViewChecked(): void {
     if(!this.didPaypalScriptLoad) {
       this.loadPaypalScript().then(() => {
-        paypal.Button.render(this.paypalConfig, '#paypal-button');
-        this.loading = false;
+          paypal.Button.render(this.paypalConfig, '#paypal-button');
+          this.loading = false;
       });
     }
   }
@@ -51,8 +51,8 @@ export class PaypalComponent implements AfterViewChecked {
     return new Promise((resolve, reject) => {
       const scriptElement = document.createElement('script');
       scriptElement.src = 'https://www.paypalobjects.com/api/checkout.js';
-      scriptElement.onload = resolve;
       document.body.appendChild(scriptElement);
+      scriptElement.onload = resolve;
     });
   }
 }
