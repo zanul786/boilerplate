@@ -1,13 +1,18 @@
 import * as Stripe from 'stripe';
+import * as dotevn from 'dotenv';
 
 import { User, Payment } from './../db/index';
 
+dotevn.config();
 class StripeService {
     stripe: Stripe;
 
-    public createCustomer = async (loggerInUserDetails, chargeData) => {
-        this.stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
+    constructor() {
+        console.log(process.env.STRIPE_SECRET_KEY)
+        this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    }
 
+    public createCustomer = async (loggerInUserDetails, chargeData) => {
         const customer = await this.stripe.customers.create({
             metadata: {
                 Id: loggerInUserDetails.id,
@@ -20,8 +25,6 @@ class StripeService {
     }
 
     public createChargeWithSavedCard = async (loggerInUserDetails, chargeData) => {
-        this.stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
-
         const charge = await this.stripe.charges.create({
             amount: chargeData.amount,
             currency: chargeData.currency,
@@ -32,8 +35,6 @@ class StripeService {
     }
 
     public createChargeWithOutSavedCard = async (chargeData) =>{
-        this.stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
-
         const charge = await this.stripe.charges.create({
             amount: chargeData.amount,
             currency: chargeData.currency,
@@ -42,9 +43,7 @@ class StripeService {
         return charge;
     }
 
-    public createChargeWithSource = async (loggerInUserDetails, chargeData, source) =>{
-        this.stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
-
+    public createChargeWithSource = async (loggerInUserDetails, chargeData, source) => {
         const charge = await this.stripe.charges.create({
             amount: chargeData.amount,
             currency: chargeData.currency,
@@ -55,8 +54,6 @@ class StripeService {
     }
 
     public createSource = async (loggerInUserDetails, chargeData) =>{
-        this.stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
-
         const customer = await this.stripe.customers.createSource(loggerInUserDetails.stripeCustomerId, {
             source: chargeData.token.id
         });
@@ -64,7 +61,6 @@ class StripeService {
     }
 
     public listAllCards = async (loggerInUserDetails) =>{
-        this.stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
         const cardList = await this.stripe.customers.listCards(loggerInUserDetails.stripeCustomerId);
         return cardList;
     }
@@ -82,7 +78,6 @@ class StripeService {
             'currency': charge.currency,
             'failureCode': charge.failure_code, // When status is success, it will be NULL.
             'failureMessage': charge.failure_message // When status is success, it will be NULL.
-
         });
         return payment;
     }
