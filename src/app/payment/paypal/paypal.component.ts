@@ -7,7 +7,7 @@ declare let paypal: any;
   templateUrl: './paypal.component.html',
   styleUrls: ['./paypal.component.css']
 })
-export class PaypalComponent implements AfterViewChecked {
+export class PaypalComponent implements OnInit {
 
   public didPaypalScriptLoad: boolean = false;
   public loading: boolean = true;
@@ -36,7 +36,13 @@ export class PaypalComponent implements AfterViewChecked {
       });
     }
   };
-
+  public ngOnInit(): void{
+    $.getScript( 'https://www.paypalobjects.com/api/checkout.js', function() {
+      paypal.Button.render(this.paypalConfig, '#paypal-button');
+      this.loading = false;
+    });
+  }
+  
   public ngAfterViewChecked(): void {
     if(!this.didPaypalScriptLoad) {
       this.loadPaypalScript().then(() => {
