@@ -9,22 +9,27 @@ export class PaymentRoutes {
     public static async createCharge(req, res, next) {
         const loggerInUserDetails = req.user;
         const chargeData = req.body.chargeData;
-
+        let customer;
         if (!loggerInUserDetails.stripeCustomerId && chargeData.saveThisCard) {
-            const customer = await stripeService.createCustomer(loggerInUserDetails, chargeData);
+            try{
+                console.log('before create cust');
+                customer = await stripeService.createCustomer(loggerInUserDetails, chargeData);
+                console.log('after create cust');
 
-            const user = await User.update({ 'email': loggerInUserDetails.email},
-                                { '$push': { cardTokens : chargeData.token.card.id },
-                                            stripeCustomerId: customer.id, 
-                                            defaultCardToken: customer.default_source,
-                                }
-                            );
+                const user = await User.update({ 'email': loggerInUserDetails.email},
+                                                { '$push': { cardTokens : chargeData.token.card.id },
+                                                            stripeCustomerId: customer.id, 
+                                                            defaultCardToken: customer.default_source,
+                                                });
 
-            loggerInUserDetails.stripeCustomerId = customer.id;
-            const charge = await stripeService.createChargeWithSavedCard(loggerInUserDetails, chargeData);
+                loggerInUserDetails.stripeCustomerId = customer.id;
+                const charge = await stripeService.createChargeWithSavedCard(loggerInUserDetails, chargeData);
 
-            const payment = await await stripeService.createPayment(loggerInUserDetails, charge);
-            res.json(payment);
+                const payment = await await stripeService.createPayment(loggerInUserDetails, charge);
+                res.json(payment);
+            } catch(error){
+                next(error);
+            }
 
         } else if (loggerInUserDetails.stripeCustomerId && chargeData.saveThisCard) {
             const source = await stripeService.createSource(loggerInUserDetails, chargeData);
@@ -33,9 +38,13 @@ export class PaymentRoutes {
             const payment = await stripeService.createPayment(loggerInUserDetails, charge);
             res.json(payment);
         } else {
-            const charge = await stripeService.createChargeWithOutSavedCard(chargeData);
-            const payment = await stripeService.createPayment(loggerInUserDetails, charge);
-            res.json(payment);
+            try{
+                const charge = await stripeService.createChargeWithOutSavedCard(chargeData);
+                const payment = await stripeService.createPayment(loggerInUserDetails, charge);
+                res.json(payment);
+            }catch(error){
+                next(error);
+            }
         }
     }
 
