@@ -7,7 +7,7 @@ declare let paypal: any;
   templateUrl: './paypal.component.html',
   styleUrls: ['./paypal.component.css']
 })
-export class PaypalComponent implements OnInit {
+export class PaypalComponent implements AfterViewChecked {
 
   public didPaypalScriptLoad: boolean = false;
   public loading: boolean = true;
@@ -32,22 +32,17 @@ export class PaypalComponent implements OnInit {
     },
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then((payment) => {
-        // show success page
+        console.log(payment);
       });
     }
   };
-  public ngOnInit(): void{
-    $.getScript( 'https://www.paypalobjects.com/api/checkout.js', function() {
-      paypal.Button.render(this.paypalConfig, '#paypal-button');
-      this.loading = false;
-    });
-  }
   
   public ngAfterViewChecked(): void {
-    if(!this.didPaypalScriptLoad) {
+    const elementExists: boolean = !!document.getElementById('paypal-button');
+    if(elementExists && !this.didPaypalScriptLoad) {
       this.loadPaypalScript().then(() => {
-          paypal.Button.render(this.paypalConfig, '#paypal-button');
           this.loading = false;
+          paypal.Button.render(this.paypalConfig, '#paypal-button');
       });
     }
   }
