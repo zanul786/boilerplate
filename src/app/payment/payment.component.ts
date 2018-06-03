@@ -97,9 +97,10 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
     
         this.paymentService
           .createCharge(chargeData)
-          .subscribe(res => {
-            this.showMessageToUser(res);
-          });
+          .subscribe(
+            res => {this.showMessageToUser(res)},
+            error => {this.stripePaymentError(error)},
+          )
       } else{
         const chargeData = {
           'currency': 'usd',
@@ -109,9 +110,10 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
         };
         this.paymentService
         .chargeGuestCard(chargeData)
-        .subscribe(res => {
-          this.showMessageToUser(res);
-        });
+        .subscribe(
+          res => {this.showMessageToUser(res)},
+          error => {this.stripePaymentError(error)},
+        )
       }
         
     }
@@ -126,9 +128,10 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.paymentService
       .createSavedCharge(chargeData)
-      .subscribe(res => {
-        this.showMessageToUser(res);
-      });
+      .subscribe(
+        res => {this.showMessageToUser(res)},
+        error => {this.stripePaymentError(error)},
+      )
   }
 
   async showMessageToUser(res){
@@ -137,6 +140,10 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
     } else {
       Swal('Error!' , res.failureMessage , 'error')
     }
+  }
+
+  async stripePaymentError({error}){
+    Swal('Error!' , error.message , 'error')
   }
 
   async getSavedCardDetails() {
