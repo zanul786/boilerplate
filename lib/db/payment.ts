@@ -37,6 +37,10 @@ export const PaymentSchema = mongoose.Schema({
     },
     failureMessage:{
         type: String
+    },
+    gateWay:{
+        type: String,
+        required: true
     }
 
 }, { timestamps: true });

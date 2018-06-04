@@ -33,4 +33,11 @@ export class PaymentService {
       .map((res:any) => res);
   }
 
+  savePaypalPayment = (paypalResponse) => {
+    const PATH = `${this.BASE_URL}/savePayPalPayment`;
+    return this.http.post(PATH, {paypalResponse})
+      .map((res:any) => res);
+  }
+
+
 }

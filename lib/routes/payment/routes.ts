@@ -71,5 +71,11 @@ export class PaymentRoutes {
         const payment = await stripeService.createPayment({ email : chargeData.email},charge);
         res.json(payment);
     }
+
+    public static async savePayPalPayment(req, res, next) {
+        const payPalData = req.body.payPalData;
+        const payment = await stripeService.createPayment({ email : payPalData.email},payPalData);
+        res.json(payment);
+    }
     
 }

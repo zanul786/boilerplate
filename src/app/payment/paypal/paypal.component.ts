@@ -12,7 +12,7 @@ export class PaypalComponent implements AfterViewChecked {
   public didPaypalScriptLoad: boolean = false;
   public loading: boolean = true;
 
-  public paymentAmount: number = 2000;
+  public paymentAmount: number = 20;
 
   public paypalConfig: any = {
     env: 'sandbox',
@@ -34,7 +34,19 @@ export class PaypalComponent implements AfterViewChecked {
       return actions.payment.execute().then((payment) => {
         console.log(payment);
       });
+    },
+    onCancel: function(data, actions) {
+      /*
+       * Buyer cancelled the payment
+       */
+    },
+
+    onError: function(err) {
+      /*
+       * An error occurred during the transaction
+       */
     }
+
   };
   
   public ngAfterViewChecked(): void {
