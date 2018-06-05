@@ -14,9 +14,12 @@ import { AuthModule } from './auth/auth.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './token.interceptor';
 
+import { PaymentModule } from './payment/payment.module';
+import { PaymentService } from './payment/payment.service';
+
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     MaterialModule,
@@ -24,10 +27,12 @@ import { TokenInterceptor } from './token.interceptor';
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule
+    RouterModule,
+    PaymentModule
   ],
   providers: [
     UserService,
+    PaymentService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
