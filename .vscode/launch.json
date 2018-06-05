@@ -4,12 +4,22 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+<<<<<<< HEAD
 
+=======
+>>>>>>> e69eb4b8b9c3cb27e237637176b87ab6f9efca50
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}/server/index.js",
+<<<<<<< HEAD
+=======
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+>>>>>>> e69eb4b8b9c3cb27e237637176b87ab6f9efca50
         }
     ]
 }

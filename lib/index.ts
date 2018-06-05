@@ -41,7 +41,6 @@ try {
    * Create HTTP server.
    */
   const server = http.createServer(app);
-
   /**
    * Listen on provided port, on all network interfaces.
    */
@@ -52,3 +51,4 @@ try {
   console.error(error);
   process.exit(1);
 }
+

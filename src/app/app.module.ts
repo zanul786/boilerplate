@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
 import { UserService } from './user.service';
-
+import { CartService } from './cart.service';
 import { AuthModule } from './auth/auth.module';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -33,6 +33,7 @@ import { PaymentService } from './payment/payment.service';
   providers: [
     UserService,
     PaymentService,
+    CartService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
