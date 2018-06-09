@@ -3,6 +3,7 @@ import * as status from 'http-status';
 import * as Stripe from 'stripe';
 import { User, Payment } from './../../db/index';
 import { stripeService } from './../../services/stripe-service';
+import { payPalService } from './../../services/paypal-service';
 
 export class PaymentRoutes {
 
@@ -73,8 +74,9 @@ export class PaymentRoutes {
     }
 
     public static async savePayPalPayment(req, res, next) {
-        const payPalData = req.body.payPalData;
-        const payment = await stripeService.createPayment({ email : payPalData.email},payPalData);
+        const loggerInUserDetails = req.user;
+        const payPalData = req.body.paypalResponse;
+        const payment = await payPalService.savePayPalPayment(loggerInUserDetails, payPalData);
         res.json(payment);
     }
     

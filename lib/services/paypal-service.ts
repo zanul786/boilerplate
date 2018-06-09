@@ -2,19 +2,18 @@ import { User, Payment } from './../db/index';
 
 class PayPalService {
 
-    public savePayPalPayment = async(loggerInUserDetails, charge) => {
+    public savePayPalPayment = async(loggerInUserDetails, payPalData) => {
+        console.log(payPalData);
         const payment =  await Payment.create({
-            'amount': charge.amount,
-            'status': charge.status,
-            'stripeCustomerId': loggerInUserDetails.stripeCustomerId || 0,
-            'chargeId': charge.id,
+            'amount': payPalData.transactions[0].amount.total,
+            'status': payPalData.state,
+            'stripeCustomerId': 0,
+            'chargeId' :0
+            'paypalPayerId': payPalData.payer.payer_info.payer_id,
             'user': loggerInUserDetails._id || null,
-            'cardToken': charge.source.id,
-            'transactionId': charge.balance_transaction,
-            'email': loggerInUserDetails.email,
-            'currency': charge.currency,
-            'failureCode': charge.failure_code, // When status is success, it will be NULL.
-            'failureMessage': charge.failure_message, // When status is success, it will be NULL.
+            'transactionId': payPalData.id,
+            'email': payPalData.payer.payer_info.email,
+            'currency': payPalData.transactions[0].amount.currency,
             'gateWay' : 'paypal'
         });
         
@@ -23,4 +22,4 @@ class PayPalService {
 };
 
 
-
+export const payPalService = new PayPalService();

@@ -32,6 +32,10 @@ export const PaymentSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    paypalPayerId:{
+        type: String,
+        required: true
+    },
     failureCode:{
         type: String
     },

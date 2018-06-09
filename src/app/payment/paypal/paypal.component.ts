@@ -1,4 +1,8 @@
-import { Component, AfterViewChecked, OnInit } from '@angular/core';
+import { Component, AfterViewChecked, OnInit, DoCheck } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { PaymentService } from './../payment.service';
+import Swal from 'sweetalert2';
 
 declare let paypal: any;
 
@@ -9,16 +13,21 @@ declare let paypal: any;
 })
 export class PaypalComponent implements AfterViewChecked {
 
+  constructor(
+    private router: Router,
+    private paymentService: PaymentService,
+  ){};
+
   public didPaypalScriptLoad: boolean = false;
   public loading: boolean = true;
 
   public paymentAmount: number = 20;
-
   public paypalConfig: any = {
-    env: 'sandbox',
+    env: `${environment.paypalEnvironment}`,
+    
     client: {
-      sandbox: 'AXG7SxD3vnp1YfY77SRmSxWpM-CcSbkV0IjyK20xRuiIp5M78asYYQE13gWIvFWX7XpPGiqkVpkzeZJk',
-      production: 'xxxxxxxxxx'
+      sandbox: `${environment.paypalSandboxId}`,
+      production: `${environment.paypalLiveId}`,
     },
     commit: true,
     payment: (data, actions) => {
@@ -32,19 +41,18 @@ export class PaypalComponent implements AfterViewChecked {
     },
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then((payment) => {
-        console.log(payment);
+        this.paymentService.savePaypalPayment(payment)
+        .subscribe(res => {
+          Swal('Success!','Payment Successful.','success');
+          this.router.navigate(['']);
+        });
       });
     },
     onCancel: function(data, actions) {
-      /*
-       * Buyer cancelled the payment
-       */
+      Swal('Error!' , 'Payment Unsuccessful' , 'error')
     },
-
     onError: function(err) {
-      /*
-       * An error occurred during the transaction
-       */
+      Swal('Error!' , 'Payment Unsuccessful' , 'error')
     }
 
   };

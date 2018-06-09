@@ -1,41 +1,54 @@
 <div class="PaymentTabContainer">
-  <div class="container">
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" *ngIf="isSavedCardAvailable" hideToggle="true">
+        <mat-expansion-panel-header class="materialHeader">
+          <mat-panel-title>
+            Saved Card
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <div *ngFor="let card of savedCards; let index = index">
+            <form #savedCard="ngForm" (ngSubmit)="createSavedCharge(index)" class="checkout">
+              <div class="form-row">
+                  <p> {{card.brand}} card ending with {{card.last4}} expiry:{{card.exp_month}}/{{card.exp_year}} </p>
+                  <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+              </div>
+              <button type="submit">Pay</button>
+            </form>
+          </div>
+      </mat-expansion-panel>
 
-    <mat-tab-group>
-      <mat-tab label="Saved Cards" *ngIf="isSavedCardAvailable"  >
-        <div *ngFor="let card of savedCards; let index = index">
-          <form #savedCard="ngForm" (ngSubmit)="createSavedCharge(index)" class="checkout">
+      <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+        <mat-expansion-panel-header class="materialHeader">
+          <mat-panel-title>
+            Debit/Credit Cards
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout)" class="checkout">
             <div class="form-row">
-                <p> {{card.brand}} card ending with {{card.last4}} expiry:{{card.exp_month}}/{{card.exp_year}} </p>
-                <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+              <label for="card-info">Card Info</label>
+              <div *ngIf="!isLoggedIn">
+                <input type="email" class="form-control" [(ngModel)]="emailAddress" placeholder="Enter email" name="emailAddress">
+              </div>
+              <div id="card-info" #cardInfo></div>
+              
+              <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+            </div>
+            <div class="form-row" *ngIf="isLoggedIn">
+              <mat-checkbox [(ngModel)]="saveThisCard" name="saveThisCard">Save this card for faster checkout</mat-checkbox>
             </div>
             <button type="submit">Pay</button>
           </form>
-        </div>
-      </mat-tab>
-
-      <mat-tab label="Debit/Credit Cards">
-        <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout)" class="checkout">
-          <div class="form-row">
-            <label for="card-info">Card Info</label>
-            <div *ngIf="!isLoggedIn">
-              <input type="email" class="form-control" [(ngModel)]="emailAddress" placeholder="Enter email" name="emailAddress">
-            </div>
-            <div id="card-info" #cardInfo></div>
-            
-            <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
-          </div>
-          <div class="form-row" *ngIf="isLoggedIn">
-            <mat-checkbox [(ngModel)]="saveThisCard" name="saveThisCard">Save this card for faster checkout</mat-checkbox>
-          </div>
-          <button type="submit">Pay</button>
-        </form>
-      </mat-tab>
-
-      <mat-tab label="Paypal">
+      </mat-expansion-panel>
+    
+      <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+        <mat-expansion-panel-header class="materialHeader">
+          <mat-panel-title>
+            Paypal
+          </mat-panel-title>
+        </mat-expansion-panel-header>
         <paypal-root></paypal-root>
-      </mat-tab>
+      </mat-expansion-panel>
 
-    </mat-tab-group>
-  </div>
+    
+  </mat-accordion>    
 </div>

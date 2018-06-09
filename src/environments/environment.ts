@@ -5,5 +5,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: '/api/'
+  apiUrl: '/api/',
+  paypalSandboxId : 'AXG7SxD3vnp1YfY77SRmSxWpM-CcSbkV0IjyK20xRuiIp5M78asYYQE13gWIvFWX7XpPGiqkVpkzeZJk',
+  paypalEnvironment: 'sandbox',
+  paypalLiveId: 'xxxxxxxxxxxxxx'
 };
