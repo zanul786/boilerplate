@@ -8,7 +8,7 @@ class PayPalService {
             'amount': payPalData.transactions[0].amount.total,
             'status': payPalData.state,
             'stripeCustomerId': 0,
-            'chargeId' :0
+            'chargeId' :0,
             'paypalPayerId': payPalData.payer.payer_info.payer_id,
             'user': loggerInUserDetails._id || null,
             'transactionId': payPalData.id,
