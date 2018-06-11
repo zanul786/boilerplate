@@ -75,7 +75,8 @@ class StripeService {
             'email': loggerInUserDetails.email,
             'currency': charge.currency,
             'failureCode': charge.failure_code, // When status is success, it will be NULL.
-            'failureMessage': charge.failure_message // When status is success, it will be NULL.
+            'failureMessage': charge.failure_message, // When status is success, it will be NULL.
+            'gateWay' : 'stride'
         });
         return payment;
     }

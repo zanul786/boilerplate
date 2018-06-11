@@ -5,6 +5,7 @@ import { User, Payment } from './../../db/index';
 import { stripeService } from './../../services/stripe-service';
 import { PaymentErrorHandlerService } from './payment-error-handler';
 import * as StandardError from 'standard-error';
+import { payPalService } from './../../services/paypal-service';
 
 export class PaymentRoutes {
 
@@ -92,4 +93,12 @@ export class PaymentRoutes {
             PaymentErrorHandlerService.PaymentErrorHandleError(error, next);
         }
     }
+
+    public static async savePayPalPayment(req, res, next) {
+        const loggerInUserDetails = req.user;
+        const payPalData = req.body.paypalResponse;
+        const payment = await payPalService.savePayPalPayment(loggerInUserDetails, payPalData);
+        res.json(payment);
+    }
+    
 }
