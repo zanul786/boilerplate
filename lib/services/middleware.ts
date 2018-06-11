@@ -20,32 +20,36 @@ export class Middleware {
   }
 
   public jwtDecoder = async (req, res, next) => {
-    const authz = req.headers.authorization;
-    if (!authz) {
-      return next();
+    try {
+      const authz = req.headers.authorization;
+      if (!authz) {
+        return next();
+      }
+
+      const decoded = jwt.decode(authz, this.JWT_SECRET);
+
+      if (!decoded || !decoded.valid) {
+        throw new StandardError({
+          message: 'Invalid Token',
+          code: status.BAD_REQUEST
+        });
+      }
+
+      const user = await User.findById(decoded.id);
+
+      if (!user) {
+        throw new StandardError({
+          message: 'Invalid Token',
+          code: status.BAD_REQUEST
+        });
+      }
+
+      req.user = user;
+      req.token = decoded;
+      next();
+    } catch (error) {
+      next(error);
     }
-
-    const decoded = jwt.decode(authz, this.JWT_SECRET);
-
-    if (!decoded || !decoded.valid) {
-      throw new StandardError({
-        message: 'Invalid Token',
-        code: status.BAD_REQUEST
-      });
-    }
-
-    const user = await User.findById(decoded.id);
-
-    if (!user) {
-      throw new StandardError({
-        message: 'Invalid Token',
-        code: status.BAD_REQUEST
-      });
-    }
-
-    req.user = user;
-    req.token = decoded;
-    next();
   }
 
   public requireAdmin = (req, res, next) => {
