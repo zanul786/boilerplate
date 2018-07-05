@@ -9,6 +9,7 @@ export class AuthRouter {
     this.router.post('/register', AuthRoutes.register);
     this.router.post('/login', AuthRoutes.login);
     this.router.post('/loginOauth', AuthRoutes.loginOauth);
+    this.router.post('/changePassword', AuthRoutes.changePassword);
   }
 }
 

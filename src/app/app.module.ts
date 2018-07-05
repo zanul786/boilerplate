@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
@@ -16,10 +17,11 @@ import { TokenInterceptor } from './token.interceptor';
 
 import { PaymentModule } from './payment/payment.module';
 import { PaymentService } from './payment/payment.service';
+import { ProfileModule } from './profile/profile.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     MaterialModule,
@@ -28,7 +30,9 @@ import { PaymentService } from './payment/payment.service';
     FormsModule,
     HttpModule,
     RouterModule,
-    PaymentModule
+    PaymentModule,
+    ProfileModule,
+    ReactiveFormsModule
   ],
   providers: [
     UserService,

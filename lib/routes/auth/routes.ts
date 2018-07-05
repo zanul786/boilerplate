@@ -112,4 +112,23 @@ export class AuthRoutes {
       next(error);
     }
   }
+
+  public static async changePassword(req, res, next){
+    try{
+      const {currentPassword, newPassword } = req.body.passwordDetails;
+      const match = await bcrypt.compare(currentPassword, req.user.password);
+      if (!match) {
+        throw new StandardError({ message: 'Invalid password', code: status.CONFLICT });
+      }else{
+        const user = await User.findById(req.user._id);
+        const hashedPassword = await bcrypt.hash(newPassword, 8);
+        user.password = hashedPassword;
+        await user.save();
+        res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
+      }
+    }catch(error){
+      next(error);
+    }
+
+  }
 }

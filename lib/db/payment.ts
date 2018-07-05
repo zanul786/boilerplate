@@ -34,7 +34,6 @@ export const PaymentSchema = mongoose.Schema({
     },
     paypalPayerId:{
         type: String,
-        required: true
     },
     failureCode:{
         type: String

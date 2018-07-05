@@ -39,5 +39,18 @@ export class PaymentService {
       .map((res:any) => res);
   }
 
+  saveCard = (chargeData) => {
+    const PATH = `${this.BASE_URL}/saveCard`;
+    return this.http.post(PATH, {chargeData})
+      .map((res:any) => res);
+  }
+
+  deleteCard = (chargeData) => {
+    const PATH = `${this.BASE_URL}/deleteCard`;
+    return this.http.post(PATH, {chargeData})
+      .map((res:any) => res);
+  }
+
+
 
 }
