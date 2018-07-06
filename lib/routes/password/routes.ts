@@ -9,7 +9,7 @@ import { ErrorService } from '../../services/error';
 
 // Internal Dependencies
 import { User } from '../../db';
-
+import { EmailService } from '../../services/email';
 // Helpers
 import { getJwtPayload } from './helpers';
 
@@ -20,7 +20,8 @@ export class PasswordRoutes {
   public static async forgotpassword (req: express.Request, res: express.Response, next) {
     
     try {
-      const { email } = req.body;
+      const emailService = new EmailService();
+      const email  = req.body.email;
 
       if (!email) {
         throw new StandardError({ message: 'Email is requried ', code: status.UNPROCESSABLE_ENTITY });
@@ -28,9 +29,14 @@ export class PasswordRoutes {
 
       const user = await User.findOne({ email });
 
-      if (!user) {
-        throw new StandardError({ message: 'Invalid email ', code: status.CONFLICT });
-      }
+      // if (!user) {
+      //   throw new StandardError({ message: 'Invalid email ', code: status.CONFLICT });
+      // }
+      emailService.sendEmail(email,'https://www.google.com/')
+                  .then((result) => {
+                  res.sendStatus(status.OK);
+                  })
+                  .catch((err) => res.json(err));
       res.json({ token: jwt.encode(getJwtPayload(user),  PasswordRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
