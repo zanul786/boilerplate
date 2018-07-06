@@ -6,22 +6,51 @@ import { FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angular4
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {MatDialog, MAT_DIALOG_DATA} from '@angular/material';
+import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   constructor(public snackBar: MatSnackBar,
               private authService: BPAuthService,
               private socialAuthService: AuthService,
               private userService: UserService,
               private route: ActivatedRoute,
               private router: Router,
-              private http: HttpClient) { }
+              private http: HttpClient,
+              public dialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ForgotPasswordComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result)
+      if(result!=undefined){
+        this.sendResetPasswordLink(result);
+      }
+    });
+  }
+
+  sendResetPasswordLink(email){
+     if(email){
+      this.authService.sendLink(email).subscribe(
+        ({ result }) => {
+            console.log(result)
+        },
+        (err) => {
+          this.handleError(err);
+        }
+      );
+     }
   }
   public socialSignIn(socialPlatform: string) {
     let socialPlatformProvider;

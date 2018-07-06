@@ -7,7 +7,7 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class BPAuthService {
   BASE_URL = `/api/auth`;
-
+  FORGOT_BASE_URL = `/api/password`;
   constructor(private http: HttpClient) { }
   me = () => {
     const PATH = `${this.BASE_URL}/me`;
@@ -37,6 +37,14 @@ export class BPAuthService {
     }
     const PATH = `${this.BASE_URL}/${route}`;
     return this.http.post(PATH, { user })
+      .map((res: any) => res)
+      .catch((error: any) => Observable.throw(error.error || 'Server error'));
+  }
+
+  sendLink = (email) => {
+    let route =  '/forgotpassword';
+    const PATH = `${this.FORGOT_BASE_URL}/${route}`;
+    return this.http.post(PATH, { email })
       .map((res: any) => res)
       .catch((error: any) => Observable.throw(error.error || 'Server error'));
   }

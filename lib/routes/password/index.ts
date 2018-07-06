@@ -6,6 +6,8 @@ export class PasswordRouter {
   constructor() {
     this.router = express.Router();
     this.router.post('/forgotpassword', PasswordRoutes.forgotpassword);
+    this.router.get('/resetpassword/:token', PasswordRoutes.resetpassword);
+    this.router.post('/updatepassword', PasswordRoutes.updatePassword);
   }
 }
 

@@ -1,35 +1,39 @@
 
 import * as Nodemailer from 'nodemailer';
-
+import * as dotenv from 'dotenv';
+dotenv.load();
 export class EmailService {
   transporter;
   constructor() {
     this.transporter = Nodemailer.createTransport( 
         {
-          host: 'smtp.ethereal.email',
-          port: 587,
-          secure: false, // true for 465, false for other ports
+          service: "Gmail",
+          // auth: {
+          //     user: process.env.GMAIL_USER, // generated ethereal user
+          //     pass: process.env.GMAIL_PASS // generated ethereal password
+          // } 
           auth: {
-              user: 'nwacszdcw7ezgh3u@ethereal.email', // generated ethereal user
-              pass: 'XAgENSC2VpXedCDVmF' // generated ethereal password
-          }
+            user:'squadc007@gmail.com', // generated ethereal user
+            pass: 'creative_squad' // generated ethereal password
+        }
       }
     );
   } 
   public sendEmail = (email, link) => {
     var mailOptions = { 
-      from : 'squadc007@gmail.com', 
+      from : 'sksanjaychopra8@gmail.com', 
       to : email, 
-      subject : 'Hello', 
-      text: '<a href ='+link+'>Change Password</a>' 
+      subject : 'Reset Password', 
+      text: link 
     }; 
 
-   return this.transporter.sendMail( mailOptions, (error, info) => { 
+  return  this.transporter.sendMail( mailOptions, (error, info) => { 
       if (error) { 
         return console.log(`error: ${error}`); 
       } 
-      console.log(`Message Sent ${info.response}`); 
-    }); 
+      console.log(`Message Sent ${info.response}`);
+      return info.response;
+    });
   }
    
 }
