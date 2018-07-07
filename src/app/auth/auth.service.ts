@@ -48,4 +48,12 @@ export class BPAuthService {
       .map((res: any) => res)
       .catch((error: any) => Observable.throw(error.error || 'Server error'));
   }
+
+  resetPassword =(data) =>{
+    let route =  '/updatepassword';
+    const PATH = `${this.FORGOT_BASE_URL}/${route}`;
+    return this.http.post(PATH, { data })
+      .map((res: any) => res)
+      .catch((error: any) => Observable.throw(error.error || 'Server error'));
+  }
 }

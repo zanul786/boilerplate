@@ -9,12 +9,12 @@ export class EmailService {
         {
           service: "Gmail",
           // auth: {
-          //     user: process.env.GMAIL_USER, // generated ethereal user
-          //     pass: process.env.GMAIL_PASS // generated ethereal password
+          //     user: process.env.GMAIL_USER, 
+          //     pass: process.env.GMAIL_PASS 
           // } 
           auth: {
-            user:'squadc007@gmail.com', // generated ethereal user
-            pass: 'creative_squad' // generated ethereal password
+            user:'squadc007@gmail.com', 
+            pass: 'creative_squad' 
         }
       }
     );
@@ -24,7 +24,7 @@ export class EmailService {
       from : 'sksanjaychopra8@gmail.com', 
       to : email, 
       subject : 'Reset Password', 
-      text: link 
+      text: "'"+link +"'"
     }; 
 
   return  this.transporter.sendMail( mailOptions, (error, info) => { 

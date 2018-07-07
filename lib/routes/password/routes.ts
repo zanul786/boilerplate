@@ -29,15 +29,15 @@ export class PasswordRoutes {
 
       const user = await User.findOne({ email });
 
-      // if (!user) {
-      //   throw new StandardError({ message: 'Invalid email ', code: status.CONFLICT });
-      // }
+      if (!user) {
+        throw new StandardError({ message: 'Invalid email ', code: status.CONFLICT });
+      }
       const host =  req.protocol+'://'+req.headers.host;
       const link = host+'/api/password/resetpassword/';
       var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60),email_id:email},  PasswordRoutes.JWT_SECRET);
       const callbackUrl = '<p>Click <a href="'+ link + token + '">here</a> to reset your password</p>';
       
-      var result = await emailService.sendEmail(email,callbackUrl)
+       emailService.sendEmail(email,callbackUrl)
      
 
     } catch (error) {
@@ -47,21 +47,36 @@ export class PasswordRoutes {
   public static async resetpassword (req: express.Request, res: express.Response, next) {
     const host =  req.protocol+'://'+req.headers.host;
    jwt.verify(req.params.token, PasswordRoutes.JWT_SECRET, function(err, decoded) {
-        // err
-        // decoded undefined
         if(err){
           console.log(err)
         }
-        console.log(decoded)
         const email = decoded.email_id;
         res.redirect(host+'/reset?email=' + email)
       });
  
   }
-  public static async updatePassword (req: express.Request, res: express.Response, next) {
+  public static async updatepassword (req: express.Request, res: express.Response, next) {
     try {
-        const {email, newpassword} = req.body;
-      } catch (error) {
+
+      const { email, password } = req.body.data;
+
+      if (!email) {
+        throw new StandardError({ message: 'Email is required', code: status.UNPROCESSABLE_ENTITY });
+      }
+
+      if (!password) {
+        throw new StandardError({ message: 'Password is required', code: status.UNPROCESSABLE_ENTITY });
+      }
+
+      const existingUser = await User.findOne({ email });
+      if (!existingUser) {
+        throw new StandardError({ message: 'Email is not registerd', code: status.CONFLICT });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 8);
+      const user = await User.update({ email, password: hashedPassword});
+      res.json({email:email});
+    } catch (error) {
       next(error);
     }
   }
