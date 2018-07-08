@@ -41,8 +41,10 @@ export class LoginComponent implements OnInit {
   sendResetPasswordLink(email){
      if(email){
       this.authService.sendLink(email).subscribe(
-        ({ result }) => {
-            console.log(result)
+        (result) => {
+          this.snackBar.open('Reset Link is sent successfully, pLease check your email!', '', {
+            duration: 2000,
+          })
         },
         (err) => {
           this.handleError(err);

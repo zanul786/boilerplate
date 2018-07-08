@@ -1,6 +1,7 @@
 
 import * as Nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
+import { realpath } from 'fs';
 dotenv.load();
 export class EmailService {
   transporter;
@@ -19,20 +20,24 @@ export class EmailService {
       }
     );
   } 
-  public sendEmail = (email, link) => {
+   public sendEmail = (email, link) => {
     var mailOptions = { 
       from : 'sksanjaychopra8@gmail.com', 
       to : email, 
       subject : 'Reset Password', 
-      text: "'"+link +"'"
+      text: link
     }; 
 
-  return  this.transporter.sendMail( mailOptions, (error, info) => { 
-      if (error) { 
-        return console.log(`error: ${error}`); 
-      } 
-      console.log(`Message Sent ${info.response}`);
-      return info.response;
+    return new Promise((resolve, reject) => {
+      this.transporter.sendMail( mailOptions, (error, info) => { 
+        if (error) { 
+          console.log(`error: ${error}`); 
+          reject(error)
+        } 
+        console.log(`Message Sent ${info.response}`);
+        resolve(info.response);
+      });
+        
     });
   }
    

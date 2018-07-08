@@ -29,15 +29,20 @@ export class PasswordRoutes {
 
       const user = await User.findOne({ email });
 
-      if (!user) {
-        throw new StandardError({ message: 'Invalid email ', code: status.CONFLICT });
-      }
+      // if (!user) {
+      //   throw new StandardError({ message: 'Invalid email ', code: status.CONFLICT });
+      // }
       const host =  req.protocol+'://'+req.headers.host;
       const link = host+'/api/password/resetpassword/';
       var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60),email_id:email},  PasswordRoutes.JWT_SECRET);
       const callbackUrl = '<p>Click <a href="'+ link + token + '">here</a> to reset your password</p>';
       
-       emailService.sendEmail(email,callbackUrl)
+      emailService.sendEmail(email,callbackUrl).then(function(result) {
+            res.json(result)
+      }, function(err) {
+          console.log(err);
+          res.json(err)
+      });
      
 
     } catch (error) {
