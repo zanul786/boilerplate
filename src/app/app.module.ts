@@ -18,10 +18,24 @@ import { TokenInterceptor } from './token.interceptor';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentService } from './payment/payment.service';
 import { ProfileModule } from './profile/profile.module';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { FaqComponent } from './faq/faq.component';
 
+const ROUTES = [
+  {
+    path: 'about-us',
+    component: AboutUsComponent
+  },
+  {
+    path: 'faq',
+    component: FaqComponent
+  }
+];
 @NgModule({
   declarations: [
     AppComponent,
+    AboutUsComponent,
+    FaqComponent,
   ],
   imports: [
     MaterialModule,
@@ -32,7 +46,8 @@ import { ProfileModule } from './profile/profile.module';
     RouterModule,
     PaymentModule,
     ProfileModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule.forRoot(ROUTES)
   ],
   providers: [
     UserService,
