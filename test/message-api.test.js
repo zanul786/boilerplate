@@ -16,7 +16,7 @@ describe('Twilio API Tests', function () {
 
     describe('POST /message', function () {
         it('should send message',  function (done) {
-            this.timeout(10000);
+            try {
             chai.request('http://localhost:8000')
                 .post('/api/twilio/send')
                 .send({
@@ -30,9 +30,13 @@ describe('Twilio API Tests', function () {
                     assert.equal(res.status, 200);
                     done()
                 })
-        });
+            }
+            catch (err) {
+                done(err);
+            }
+        }).timeout(10000);
         it('should return error message (Phone number is incorrect!)',  function (done) {
-            this.timeout(10000);
+        try{
             chai.request('http://localhost:8000')
                 .post('/api/twilio/send')
                 .send({
@@ -46,7 +50,11 @@ describe('Twilio API Tests', function () {
                     assert.equal(res.body.status, '400');
                     done()
                 })
-        });
+            }
+            catch (err) {
+                done(err);
+            }
+        }).timeout(10000);
      
     });
 

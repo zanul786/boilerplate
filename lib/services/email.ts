@@ -32,7 +32,7 @@ export class EmailService {
       this.transporter.sendMail( mailOptions, (error, info) => { 
         if (error) { 
           console.log(`error: ${error}`); 
-          reject(error)
+          resolve(error)
         } 
         console.log(`Message Sent ${info.response}`);
         resolve(info.response);

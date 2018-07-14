@@ -7,7 +7,7 @@
     "front": "ng build --watch",
     "build": "ng build --prod --aot",
     "tsc-watch": "tsc --project lib --watch",
-    "server": " nodemon server/index.js",
+    "server": "NODE_ENV=deployment nodemon server/index.js",
     "test": "ng test",
     "mocha-debug": "NODE_PATH=./ $(npm bin)/mocha",
     "lint": "ng lint",

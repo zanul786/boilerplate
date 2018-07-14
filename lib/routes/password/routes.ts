@@ -50,14 +50,20 @@ export class PasswordRoutes {
     }
   }
   public static async resetpassword (req: express.Request, res: express.Response, next) {
-    const host =  req.protocol+'://'+req.headers.host;
-   jwt.verify(req.params.token, PasswordRoutes.JWT_SECRET, function(err, decoded) {
+    try{
+      const host =  req.protocol+'://'+req.headers.host;
+      jwt.verify(req.params.token, PasswordRoutes.JWT_SECRET, function(err, decoded) {
         if(err){
-          console.log(err)
-        }
+          res.json(err)
+        }else{
         const email = decoded.email_id;
         res.redirect(host+'/reset?email=' + email)
+        }
       });
+    }
+    catch (error){
+      next(error)
+    }
  
   }
   public static async updatepassword (req: express.Request, res: express.Response, next) {
