@@ -9,20 +9,17 @@ export class EmailService {
     this.transporter = Nodemailer.createTransport( 
         {
           service: "Gmail",
-          // auth: {
-          //     user: process.env.GMAIL_USER, 
-          //     pass: process.env.GMAIL_PASS 
-          // } 
           auth: {
-            user:'squadc007@gmail.com', 
-            pass: 'creative_squad' 
-        }
+              user: process.env.GMAIL_USER, 
+              pass: process.env.GMAIL_PASS 
+          } 
       }
     );
   } 
-   public sendEmail = (email, link) => {
+  
+  public sendPWResetEmail = (email, link) => {
     var mailOptions = { 
-      from : 'sksanjaychopra8@gmail.com', 
+      from : process.env.PW_RESET_FROM, 
       to : email, 
       subject : 'Reset Password', 
       text: link
@@ -34,8 +31,8 @@ export class EmailService {
           console.log(`error: ${error}`); 
           resolve(error)
         } 
-        console.log(`Message Sent ${info.response}`);
-        resolve(info.response);
+         info.status = 'Ok';
+        resolve(info);
       });
         
     });

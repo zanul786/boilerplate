@@ -15,19 +15,38 @@ chai.use(chaiHttp);
 
 describe('forgotpassword API Tests', function () {
 
-    describe('POST /forgotpassword', function () {
-        it('should send email',  function (done) {
+    describe('POST /send-reset-email', function () {
+        it('should send email to valid email id present in db',  function (done) {
             try {
                 chai.request('http://localhost:8000')
-                    .post('/api/password/forgotpassword')
+                    .post('/api/auth/send-reset-email')
                     .send({
-                            email: 'sanjaynextpage@gmail.com'
+                            email: 'squadc007@gmail.com'
                     })
                     .end(function (err, res) {
                         if (err){
                             done(err);
                         }
-                        assert.equal(res.status, 200);
+                        assert.equal(res.body.status, 'Ok');
+                        done()
+                    })
+                }
+                catch (err) {
+                    done(err);
+                }
+            }).timeout(10000);  
+        it('should not send email to invalid email id',  function (done) {
+            try {
+                chai.request('http://localhost:8000')
+                    .post('/api/auth/send-reset-email')
+                    .send({
+                            email: 'squadc07@gmail.com'
+                    })
+                    .end(function (err, res) {
+                        if (err){
+                            done(err);
+                        }
+                        assert.equal(res.error.status, 409);
                         done()
                     })
                 }
@@ -37,17 +56,18 @@ describe('forgotpassword API Tests', function () {
             }).timeout(10000);  
     });
 
-    describe('POST /resetpassword', function () {
-        it('should  verify  token',  function (done) {
+    describe('POST /reset-password', function () {
+        it('should  verify  token if token is not expired',  function (done) {
             try {
                 var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60),email_id:'sanjaynextpage@gmail.com'},  'i am a tea pot');
                 chai.request('http://localhost:8000')
-                    .get('/api/password/resetpassword/'+token)
+                    .get('/api/auth/reset-password/'+token)
+                    .redirects(0)
                     .end(function (err, res) {
                         if (err){
                             done(err);
                         }
-                        assert.equal(res.body.name, undefined);
+                        assert.equal(res.redirect, true);
                         done()
                     })
                 }
@@ -55,18 +75,18 @@ describe('forgotpassword API Tests', function () {
                     done(err);
                 }
         }); 
-        it('should not verify  token',  function (done) {
+        it('should not verify  token if its expired',  function (done) {
             try {
-                var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60),email_id:'sanjaynextpage@gmail.com'},  'i am a tea po');
+                var token = jwt.sign({exp: Math.floor(1514745000000 / 1000) + (60 * 60),email_id:'sanjaynextpage@gmail.com'},  'i am a tea pot');
                 chai.request('http://localhost:8000')
-                    .get('/api/password/resetpassword/'+token)
+                    .get('/api/auth/reset-password/'+token)
                     .end(function (err, res) {
                         if (err){
                             done(err);
                         }
                         
-                        const response = JSON.parse(res.text)
-                        assert.equal(response.name, 'JsonWebTokenError');
+                        const response = JSON.parse(res.error.text) 
+                        assert.equal(response.name, 'TokenExpiredError');
                         done()
                     })
                 }
@@ -77,20 +97,21 @@ describe('forgotpassword API Tests', function () {
     });
 
 
-    describe('POST /updatepassword', function () {
+    describe('POST /update-password', function () {
         it('should update password',  function (done) {
             try{
                 chai.request('http://localhost:8000')
-                    .post('/api/password/updatepassword')
+                    .post('/api/auth/update-password')
                     .send({
-                            email: 'sanjaynextpage@gmail.com',
+                            email: 'squadc007@gmail.com',
                             password:'11111'
                     })
                     .end(function (err, res) {
                         if (err){
                             done(err);
                         }
-                        assert.equal(res.status, 500);
+                        should.exist(res.body.name);
+                        res.body.name.should.be.an('object');
                         done()
                     })
             }
@@ -98,10 +119,10 @@ describe('forgotpassword API Tests', function () {
                 done(err);
             }
         });
-        it('should return error for invalid email id',  function (done) {
+        it('should return error for invalid email id which is not registered',  function (done) {
            try{
             chai.request('http://localhost:8000')
-                .post('/api/password/updatepassword')
+                .post('/api/auth/update-password')
                 .send({
                         email: 'sanjayxxxxx@gmail.com',
                         password:'11111'
@@ -110,7 +131,7 @@ describe('forgotpassword API Tests', function () {
                     if (err){
                         done(err);
                     }
-                    assert.equal(res.status, 500);
+                    assert.equal(res.body.message, 'Email is not registerd');
                     done()
                 })
             }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BPAuthService } from '../auth.service';
+import { MatSnackBar } from '@angular/material';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
@@ -11,7 +12,7 @@ export class ResetPasswordComponent implements OnInit {
   resetForm: FormGroup;
   email:string;
   reset: boolean = false;
-  constructor(private fb: FormBuilder, private route: ActivatedRoute,private authService: BPAuthService) {
+  constructor(public snackBar: MatSnackBar,private fb: FormBuilder, private route: ActivatedRoute,private authService: BPAuthService) {
       this.route.queryParams.subscribe(params => {
         this.email = params['email'];
       })
@@ -19,7 +20,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit() {}
-  get cpwd() {
+  get confirmPassword() {
     return this.resetForm.get('confirmpassword');
    }
   createForm() {
@@ -32,10 +33,10 @@ export class ResetPasswordComponent implements OnInit {
   passwordConfirming(c: AbstractControl): any {
         if(!c.parent || !c) return;
         const pwd = c.parent.get('password');
-        const cpwd= c.parent.get('confirmpassword')
+        const confirmPassword= c.parent.get('confirmpassword')
 
-        if(!pwd || !cpwd) return ;
-        if (pwd.value !== cpwd.value) {
+        if(!pwd || !confirmPassword) return ;
+        if (pwd.value !== confirmPassword.value) {
             return { invalid: true };
 
     }
@@ -43,12 +44,14 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit() {
     this.authService.resetPassword(this.resetForm.value).subscribe(
-      (result) => {
-          this.email = result.email;
+      (user) => {
+          this.email = user.email;
           this.reset = true;
       },
       (err) => {
-        console.log(err)
+        this.snackBar.open(err.message, '', {
+          duration: 2000,
+        })
       }
     );
   }

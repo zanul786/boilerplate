@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
      if(email){
       this.authService.sendLink(email).subscribe(
         (result) => {
-          this.snackBar.open('Reset Link is sent successfully, pLease check your email!', '', {
+          this.snackBar.open('Reset Link is sent successfully, Please check your email!', '', {
             duration: 2000,
           })
         },
