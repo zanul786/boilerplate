@@ -52,7 +52,7 @@ export class RegisterComponent {
       })
       .catch((err) => {
         console.log(err);
-     });
+    });
   }
 
   submit = (form) => {

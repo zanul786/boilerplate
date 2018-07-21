@@ -10,7 +10,7 @@ class StripeService {
         this.stripe = new Stripe(config.STRIPE_SECRET_KEY);
     }
 
-    public createCustomer = async (loggerInUserDetails, chargeData) => {
+    public createCustomer = async ({loggerInUserDetails, chargeData}) => {
         const customer = await this.stripe.customers.create({
             metadata: {
                 Id: loggerInUserDetails.id,
@@ -22,7 +22,7 @@ class StripeService {
         return customer;
     }
 
-    public createChargeWithSavedCard = async (loggerInUserDetails, chargeData) => {
+    public createChargeWithSavedCard = async ({loggerInUserDetails, chargeData}) => {
         const charge = await this.stripe.charges.create({
             amount: chargeData.amount,
             currency: chargeData.currency,
@@ -41,7 +41,7 @@ class StripeService {
         return charge;
     }
 
-    public createChargeWithSource = async (loggerInUserDetails, chargeData, source) => {
+    public createChargeWithSource = async ({loggerInUserDetails, chargeData, source}) => {
         const charge = await this.stripe.charges.create({
             amount: chargeData.amount,
             currency: chargeData.currency,
@@ -51,7 +51,7 @@ class StripeService {
         return charge;
     }
 
-    public createSource = async (loggerInUserDetails, chargeData) =>{
+    public createSource = async ({loggerInUserDetails, chargeData}) =>{
         const customer = await this.stripe.customers.createSource(loggerInUserDetails.stripeCustomerId, {
             source: chargeData.token.id
         });
@@ -63,7 +63,14 @@ class StripeService {
         return cardList;
     }
 
-    public createPayment = async(loggerInUserDetails, charge) => {
+    public deleteCard = async ({ loggerInUserDetails , chargeData })=>{
+        const confirmation = await this.stripe.customers.deleteCard(
+            loggerInUserDetails.stripeCustomerId,
+            chargeData.source);
+        return confirmation;;
+    }
+
+    public createPayment = async({loggerInUserDetails, charge}) => {
         const payment =  await Payment.create({
             'amount': charge.amount,
             'status': charge.status,
@@ -75,7 +82,8 @@ class StripeService {
             'email': loggerInUserDetails.email,
             'currency': charge.currency,
             'failureCode': charge.failure_code, // When status is success, it will be NULL.
-            'failureMessage': charge.failure_message // When status is success, it will be NULL.
+            'failureMessage': charge.failure_message, // When status is success, it will be NULL.
+            'gateWay' : 'stride'
         });
         return payment;
     }

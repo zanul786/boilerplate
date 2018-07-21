@@ -9,6 +9,9 @@ export class PaymentRouter {
         this.router.post('/charge/savedCard', PaymentRoutes.chargeSavedCard);
         this.router.get('/getSavedCard', PaymentRoutes.retrieveSavedCard);
         this.router.post('/charge/guestCard', PaymentRoutes.chargeGuestCard);
+        this.router.post('/savePayPalPayment', PaymentRoutes.savePayPalPayment);
+        this.router.post('/saveCard', PaymentRoutes.saveCard);
+        this.router.post('/deleteCard', PaymentRoutes.deleteCard);
     }
 }
 

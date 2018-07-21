@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import {
   Component,
   AfterViewInit,
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
 
 import { PaymentService } from './payment.service';
 import { UserService } from './../user.service';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -34,10 +35,12 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   savedCards: any;
   savedCardArray: any;
   isLoggedIn : boolean
+  step : number = 0;
 
   constructor(private cd: ChangeDetectorRef,
     private paymentService: PaymentService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -66,6 +69,11 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
     this.card.mount(this.cardInfo.nativeElement);
     this.card.addEventListener('change', this.cardHandler);
   }
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
 
   ngOnDestroy() {
     this.card.removeEventListener('change', this.cardHandler);
@@ -136,9 +144,11 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   async showMessageToUser(res){
     if (res.status === 'succeeded') {
-      Swal('Success!','Payment Successful.','success')
+      Swal('Success!','Payment Successful.','success');
+      this.router.navigate(['']);
     } else {
       Swal('Error!' , res.failureMessage , 'error')
+      this.router.navigate(['']);
     }
   }
 
@@ -153,10 +163,12 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
           this.isSavedCardAvailable = true;
           this.savedCards = cards;
         } else {
+          this.step = 1;
           this.isSavedCardAvailable = false;
         }
       });
     } else {
+      this.step = 1;
       this.isSavedCardAvailable = false;
     }
   }
