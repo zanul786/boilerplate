@@ -117,7 +117,7 @@ export class AuthRoutes {
 
 
   public static async sendResetEmail (req: express.Request, res: express.Response, next) {
-    
+
     try {
       const emailService = new EmailService();
       const email  = req.body.email;
@@ -136,28 +136,25 @@ export class AuthRoutes {
 
 
       const link = `${host}/api/password/reset-password/`;
-      var token = jsonwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60),email_id:email},  AuthRoutes.JWT_SECRET);
+      const token = jsonwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), email_id: email},  AuthRoutes.JWT_SECRET);
       const callbackUrl = `<p>Click <a href="${link}${token}">here</a> to reset your password</p>`;
       const result = await emailService.sendPWResetEmail(email, callbackUrl);
-      res.json(result)
-      
+      res.json(result);
     } catch (error) {
       next(error);
     }
   }
   public static async resetPassword (req: express.Request, res: express.Response, next) {
-    try{
+    try {
       const host  = `${req.protocol}://${process.env.HOST}`;
       const decoded = await jsonwt.verify(req.params.token, AuthRoutes.JWT_SECRET);
-      if(decoded){
+      if (decoded) {
         const email = decoded.email_id;
-        res.redirect(301,`${host}/reset?email=${email}`)
+        res.redirect(301, `${host}/reset?email=${email}`);
       }
+    } catch (error) {
+      next(error);
     }
-    catch (error){
-      next(error)
-    }
- 
   }
   public static async updatePassword (req: express.Request, res: express.Response, next) {
     try {
@@ -179,8 +176,7 @@ export class AuthRoutes {
 
       const hashedPassword = await bcrypt.hash(password, 8);
       const user = await User.update({ email, password: hashedPassword});
-    
-      if(user){
+      if (user) {
         res.json(existingUser);
       }
     } catch (error) {

@@ -10,13 +10,13 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ResetPasswordComponent implements OnInit {
   resetForm: FormGroup;
-  email:string;
-  reset: boolean = false;
-  constructor(public snackBar: MatSnackBar,private fb: FormBuilder, private route: ActivatedRoute,private authService: BPAuthService) {
+  email: string;
+  reset = false;
+  constructor(public snackBar: MatSnackBar, private fb: FormBuilder, private route: ActivatedRoute,private authService: BPAuthService) {
       this.route.queryParams.subscribe(params => {
         this.email = params['email'];
-      })
-      this.createForm()
+      });
+      this.createForm();
   }
 
   ngOnInit() {}
@@ -30,12 +30,12 @@ export class ResetPasswordComponent implements OnInit {
       confirmpassword: [null, [Validators.required, this.passwordConfirming]]
     });
   }
-  passwordConfirming(c: AbstractControl): any {
-        if(!c.parent || !c) return;
-        const pwd = c.parent.get('password');
-        const confirmPassword= c.parent.get('confirmpassword')
+  passwordConfirming(confirmedPassword: AbstractControl): any {
+        if(!confirmedPassword.parent || !confirmedPassword) return;
+        const pwd = confirmedPassword.parent.get('password');
+        const confirmPassword = confirmedPassword.parent.get('confirmpassword');
 
-        if(!pwd || !confirmPassword) return ;
+        if (!pwd || !confirmPassword) return ;
         if (pwd.value !== confirmPassword.value) {
             return { invalid: true };
 
@@ -51,7 +51,7 @@ export class ResetPasswordComponent implements OnInit {
       (err) => {
         this.snackBar.open(err.message, '', {
           duration: 2000,
-        })
+        });
       }
     );
   }

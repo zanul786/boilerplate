@@ -5,6 +5,7 @@ const EmailService = require("../server/services/email");
 var assert = chai.assert;
 const server = require('../server/index');
 const jwt  = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const {
     db
 } = require('../server/db');
@@ -43,9 +44,7 @@ describe('forgotpassword API Tests', function () {
                             email: 'squadc07@gmail.com'
                     })
                     .end(function (err, res) {
-                        if (err){
-                            done(err);
-                        }
+                    //    it's always returning res
                         assert.equal(res.error.status, 409);
                         done()
                     })
@@ -59,7 +58,8 @@ describe('forgotpassword API Tests', function () {
     describe('POST /reset-password', function () {
         it('should  verify  token if token is not expired',  function (done) {
             try {
-                var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60),email_id:'sanjaynextpage@gmail.com'},  'i am a tea pot');
+                const email = 'sanjaynextpage@gmail.com';
+                var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60),email_id:email},  'i am a tea pot');
                 chai.request('http://localhost:8000')
                     .get('/api/auth/reset-password/'+token)
                     .redirects(0)
@@ -68,6 +68,7 @@ describe('forgotpassword API Tests', function () {
                             done(err);
                         }
                         assert.equal(res.redirect, true);
+                        assert.equal(res.headers.location, 'http://localhost:8000/reset?email='+email)
                         done()
                     })
                 }
@@ -81,10 +82,7 @@ describe('forgotpassword API Tests', function () {
                 chai.request('http://localhost:8000')
                     .get('/api/auth/reset-password/'+token)
                     .end(function (err, res) {
-                        if (err){
-                            done(err);
-                        }
-                        
+                        //    it's always returning res
                         const response = JSON.parse(res.error.text) 
                         assert.equal(response.name, 'TokenExpiredError');
                         done()
@@ -110,9 +108,11 @@ describe('forgotpassword API Tests', function () {
                         if (err){
                             done(err);
                         }
-                        should.exist(res.body.name);
-                        res.body.name.should.be.an('object');
-                        done()
+                        bcrypt.compare('11111', res.body.password, function(err, res) {
+                            assert.equal(res, true);
+                            done()
+                        });
+                        
                     })
             }
             catch (err) {
@@ -128,9 +128,7 @@ describe('forgotpassword API Tests', function () {
                         password:'11111'
                 })
                 .end(function (err, res) {
-                    if (err){
-                        done(err);
-                    }
+                        // it's always returning res
                     assert.equal(res.body.message, 'Email is not registerd');
                     done()
                 })
