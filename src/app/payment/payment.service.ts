@@ -5,7 +5,6 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class PaymentService {
   BASE_URL = `/api/payment`;
-
   constructor(private http: HttpClient) { }
 
   createCharge = (chargeData) => {
@@ -20,7 +19,6 @@ export class PaymentService {
       .map((res: any) => res);
   }
 
-
   chargeGuestCard = (chargeData) => {
     const PATH = `${this.BASE_URL}/charge/guestCard`;
     return this.http.post(PATH, { chargeData })
@@ -30,27 +28,25 @@ export class PaymentService {
   retrieveSavedCard = () => {
     const PATH = `${this.BASE_URL}/getSavedCard`;
     return this.http.get(PATH)
-      .map((res:any) => res);
+      .map((res: any) => res);
   }
 
   savePaypalPayment = (paypalResponse) => {
     const PATH = `${this.BASE_URL}/savePayPalPayment`;
-    return this.http.post(PATH, {paypalResponse})
-      .map((res:any) => res);
+    return this.http.post(PATH, { paypalResponse })
+      .map((res: any) => res);
   }
 
   saveCard = (chargeData) => {
     const PATH = `${this.BASE_URL}/saveCard`;
-    return this.http.post(PATH, {chargeData})
-      .map((res:any) => res);
+    return this.http.post(PATH, { chargeData })
+      .map((res: any) => res);
   }
 
   deleteCard = (chargeData) => {
     const PATH = `${this.BASE_URL}/deleteCard`;
-    return this.http.post(PATH, {chargeData})
-      .map((res:any) => res);
+    return this.http.post(PATH, { chargeData })
+      .map((res: any) => res);
   }
-
-
 
 }

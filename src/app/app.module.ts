@@ -20,6 +20,10 @@ import { PaymentService } from './payment/payment.service';
 import { ProfileModule } from './profile/profile.module';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { FaqComponent } from './faq/faq.component';
+import { OfficeHoursComponent } from './office-hours/office-hours.component';
+import { AmazingTimePickerModule } from 'amazing-time-picker'; 
+import { MinutesToHourPipe } from './pipes/MinutesToHourPipe';
+
 
 const ROUTES = [
   {
@@ -31,11 +35,14 @@ const ROUTES = [
     component: FaqComponent
   }
 ];
+
 @NgModule({
   declarations: [
     AppComponent,
     AboutUsComponent,
     FaqComponent,
+    OfficeHoursComponent,
+    MinutesToHourPipe,
   ],
   imports: [
     MaterialModule,
@@ -47,6 +54,7 @@ const ROUTES = [
     PaymentModule,
     ProfileModule,
     ReactiveFormsModule,
+    AmazingTimePickerModule,
     RouterModule.forRoot(ROUTES)
   ],
   providers: [
