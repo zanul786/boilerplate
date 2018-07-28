@@ -3,6 +3,8 @@ import * as status from 'http-status';
 
 import { AdminRouter } from './admin/admin';
 import { AuthRouter } from './auth';
+import { PasswordRouter } from './password';
+
 import { PaymentRouter } from './payment';
 import { TwilioRouter } from './twilio';
 import { Middleware } from '../services/middleware';
@@ -13,6 +15,8 @@ export const api = express.Router();
 api.use(middleware.jwtDecoder);
 
 api.use('/admin', new AdminRouter().router);
+
+api.use('/password', new PasswordRouter().router);
 
 api.use('/auth', new AuthRouter().router);
 

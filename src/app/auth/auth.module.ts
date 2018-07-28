@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { MaterialModule } from '../material.module';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SocialLoginModule, AuthServiceConfig } from 'angular4-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider } from 'angular4-social-login';
@@ -13,6 +14,8 @@ import { BPAuthService } from './auth.service';
 import { HomeComponent } from '../home/home.component';
 import { AuthGuard } from './auth-guard.service';
 import { environment } from '../../environments/environment';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 // Configs
 
 const config = new AuthServiceConfig([
@@ -34,6 +37,10 @@ const ROUTES = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'reset',
+    component: ResetPasswordComponent
   }
 ];
 
@@ -42,11 +49,15 @@ const ROUTES = [
     MaterialModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     SocialLoginModule.initialize(config),
     RouterModule.forRoot(ROUTES)
   ],
-  declarations: [RegisterComponent, LoginComponent, HomeComponent],
+  declarations: [RegisterComponent, LoginComponent, HomeComponent, ForgotPasswordComponent, ResetPasswordComponent],
+  entryComponents: [
+    ForgotPasswordComponent
+  ],
   providers: [BPAuthService, AuthGuard]
 })
 export class AuthModule { }

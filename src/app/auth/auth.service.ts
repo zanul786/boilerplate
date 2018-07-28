@@ -7,7 +7,6 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class BPAuthService {
   BASE_URL = `/api/auth`;
-
   constructor(private http: HttpClient) { }
   me = () => {
     const PATH = `${this.BASE_URL}/me`;
@@ -41,9 +40,18 @@ export class BPAuthService {
       .catch((error: any) => Observable.throw(error.error || 'Server error'));
   }
 
-  changePassword = (passwordDetails) =>{
-    const PATH = `${this.BASE_URL}/changePassword`;
-    return this.http.post(PATH, { passwordDetails })
+  sendLink = (email) => {
+    let route =  '/send-reset-email';
+    const PATH = `${this.BASE_URL}/${route}`;
+    return this.http.post(PATH, { email })
+      .map((res: any) => res)
+      .catch((error: any) => Observable.throw(error.error || 'Server error'));
+  }
+
+  resetPassword =(data) =>{
+    let route =  '/update-password';
+    const PATH = `${this.BASE_URL}/${route}`;
+    return this.http.post(PATH, { data })
       .map((res: any) => res)
       .catch((error: any) => Observable.throw(error.error || 'Server error'));
   }
