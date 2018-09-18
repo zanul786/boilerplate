@@ -10,6 +10,7 @@ import {
 import { NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-manage-payment-tokens',
   templateUrl: './manage-payment-tokens.component.html',
@@ -22,6 +23,7 @@ export class ManagePaymentTokensComponent implements OnInit {
   @ViewChild('cardInfo') cardInfo: ElementRef;
 
   card: any;
+  elements : any;
   emailAddress:any;
   cardHandler = this.onChange.bind(this);
   error: string;
@@ -35,6 +37,7 @@ export class ManagePaymentTokensComponent implements OnInit {
     private paymentService:PaymentService) { }
 
   ngOnInit() {
+    this.elements  = this.paymentService.stripe.elements();
     this.getSavedCardDetails();
   }
 
@@ -55,7 +58,7 @@ export class ManagePaymentTokensComponent implements OnInit {
       }
     };
 
-    this.card = elements.create('card', { style });
+    this.card = this.elements.create('card', { style });
     this.card.mount(this.cardInfo.nativeElement);
     this.card.addEventListener('change', this.cardHandler);
   }
@@ -94,7 +97,7 @@ export class ManagePaymentTokensComponent implements OnInit {
 
 
   async onSubmit(form: NgForm) {
-    const { token, error } = await stripe.createToken(this.card);
+    const { token, error } = await this.paymentService.stripe.createToken(this.card);
     if (error) { 
       Swal('Error!',error,'error')
     } else {
