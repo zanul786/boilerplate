@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SocialLoginModule, AuthServiceConfig } from 'angular4-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider } from 'angular4-social-login';
 // Services
-import { BPAuthService } from './auth.service';
+import { BPAuthService } from './bp-auth.service';
 import { HomeComponent } from '../home/home.component';
 import { AuthGuard } from './auth-guard.service';
 import { environment } from '../../environments/environment';
@@ -24,6 +24,10 @@ const config = new AuthServiceConfig([
     provider: new GoogleLoginProvider(environment.GOOGLE_ID)
   }
 ]);
+export function provideConfig() {
+  return config;
+}
+
 const ROUTES = [
   {
     path: 'login',
@@ -51,13 +55,15 @@ const ROUTES = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    SocialLoginModule.initialize(config),
+    SocialLoginModule,
     RouterModule.forRoot(ROUTES)
   ],
   declarations: [RegisterComponent, LoginComponent, HomeComponent, ForgotPasswordComponent, ResetPasswordComponent],
   entryComponents: [
     ForgotPasswordComponent
   ],
-  providers: [BPAuthService, AuthGuard]
+  providers: [BPAuthService, AuthGuard, {
+    provide: AuthServiceConfig,
+    useFactory: provideConfig}]
 })
 export class AuthModule { }

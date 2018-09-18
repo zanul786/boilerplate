@@ -17,6 +17,10 @@
     <mat-form-field class="col-xs-12">
       <input [(ngModel)]="user.password" matInput type="password" name="password" placeholder="Password">
     </mat-form-field>
+    <section class="col-xs-12">
+        <mat-checkbox color="primary" [(ngModel)]="user.subscribedToNewsletter" name="subscribedToNewsletter" [checked]="true" >Subscribe to Newsletter</mat-checkbox>
+    </section>
+
     <div>
       <button type="submit" mat-raised-button color="primary">Register</button>
     </div>

@@ -1,5 +1,5 @@
 
-import { BPAuthService } from '../auth/auth.service';
+import { BPAuthService } from '../auth/bp-auth.service';
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 
@@ -10,10 +10,10 @@ import Swal from 'sweetalert2';
 })
 export class ChangePasswordComponent implements OnInit {
 
-  public currentPassword: string = '';
-	public password: string = '';
-  public repeatPassword: string = '';
-  public errorMessage: string =  '';
+  public currentPassword = '';
+  public password = '';
+  public repeatPassword = '';
+  public errorMessage = '';
 
   constructor(private authService: BPAuthService) {
   }
@@ -21,27 +21,27 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit() {
   }
 
-  public changePassword(){
-    if(this.password !== this.repeatPassword){
+  public changePassword() {
+    if (this.password !== this.repeatPassword) {
       this.errorMessage = 'New Password & Confirm Password does not match!';
-    }else{
+    } else {
       this.errorMessage = '';
       const passwordDetails = {
-        'newPassword' : this.password,
+        'newPassword': this.password,
         'currentPassword': this.currentPassword
       };
       this.authService.changePassword(passwordDetails)
-      .subscribe(
-        ({ token, user }) => {
-          this.currentPassword = '';
-          this.password = '';
-          this.repeatPassword = '';
-          Swal('Success!','Password Updated Successfully!','success');
-        },
-        (err) => {
-          this.errorMessage = err.message;
-        }
-      );
+        .subscribe(
+          ({ token, user }) => {
+            this.currentPassword = '';
+            this.password = '';
+            this.repeatPassword = '';
+            Swal('Success!', 'Password Updated Successfully!', 'success');
+          },
+          (err) => {
+            this.errorMessage = err.message;
+          }
+        );
     }
   }
 }

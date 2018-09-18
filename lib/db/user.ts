@@ -31,6 +31,10 @@ export const UserSchema = mongoose.Schema({
       type: String,
       required: true
     }
+  },
+  subscribedToNewsletter: {
+    type: Boolean,
+    default: true
   }
 }, { timestamps: true });
 

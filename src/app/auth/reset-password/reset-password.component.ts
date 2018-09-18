@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BPAuthService } from '../auth.service';
+import { BPAuthService } from '../bp-auth.service';
 import { MatSnackBar } from '@angular/material';
 @Component({
   selector: 'app-reset-password',
@@ -12,32 +12,36 @@ export class ResetPasswordComponent implements OnInit {
   resetForm: FormGroup;
   email: string;
   reset = false;
-  constructor(public snackBar: MatSnackBar, private fb: FormBuilder, private route: ActivatedRoute,private authService: BPAuthService) {
-      this.route.queryParams.subscribe(params => {
-        this.email = params['email'];
-      });
-      this.createForm();
+  constructor(public snackBar: MatSnackBar, private fb: FormBuilder, private route: ActivatedRoute, private authService: BPAuthService) {
+    this.route.queryParams.subscribe(params => {
+      this.email = params['email'];
+    });
+    this.createForm();
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   get confirmPassword() {
     return this.resetForm.get('confirmpassword');
-   }
+  }
   createForm() {
     this.resetForm = this.fb.group({
-      email: [this.email, Validators.required ],
-      password: [null, Validators.required ],
+      email: [this.email, Validators.required],
+      password: [null, Validators.required],
       confirmpassword: [null, [Validators.required, this.passwordConfirming]]
     });
   }
   passwordConfirming(confirmedPassword: AbstractControl): any {
-        if(!confirmedPassword.parent || !confirmedPassword) return;
-        const pwd = confirmedPassword.parent.get('password');
-        const confirmPassword = confirmedPassword.parent.get('confirmpassword');
+    if (!confirmedPassword.parent || !confirmedPassword) {
+      return;
+    }
+    const pwd = confirmedPassword.parent.get('password');
+    const confirmPassword = confirmedPassword.parent.get('confirmpassword');
 
-        if (!pwd || !confirmPassword) return ;
-        if (pwd.value !== confirmPassword.value) {
-            return { invalid: true };
+    if (!pwd || !confirmPassword) {
+      return;
+    }
+    if (pwd.value !== confirmPassword.value) {
+      return { invalid: true };
 
     }
   }
@@ -45,8 +49,8 @@ export class ResetPasswordComponent implements OnInit {
   onSubmit() {
     this.authService.resetPassword(this.resetForm.value).subscribe(
       (user) => {
-          this.email = user.email;
-          this.reset = true;
+        this.email = user.email;
+        this.reset = true;
       },
       (err) => {
         this.snackBar.open(err.message, '', {

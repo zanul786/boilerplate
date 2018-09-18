@@ -8,8 +8,8 @@ import { UserService } from '../user.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  private user: SocialUser;
-  private loggedIn: boolean;
+  public user: SocialUser;
+  public loggedIn: boolean;
   constructor( private router: Router, private userService: UserService, private authService: AuthService) { }
 
   ngOnInit() {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BPAuthService } from '../auth.service';
+import { BPAuthService } from '../bp-auth.service';
 import { UserService } from '../../user.service';
 import { AuthService } from 'angular4-social-login';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angular4-social-login';

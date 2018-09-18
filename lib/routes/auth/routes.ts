@@ -19,7 +19,7 @@ import { getJwtPayload } from './helpers';
 export class AuthRoutes {
   static JWT_SECRET = process.env.JWT_SECRET || 'i am a tea pot';
 
-  public static async register (req: express.Request, res: express.Response, next) {
+  public static async register(req: express.Request, res: express.Response, next) {
     try {
 
       const { email, password, oauth, name } = req.body.user;
@@ -38,13 +38,13 @@ export class AuthRoutes {
       }
 
       const hashedPassword = await bcrypt.hash(password, 8);
-      const user = await User.create({ email, password: hashedPassword, name, oauth});
-      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
+      const user = await User.create({ email, password: hashedPassword, name, oauth });
+      res.json({ token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
     }
   }
-  public static async registerOauth (req: express.Request, res: express.Response, next) {
+  public static async registerOauth(req: express.Request, res: express.Response, next) {
     try {
 
       const { email, oauth, name } = req.body.user;
@@ -59,13 +59,13 @@ export class AuthRoutes {
       }
 
       const user = await User.create({ email, oauth, name });
-      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
+      res.json({ token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
     }
   }
 
-  public static async login (req: express.Request, res: express.Response, next) {
+  public static async login(req: express.Request, res: express.Response, next) {
     try {
       const { email, password } = req.body.user;
 
@@ -87,12 +87,12 @@ export class AuthRoutes {
         throw new StandardError({ message: 'Invalid email or password', code: status.CONFLICT });
       }
 
-      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
+      res.json({ token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
     }
   }
-  public static async loginOauth (req: express.Request, res: express.Response, next) {
+  public static async loginOauth(req: express.Request, res: express.Response, next) {
     try {
       const { email, oauth } = req.body.user;
 
@@ -109,18 +109,18 @@ export class AuthRoutes {
       if (!user.oauth) {
         throw new StandardError({ message: `You have not registered through ${user.oauth} !`, code: status.CONFLICT });
       }
-      res.json({ token: jwt.encode(getJwtPayload(user),  AuthRoutes.JWT_SECRET), user });
+      res.json({ token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET), user });
     } catch (error) {
       next(error);
     }
   }
 
 
-  public static async sendResetEmail (req: express.Request, res: express.Response, next) {
+  public static async sendResetEmail(req: express.Request, res: express.Response, next) {
 
     try {
       const emailService = new EmailService();
-      const email  = req.body.email;
+      const email = req.body.email;
 
       if (!email) {
         throw new StandardError({ message: 'Email is requried ', code: status.UNPROCESSABLE_ENTITY });
@@ -132,11 +132,11 @@ export class AuthRoutes {
         throw new StandardError({ message: 'Invalid email ', code: status.CONFLICT });
       }
 
-      const host  = `${req.protocol}://${process.env.HOST}`;
+      const host = `${req.protocol}://${process.env.HOST}`;
 
 
       const link = `${host}/api/password/reset-password/`;
-      const token = jsonwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), email_id: email},  AuthRoutes.JWT_SECRET);
+      const token = jsonwt.sign({ exp: Math.floor(Date.now() / 1000) + (60 * 60), email_id: email }, AuthRoutes.JWT_SECRET);
       const callbackUrl = `<p>Click <a href="${link}${token}">here</a> to reset your password</p>`;
       const result = await emailService.sendPWResetEmail(email, callbackUrl);
       res.json(result);
@@ -144,9 +144,9 @@ export class AuthRoutes {
       next(error);
     }
   }
-  public static async resetPassword (req: express.Request, res: express.Response, next) {
+  public static async resetPassword(req: express.Request, res: express.Response, next) {
     try {
-      const host  = `${req.protocol}://${process.env.HOST}`;
+      const host = `${req.protocol}://${process.env.HOST}`;
       const decoded = await jsonwt.verify(req.params.token, AuthRoutes.JWT_SECRET);
       if (decoded) {
         const email = decoded.email_id;
@@ -156,7 +156,7 @@ export class AuthRoutes {
       next(error);
     }
   }
-  public static async updatePassword (req: express.Request, res: express.Response, next) {
+  public static async updatePassword(req: express.Request, res: express.Response, next) {
     try {
 
       const { email, password } = req.body;
@@ -175,12 +175,31 @@ export class AuthRoutes {
       }
 
       const hashedPassword = await bcrypt.hash(password, 8);
-      const user = await User.update({ email, password: hashedPassword});
+      const user = await User.update({ email, password: hashedPassword });
       if (user) {
         res.json(existingUser);
       }
     } catch (error) {
       next(error);
     }
+  }
+
+  public static async changePassword(req, res, next) {
+    try {
+      const { currentPassword, newPassword } = req.body.passwordDetails;
+      const match = await bcrypt.compare(currentPassword, req.user.password);
+      if (!match) {
+        throw new StandardError({ message: 'Invalid password', code: status.CONFLICT });
+      } else {
+        const user = await User.findById(req.user._id);
+        const hashedPassword = await bcrypt.hash(newPassword, 8);
+        user.password = hashedPassword;
+        await user.save();
+        res.json({ token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET), user });
+      }
+    } catch (error) {
+      next(error);
+    }
+
   }
 }

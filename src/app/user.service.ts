@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { BPAuthService } from './auth/auth.service';
+import { BPAuthService } from './auth/bp-auth.service';
 
 @Injectable()
 export class UserService implements OnInit {

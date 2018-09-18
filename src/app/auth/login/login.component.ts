@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { BPAuthService } from '../auth.service';
+import { BPAuthService } from '../bp-auth.service';
 import { UserService } from '../../user.service';
 import { AuthService } from 'angular4-social-login';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angular4-social-login';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {MatDialog, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
 @Component({
   selector: 'app-login',
@@ -15,13 +15,13 @@ import { ForgotPasswordComponent } from '../forgot-password/forgot-password.comp
 })
 export class LoginComponent implements OnInit {
   constructor(public snackBar: MatSnackBar,
-              private authService: BPAuthService,
-              private socialAuthService: AuthService,
-              private userService: UserService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private http: HttpClient,
-              public dialog: MatDialog) { }
+    private authService: BPAuthService,
+    private socialAuthService: AuthService,
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private http: HttpClient,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -32,25 +32,25 @@ export class LoginComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result!=undefined){
+      if (result !== undefined) {
         this.sendResetPasswordLink(result);
       }
     });
   }
 
-  sendResetPasswordLink(email){
-     if(email){
+  sendResetPasswordLink(email) {
+    if (email) {
       this.authService.sendLink(email).subscribe(
         (result) => {
           this.snackBar.open('Reset Link is sent successfully, Please check your email!', '', {
             duration: 2000,
-          })
+          });
         },
         (err) => {
           this.handleError(err);
         }
       );
-     }
+    }
   }
   public socialSignIn(socialPlatform: string) {
     let socialPlatformProvider;
@@ -60,19 +60,19 @@ export class LoginComponent implements OnInit {
 
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
-        const newuser = { };
+        const newuser = {};
         newuser['email'] = userData.email;
         newuser['oauth'] = socialPlatform.toUpperCase();
         this.authService.login(newuser)
-        .subscribe(
-          ({ token, user }) => {
+          .subscribe(
+            ({ token, user }) => {
               return this.userService.setUser({ user, token }),
-              this.success();
-          },
-          (err) => {
-            this.handleError(err);
-          }
-        );
+                this.success();
+            },
+            (err) => {
+              this.handleError(err);
+            }
+          );
       })
       .catch((err) => {
         console.log(err);
@@ -83,18 +83,18 @@ export class LoginComponent implements OnInit {
     this.authService.login(form.value)
       .subscribe(({ token, user }) => {
         return this.userService.setUser({ user, token }),
-        this.success();
+          this.success();
       },
-      (err) => {
-        this.handleError(err);
-      });
+        (err) => {
+          this.handleError(err);
+        });
   }
 
   success = () => {
     this.snackBar.open('Logged In', '', {
       duration: 2000,
     }),
-    this.router.navigate(['/home']);
+      this.router.navigate(['/home']);
   }
 
   handleError = (err) => {
