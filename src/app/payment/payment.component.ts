@@ -29,6 +29,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   card: any;
   emailAddress:any;
+  elements:any;
   cardHandler = this.onChange.bind(this);
   error: string;
   savedCardString: string;
@@ -45,6 +46,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoggedIn = this.userService.isAuthenticated();
+    this.elements  = this.paymentService.stripe.elements();
     this.getSavedCardDetails();
   };
 
@@ -65,7 +67,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     };
 
-    this.card = elements.create('card', { style });
+    this.card = this.elements.create('card', { style });
     this.card.mount(this.cardInfo.nativeElement);
     this.card.addEventListener('change', this.cardHandler);
   }
@@ -91,7 +93,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   async onSubmit(form: NgForm) {
     
-    const { token, error } = await stripe.createToken(this.card);
+    const { token, error } = await this.paymentService.stripe.createToken(this.card);
     if (error) { 
       Swal('Error!',error,'error')
     } else {
