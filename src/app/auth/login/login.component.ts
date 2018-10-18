@@ -56,12 +56,15 @@ export class LoginComponent implements OnInit {
     let socialPlatformProvider;
     if (socialPlatform === 'google') {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+    } else if (socialPlatform === 'facebook') {
+      socialPlatformProvider = FacebookLoginProvider.PROVIDER_ID;
     }
 
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
         const newuser = {};
         newuser['email'] = userData.email;
+
         newuser['oauth'] = socialPlatform.toUpperCase();
         this.authService.login(newuser)
           .subscribe(

@@ -20,15 +20,17 @@ export class RegisterComponent {
     password?: string;
   } = { name: {} };
   constructor(public snackBar: MatSnackBar,
-              private authService: BPAuthService,
-              private socialAuthService: AuthService ,
-              private userService: UserService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+    private authService: BPAuthService,
+    private socialAuthService: AuthService,
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private router: Router) { }
   public socialSignIn(socialPlatform: string) {
     let socialPlatformProvider;
     if (socialPlatform === 'google') {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+    } else if (socialPlatform === 'facebook') {
+      socialPlatformProvider = FacebookLoginProvider.PROVIDER_ID;
     }
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => {
@@ -39,20 +41,20 @@ export class RegisterComponent {
         this.user['name']['last'] = last;
         this.user['oauth'] = socialPlatform.toUpperCase();
         this.authService
-            .register(this.user)
-            .subscribe(
-              ({ user, token }) => {
-                this.success();
-                return this.userService.setUser({ user, token });
-              },
-              (err) => {
-                this.handleError(err);
-              }
-            );
+          .register(this.user)
+          .subscribe(
+            ({ user, token }) => {
+              this.success();
+              return this.userService.setUser({ user, token });
+            },
+            (err) => {
+              this.handleError(err);
+            }
+          );
       })
       .catch((err) => {
         console.log(err);
-    });
+      });
   }
 
   submit = (form) => {
@@ -63,16 +65,16 @@ export class RegisterComponent {
         this.success();
         return this.userService.setUser({ user, token });
       },
-      (err) => {
-        this.handleError(err);
-      });
+        (err) => {
+          this.handleError(err);
+        });
   }
 
   success = () => {
     this.snackBar.open('Registered Successfully', '', {
       duration: 2000,
     }),
-    this.router.navigate(['/home']);
+      this.router.navigate(['/home']);
   }
 
   handleError = (err) => {

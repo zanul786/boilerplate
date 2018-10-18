@@ -22,6 +22,10 @@ const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
     provider: new GoogleLoginProvider(environment.GOOGLE_ID)
+  },
+  {
+    id: FacebookLoginProvider.PROVIDER_ID,
+    provider: new FacebookLoginProvider(environment.FACEBOOK_ID)
   }
 ]);
 export function provideConfig() {
@@ -64,6 +68,7 @@ const ROUTES = [
   ],
   providers: [BPAuthService, AuthGuard, {
     provide: AuthServiceConfig,
-    useFactory: provideConfig}]
+    useFactory: provideConfig
+  }]
 })
 export class AuthModule { }
