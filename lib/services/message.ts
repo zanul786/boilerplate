@@ -4,8 +4,8 @@ import * as dotenv from 'dotenv';
 dotenv.load();
 
 const twilioNumber = process.env.TWILIONUMBER;
-const accountSid   = process.env.ACCOUNTSID;
-const authToken    = process.env.AUTHTOKEN;
+const accountSid = process.env.ACCOUNTSID;
+const authToken = process.env.AUTHTOKEN;
 
 export class MessageService {
   client: Twilio;
@@ -15,13 +15,13 @@ export class MessageService {
 
   public sendMessages = (number, message) => {
     const textContent = {
-        body: message,
-        to: number,
-        from: twilioNumber
+      body: message,
+      to: number,
+      from: twilioNumber
     };
 
-   return this.client.messages.create(textContent)
-    .then((res) => res);
+    return this.client.messages.create(textContent)
+      .then((res) => res);
   }
   // Validate E164 format
   public validE164 = (num) => {

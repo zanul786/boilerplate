@@ -10,6 +10,7 @@ import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
 import { UserService } from './user.service';
 import { CartService } from './cart.service';
+import { SocketService } from './chat/socket.service';
 import { AuthModule } from './auth/auth.module';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -21,8 +22,10 @@ import { ProfileModule } from './profile/profile.module';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { FaqComponent } from './faq/faq.component';
 import { OfficeHoursComponent } from './office-hours/office-hours.component';
-import { AmazingTimePickerModule } from 'amazing-time-picker'; 
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { MinutesToHourPipe } from './pipes/MinutesToHourPipe';
+import { ChatComponent } from './chat/chat.component';
+import { ChatService } from './chat.service';
 
 
 const ROUTES = [
@@ -33,6 +36,10 @@ const ROUTES = [
   {
     path: 'faq',
     component: FaqComponent
+  },
+  {
+    path: 'chat',
+    component: ChatComponent
   }
 ];
 
@@ -43,6 +50,7 @@ const ROUTES = [
     FaqComponent,
     OfficeHoursComponent,
     MinutesToHourPipe,
+    ChatComponent,
   ],
   imports: [
     MaterialModule,
@@ -61,6 +69,8 @@ const ROUTES = [
     UserService,
     PaymentService,
     CartService,
+    SocketService,
+    ChatService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

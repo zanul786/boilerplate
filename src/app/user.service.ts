@@ -36,6 +36,10 @@ export class UserService implements OnInit {
     this.setToken(token);
   }
 
+  getUser = () => {
+    return this.user;
+  }
+
   unsetUser = () => {
     this.user = null;
     this.state = 'NOT_LOGGED_IN';

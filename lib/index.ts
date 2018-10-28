@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
 import * as bodyParser from 'body-parser';
+import * as socketio from 'socket.io';
 
 // Get DB
 import * as models from './db';
@@ -10,6 +11,10 @@ import * as dotenv from 'dotenv';
 
 // Get our API routes
 import { api } from './routes/api';
+import { chatService } from './services/chat';
+
+export let io;
+
 try {
 
   const app = express();
@@ -41,10 +46,17 @@ try {
    * Create HTTP server.
    */
   const server = http.createServer(app);
-  /**
-   * Listen on provided port, on all network interfaces.
-   */
+  chatService.establishSocket(server);
+  // io = require('socket.io')(server);
+  const user = new Map();
+
+  // io.on('connection', function (socket) {
+  //   const chatService = new ChatService(io, socket, user);
+  // });
+
+
   server.listen(port, () => console.log(`API running on localhost:${port}`));
+
   module.exports = app;
 
 } catch (error) {

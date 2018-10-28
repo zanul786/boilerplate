@@ -28,15 +28,15 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('cardInfo') cardInfo: ElementRef;
 
   card: any;
-  emailAddress:any;
-  elements:any;
+  emailAddress: any;
+  elements: any;
   cardHandler = this.onChange.bind(this);
   error: string;
   savedCardString: string;
   savedCards: any;
   savedCardArray: any;
-  isLoggedIn : boolean
-  step : number = 0;
+  isLoggedIn: boolean;
+  step = 0;
 
   constructor(private cd: ChangeDetectorRef,
     private paymentService: PaymentService,
@@ -46,9 +46,9 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoggedIn = this.userService.isAuthenticated();
-    this.elements  = this.paymentService.stripe.elements();
+    this.elements = this.paymentService.stripe.elements();
     this.getSavedCardDetails();
-  };
+  }
 
   ngAfterViewInit() {
     const style = {
@@ -92,26 +92,25 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   async onSubmit(form: NgForm) {
-    
+
     const { token, error } = await this.paymentService.stripe.createToken(this.card);
-    if (error) { 
-      Swal('Error!',error,'error')
+    if (error) {
+      Swal('Error!', error, 'error');
     } else {
-      if (this.isLoggedIn){
+      if (this.isLoggedIn) {
         const chargeData = {
           'token': token,
           'amount': 2000,
           'currency': 'usd',
           'saveThisCard': this.saveThisCard
         };
-    
         this.paymentService
           .createCharge(chargeData)
           .subscribe(
-            res => {this.showMessageToUser(res)},
-            error => {this.stripePaymentError(error)},
-          )
-      } else{
+          res => { this.showMessageToUser(res); },
+          error => { this.stripePaymentError(error); },
+        );
+      } else {
         const chargeData = {
           'currency': 'usd',
           'amount': 2000,
@@ -119,13 +118,13 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
           'email': this.emailAddress
         };
         this.paymentService
-        .chargeGuestCard(chargeData)
-        .subscribe(
-          res => {this.showMessageToUser(res)},
-          error => {this.stripePaymentError(error)},
-        )
+          .chargeGuestCard(chargeData)
+          .subscribe(
+          res => { this.showMessageToUser(res); },
+          error => { this.stripePaymentError(error); },
+        );
       }
-        
+
     }
   }
 
@@ -133,29 +132,29 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
     const chargeData = {
       'currency': 'usd',
       'amount': 2000,
-      'source':this.savedCards[cardIndex].id
+      'source': this.savedCards[cardIndex].id
     };
 
     this.paymentService
       .createSavedCharge(chargeData)
       .subscribe(
-        res => {this.showMessageToUser(res)},
-        error => {this.stripePaymentError(error)},
-      )
+      res => { this.showMessageToUser(res); },
+      error => { this.stripePaymentError(error); },
+    );
   }
 
-  async showMessageToUser(res){
+  async showMessageToUser(res) {
     if (res.status === 'succeeded') {
-      Swal('Success!','Payment Successful.','success');
+      Swal('Success!', 'Payment Successful.', 'success');
       this.router.navigate(['']);
     } else {
-      Swal('Error!' , res.failureMessage , 'error')
+      Swal('Error!', res.failureMessage, 'error');
       this.router.navigate(['']);
     }
   }
 
-  async stripePaymentError({error}){
-    Swal('Error!' , error.message , 'error')
+  async stripePaymentError({ error }) {
+    Swal('Error!', error.message, 'error');
   }
 
   async getSavedCardDetails() {

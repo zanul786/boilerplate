@@ -11,7 +11,7 @@ export class BPAuthService {
   me = () => {
     const PATH = `${this.BASE_URL}/me`;
     return this.http.get(PATH)
-      .map((res: any) => res.data);
+      .map((res: any) => res);
   }
 
   register = (user) => {

@@ -200,6 +200,18 @@ export class AuthRoutes {
     } catch (error) {
       next(error);
     }
-
   }
+
+  public static async me(req, res, next) {
+    try {
+      if (!req.user) {
+        res.sendStatus(401);
+      } else {
+        res.json(req.user);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }

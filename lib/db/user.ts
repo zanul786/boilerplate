@@ -12,7 +12,7 @@ export const UserSchema = mongoose.Schema({
   oauth: {
     type: String,
     enum: ['FACEBOOK', 'GOOGLE', 'LINKEDIN'],
-    required: function() { return !this.password; }
+    required: function () { return !this.password; }
   },
   roles: [String],
   stripeCustomerId: {
@@ -38,8 +38,8 @@ export const UserSchema = mongoose.Schema({
   }
 }, { timestamps: true });
 
-function isPasswordRequired () { return !this.oauth; }
-UserSchema.pre('save', function(next) {
+function isPasswordRequired() { return !this.oauth; }
+UserSchema.pre('save', function (next) {
   const email = this.get('profile.email');
   if (email) {
     this.profile.email = this.profile.email.toLowerCase();
@@ -58,10 +58,10 @@ UserSchema.pre('save', function(next) {
   next();
 });
 
-UserSchema.virtual('fullName').get(function() {
+UserSchema.virtual('fullName').get(function () {
   return `${this.name.first} ${this.name.last}`;
 });
 
-UserSchema.virtual('isAdmin').get(function() {
+UserSchema.virtual('isAdmin').get(function () {
   return this.roles.includes('Admin');
 });
