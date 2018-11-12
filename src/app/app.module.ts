@@ -26,6 +26,8 @@ import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { MinutesToHourPipe } from './pipes/MinutesToHourPipe';
 import { ChatComponent } from './chat/chat.component';
 import { ChatService } from './chat.service';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 
 const ROUTES = [
@@ -40,6 +42,10 @@ const ROUTES = [
   {
     path: 'chat',
     component: ChatComponent
+  },
+  {
+    path: 'file',
+    component: FileUploadComponent
   }
 ];
 
@@ -51,6 +57,7 @@ const ROUTES = [
     OfficeHoursComponent,
     MinutesToHourPipe,
     ChatComponent,
+    FileUploadComponent,
   ],
   imports: [
     MaterialModule,
@@ -63,6 +70,7 @@ const ROUTES = [
     ProfileModule,
     ReactiveFormsModule,
     AmazingTimePickerModule,
+    FileUploadModule,
     RouterModule.forRoot(ROUTES)
   ],
   providers: [

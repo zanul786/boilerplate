@@ -4,6 +4,8 @@ import * as path from 'path';
 import * as http from 'http';
 import * as bodyParser from 'body-parser';
 import * as socketio from 'socket.io';
+import * as busboy from 'connect-busboy';
+import * as busboyBodyParser from 'busboy-body-parser';
 
 // Get DB
 import * as models from './db';
@@ -20,10 +22,12 @@ try {
   const app = express();
 
   dotenv.config();
-
+  app.use(busboy());
   // Parsers for POST data
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.use(busboyBodyParser());
 
   // Point static path to dist
   app.use(express.static(path.join(__dirname, '../dist')));

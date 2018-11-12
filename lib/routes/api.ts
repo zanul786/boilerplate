@@ -10,6 +10,7 @@ import { TwilioRouter } from './twilio';
 import { Middleware } from '../services/middleware';
 import { EmailRouter } from './email';
 import { ChatRouter } from './chat';
+import { FileRouter } from './file';
 
 const middleware = new Middleware();
 
@@ -25,6 +26,7 @@ api.use('/payment', new PaymentRouter().router);
 api.use('/twilio', new TwilioRouter().router);
 api.use('/email', new EmailRouter().router);
 api.use('/chat', new ChatRouter().router);
+api.use('/file', new FileRouter().router);
 
 api.use((err, req, res, next) => {
   res.status(err.code || status.INTERNAL_SERVER_ERROR).send(err);
