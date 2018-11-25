@@ -3,6 +3,7 @@ import { UserSchema } from './user';
 import { PaymentSchema } from './payment';
 import { ChatSchema } from './chat';
 import { MessageSchema } from './message';
+import { ReviewSchema } from './review';
 
 const PATH = process.env.DB_PATH || 'mongodb://localhost/test';
 
@@ -17,3 +18,4 @@ export const User = mongoose.model('User', UserSchema);
 export const Payment = mongoose.model('Payment', PaymentSchema);
 export const Message = mongoose.model('Message', MessageSchema);
 export const Chat = mongoose.model('Chat', ChatSchema);
+export const Review = mongoose.model('Review', ReviewSchema);
