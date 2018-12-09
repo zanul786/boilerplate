@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
@@ -28,7 +29,8 @@ import { ChatComponent } from './chat/chat.component';
 import { ChatService } from './chat.service';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { FileUploadModule } from 'ng2-file-upload';
-
+import { ReviewComponent } from './review/review.component';
+import { ReviewService } from './review.service';
 
 const ROUTES = [
   {
@@ -46,6 +48,10 @@ const ROUTES = [
   {
     path: 'file',
     component: FileUploadComponent
+  },
+  {
+    path: 'review',
+    component: ReviewComponent
   }
 ];
 
@@ -58,6 +64,7 @@ const ROUTES = [
     MinutesToHourPipe,
     ChatComponent,
     FileUploadComponent,
+    ReviewComponent,
   ],
   imports: [
     MaterialModule,
@@ -71,7 +78,8 @@ const ROUTES = [
     ReactiveFormsModule,
     AmazingTimePickerModule,
     FileUploadModule,
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES),
+    NgbModule.forRoot()
   ],
   providers: [
     UserService,
@@ -79,6 +87,7 @@ const ROUTES = [
     CartService,
     SocketService,
     ChatService,
+    ReviewService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
