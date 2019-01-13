@@ -31,5 +31,6 @@ api.use('/file', new FileRouter().router);
 api.use('/review', new ReviewRouter().router);
 
 api.use((err, req, res, next) => {
+  console.log(err)
   res.status(err.code || status.INTERNAL_SERVER_ERROR).send(err);
 });

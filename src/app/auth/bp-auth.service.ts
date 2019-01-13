@@ -41,7 +41,7 @@ export class BPAuthService {
   }
 
   sendLink = (email) => {
-    let route = '/send-reset-email';
+    const route = '/send-reset-email';
     const PATH = `${this.BASE_URL}/${route}`;
     return this.http.post(PATH, { email })
       .map((res: any) => res)
@@ -49,7 +49,7 @@ export class BPAuthService {
   }
 
   resetPassword = (data) => {
-    let route = '/update-password';
+    const route = '/update-password';
     const PATH = `${this.BASE_URL}/${route}`;
     return this.http.post(PATH, { data })
       .map((res: any) => res)
@@ -61,5 +61,12 @@ export class BPAuthService {
     return this.http.post(PATH, { passwordDetails })
       .map((res: any) => res)
       .catch((error: any) => Observable.throw(error.error || 'Server error'));
+  }
+
+  unsubscribe = (id) => {
+    const PATH = `${this.BASE_URL}/${id}/unsubscribe`;
+    return this.http.put(PATH, { user: { subscribedToNewsletter: false } })
+      .map(res => res)
+      .catch((error: any) => Observable.throw(error.error || 'Server Error'));
   }
 }

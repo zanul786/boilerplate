@@ -16,6 +16,8 @@ import { AuthGuard } from './auth-guard.service';
 import { environment } from '../../environments/environment';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
+
 // Configs
 
 const config = new AuthServiceConfig([
@@ -49,6 +51,10 @@ const ROUTES = [
   {
     path: 'reset',
     component: ResetPasswordComponent
+  },
+  {
+    path: ':id/unsubscribe',
+    component: UnsubscribeComponent
   }
 ];
 
@@ -62,7 +68,7 @@ const ROUTES = [
     SocialLoginModule,
     RouterModule.forRoot(ROUTES)
   ],
-  declarations: [RegisterComponent, LoginComponent, HomeComponent, ForgotPasswordComponent, ResetPasswordComponent],
+  declarations: [RegisterComponent, LoginComponent, HomeComponent, ForgotPasswordComponent, ResetPasswordComponent, UnsubscribeComponent],
   entryComponents: [
     ForgotPasswordComponent
   ],

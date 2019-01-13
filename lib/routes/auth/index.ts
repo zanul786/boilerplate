@@ -13,6 +13,7 @@ export class AuthRouter {
     this.router.get('/reset-password/:token', AuthRoutes.resetPassword);
     this.router.post('/update-password', AuthRoutes.updatePassword);
     this.router.get('/me', AuthRoutes.me);
+    this.router.put('/:id/unsubscribe', AuthRoutes.unsubscribe);
 
   }
 }
