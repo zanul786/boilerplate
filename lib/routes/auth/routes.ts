@@ -183,7 +183,7 @@ export class AuthRoutes {
       }
 
       const hashedPassword = await bcrypt.hash(password, 8);
-      const user = await User.update({ email, password: hashedPassword });
+      const user = await User.update({ email }, { password: hashedPassword }, { new: true, context: 'query' });
       if (user) {
         res.json(existingUser);
       }
