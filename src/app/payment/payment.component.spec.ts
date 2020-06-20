@@ -34,7 +34,7 @@ describe('PaymentComponent', () => {
         AuthService
       ],
       declarations: [ PaymentComponent ],
-      imports: [MaterialModule, FormsModule, RouterModule, BrowserModule, HttpClientModule, 
+      imports: [MaterialModule, FormsModule, RouterModule, BrowserModule, HttpClientModule,
                   HttpClientTestingModule ]
     })
     .compileComponents();
@@ -44,7 +44,7 @@ describe('PaymentComponent', () => {
     fixture = TestBed.createComponent(PaymentComponent);
     component = fixture.componentInstance;
     component.isSavedCardAvailable = true;
-    component.savedCards = [ {brand : 'visa',last4 : '4242',exp_month : '3',exp_year : '20' }];
+    component.savedCards = [ {brand : 'visa', last4 : '4242', exp_month : '3', exp_year : '20' }];
 
     fixture.detectChanges();
   });
@@ -53,11 +53,11 @@ describe('PaymentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should see saved cards tab',()=>{
+  it('should see saved cards tab', () => {
     component.isLoggedIn = true;
-    let  savedElement= fixture.debugElement.query(By.css('mat-tab-label-0-0'));
+    const  savedElement = fixture.debugElement.query(By.css('mat-tab-label-0-0'));
     const name = savedElement.nativeElement;
     expect(name.innerText).toEqual('saved cards');
-  })
+  });
 
 });

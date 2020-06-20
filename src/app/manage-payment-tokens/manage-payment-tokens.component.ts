@@ -5,7 +5,8 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewInit
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -16,28 +17,28 @@ import Swal from 'sweetalert2';
   templateUrl: './manage-payment-tokens.component.html',
   styleUrls: ['./manage-payment-tokens.component.css']
 })
-export class ManagePaymentTokensComponent implements OnInit {
+export class ManagePaymentTokensComponent implements OnInit, AfterViewInit, OnDestroy {
   saveThisCard = false;
   isSavedCardAvailable = false;
-  
+
   @ViewChild('cardInfo') cardInfo: ElementRef;
 
   card: any;
-  elements : any;
-  emailAddress:any;
+  elements: any;
+  emailAddress: any;
   cardHandler = this.onChange.bind(this);
   error: string;
   savedCardString: string;
   savedCards: any;
   savedCardArray: any;
-  isLoggedIn : boolean
-  step : number = 0;
+  isLoggedIn: boolean;
+  step = 0;
 
   constructor(private changeDetector: ChangeDetectorRef,
-    private paymentService:PaymentService) { }
+    private paymentService: PaymentService) { }
 
   ngOnInit() {
-    this.elements  = this.paymentService.stripe.elements();
+    this.elements = this.paymentService.stripe.elements();
     this.getSavedCardDetails();
   }
 
@@ -79,16 +80,16 @@ export class ManagePaymentTokensComponent implements OnInit {
 
   async deleteCard(cardIndex) {
     const chargeData = {
-      'source':this.savedCards[cardIndex].id
+      'source': this.savedCards[cardIndex].id
     };
     this.paymentService
       .deleteCard(chargeData)
       .subscribe(
         res => {
-          Swal('Success!','Card Deleted Successfully!','success');
+          Swal('Success!', 'Card Deleted Successfully!', 'success');
           this.getSavedCardDetails();
         }
-      )
+      );
   }
 
   setStep(index: number) {
@@ -98,16 +99,16 @@ export class ManagePaymentTokensComponent implements OnInit {
 
   async onSubmit(form: NgForm) {
     const { token, error } = await this.paymentService.stripe.createToken(this.card);
-    if (error) { 
-      Swal('Error!',error,'error')
+    if (error) {
+      Swal('Error!', error, 'error');
     } else {
-        const chargeData = {
-          'token': token
-        };
-        this.paymentService.saveCard(chargeData).subscribe(cards=>{
-          Swal('Success!','Card Saved Successfully!','success');
-          this.getSavedCardDetails();
-        }); 
+      const chargeData = {
+        'token': token
+      };
+      this.paymentService.saveCard(chargeData).subscribe(cards => {
+        Swal('Success!', 'Card Saved Successfully!', 'success');
+        this.getSavedCardDetails();
+      });
 
     }
   }

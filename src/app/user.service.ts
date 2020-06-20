@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { BPAuthService } from './auth/bp-auth.service';
 
 @Injectable()
-export class UserService implements OnInit {
+export class UserService {
   JWT_LOCALSTORAGE_KEY: 'jwt';
   user: {
     name: {
@@ -13,37 +11,24 @@ export class UserService implements OnInit {
     email: string;
   };
 
-  state: 'LOGGED_IN' | 'NOT_LOGGED_IN';
+  constructor() {
 
-  constructor(private authService: BPAuthService) {
-
-  }
-
-  ngOnInit = () => {
-    this.authService.me()
-      .subscribe(({ user, token }) => {
-        if (user) {
-          this.setUser(user);
-        } else {
-          this.unsetUser();
-        }
-      });
   }
 
   setUser = ({ user, token }) => {
     this.user = user;
-    this.state = 'LOGGED_IN';
+    window.localStorage.setItem('user', JSON.stringify(this.user));
     this.setToken(token);
   }
 
   getUser = () => {
-    return this.user;
+    return JSON.parse(window.localStorage.getItem('user'));
   }
 
   unsetUser = () => {
     this.user = null;
-    this.state = 'NOT_LOGGED_IN';
-    this.setToken(null);
+    window.localStorage.removeItem('user');
+    window.localStorage.removeItem(this.JWT_LOCALSTORAGE_KEY);
   }
 
   setToken = (token) => {
@@ -57,5 +42,4 @@ export class UserService implements OnInit {
   isAuthenticated = (): boolean => {
     return !!this.getToken();
   }
-
 }

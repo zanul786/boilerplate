@@ -1,9 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "../server",
+    "outDir": "../server/lib",
     "sourceMap": true,
     "allowJs": true,
+    "skipLibCheck": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -14,14 +15,25 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "services": ["./services/*"],
-      "lib/*": ["./*"],
-      "db/*": ["./db/*"],
-      "interfaces": ["./interfaces"]
+      "services": [
+        "./services/*"
+      ],
+      "lib/*": [
+        "./*"
+      ],
+      "db/*": [
+        "./db/*"
+      ],
+      "interfaces": [
+        "./interfaces"
+      ]
     },
     "lib": [
       "es2017",
       "dom"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
