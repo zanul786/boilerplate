@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 declare let paypal: any;
 
 @Component({
-  selector: 'paypal-root',
+  selector: 'app-paypal-root',
   templateUrl: './paypal.component.html',
   styleUrls: ['./paypal.component.css']
 })
@@ -16,15 +16,15 @@ export class PaypalComponent implements AfterViewChecked {
   constructor(
     private router: Router,
     private paymentService: PaymentService,
-  ){};
+  ) { }
 
-  public didPaypalScriptLoad: boolean = false;
-  public loading: boolean = true;
+  public didPaypalScriptLoad = false;
+  public loading = true;
 
-  public paymentAmount: number = 20;
+  public paymentAmount = 20;
   public paypalConfig: any = {
     env: `${environment.paypalEnvironment}`,
-    
+
     client: {
       sandbox: `${environment.paypalSandboxId}`,
       production: `${environment.paypalLiveId}`,
@@ -42,27 +42,27 @@ export class PaypalComponent implements AfterViewChecked {
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then((payment) => {
         this.paymentService.savePaypalPayment(payment)
-        .subscribe(res => {
-          Swal('Success!','Payment Successful.','success');
-          this.router.navigate(['']);
-        });
+          .subscribe(res => {
+            Swal('Success!', 'Payment Successful.', 'success');
+            this.router.navigate(['']);
+          });
       });
     },
-    onCancel: function(data, actions) {
-      Swal('Error!' , 'Payment Unsuccessful' , 'error')
+    onCancel: function (data, actions) {
+      Swal('Error!', 'Payment Unsuccessful', 'error');
     },
-    onError: function(err) {
-      Swal('Error!' , 'Payment Unsuccessful' , 'error')
+    onError: function (err) {
+      Swal('Error!', 'Payment Unsuccessful', 'error');
     }
 
   };
-  
+
   public ngAfterViewChecked(): void {
     const elementExists: boolean = !!document.getElementById('paypal-button');
-    if(elementExists && !this.didPaypalScriptLoad) {
+    if (elementExists && !this.didPaypalScriptLoad) {
       this.loadPaypalScript().then(() => {
-          this.loading = false;
-          paypal.Button.render(this.paypalConfig, '#paypal-button');
+        this.loading = false;
+        paypal.Button.render(this.paypalConfig, '#paypal-button');
       });
     }
   }

@@ -143,7 +143,7 @@ export class AuthRoutes {
       const host = `${req.protocol}://${process.env.HOST}`;
 
 
-      const link = `${host}/api/password/reset-password/`;
+      const link = `${host}/api/auth/reset-password/`;
       const token = jsonwt.sign({ exp: Math.floor(Date.now() / 1000) + (60 * 60), email_id: email }, AuthRoutes.JWT_SECRET);
       const callbackUrl = `<p>Click <a href="${link}${token}">here</a> to reset your password</p>`;
       const result = await emailService.sendPWResetEmail(email, callbackUrl);
@@ -155,10 +155,11 @@ export class AuthRoutes {
   public static async resetPassword(req: express.Request, res: express.Response, next) {
     try {
       const host = `${req.protocol}://${process.env.HOST}`;
-      const decoded = await jsonwt.verify(req.params.token, AuthRoutes.JWT_SECRET);
+      const token = req.params.token;
+      const decoded = await jsonwt.verify(token, AuthRoutes.JWT_SECRET);
       if (decoded) {
         const email = decoded.email_id;
-        res.redirect(301, `${host}/reset?email=${email}`);
+        res.redirect(301, `${host}/reset?email=${email}&token=${token}`);
       }
     } catch (error) {
       next(error);
@@ -167,7 +168,7 @@ export class AuthRoutes {
   public static async updatePassword(req: express.Request, res: express.Response, next) {
     try {
 
-      const { email, password } = req.body;
+      const { email, password, token } = req.body;
 
       if (!email) {
         throw new StandardError({ message: 'Email is required', code: status.UNPROCESSABLE_ENTITY });
@@ -177,15 +178,37 @@ export class AuthRoutes {
         throw new StandardError({ message: 'Password is required', code: status.UNPROCESSABLE_ENTITY });
       }
 
-      const existingUser = await User.findOne({ email });
-      if (!existingUser) {
-        throw new StandardError({ message: 'Email is not registerd', code: status.CONFLICT });
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 8);
-      const user = await User.update({ email }, { password: hashedPassword }, { new: true, context: 'query' });
-      if (user) {
-        res.json(existingUser);
+      const decoded = await jsonwt.verify(token, AuthRoutes.JWT_SECRET);
+      if (decoded) {
+        const decodedemail = decoded.email_id;
+        if (decodedemail === email) {
+          const existingUser = await User.findOne({ email });
+          if (!existingUser) {
+            throw new StandardError({
+              message: 'Email is not registerd',
+              code: status.CONFLICT,
+            });
+          }
+          const hashedPassword = await bcrypt.hash(password, 8);
+          const user = await User.update(
+            { email },
+            { password: hashedPassword },
+            { new: true, context: 'query' }
+          );
+          if (user) {
+            res.json(existingUser);
+          }
+        } else {
+          throw new StandardError({
+            message: 'Email is not valid',
+            code: status.CONFLICT,
+          });
+        }
+      } else {
+        throw new StandardError({
+          message: 'Email is not found',
+          code: status.CONFLICT,
+        });
       }
     } catch (error) {
       next(error);
