@@ -5,12 +5,12 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { UserService } from './user.service';
+import { AuthUserService } from './auth.user.service';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(public userService: UserService) {}
+  constructor(public userService: AuthUserService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     request = request.clone({

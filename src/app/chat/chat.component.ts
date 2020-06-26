@@ -6,7 +6,7 @@ import { Message } from './model/message';
 import { User } from './model/user';
 import { ChatService } from './../chat.service';
 import { BPAuthService } from './../auth/bp-auth.service';
-import { UserService } from './../user.service';
+import { AuthUserService } from './../auth.user.service';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -29,7 +29,7 @@ export class ChatComponent implements OnInit {
     private socketService: SocketService,
     private chatService: ChatService,
     private authService: BPAuthService,
-    private userService: UserService
+    private userService: AuthUserService
   ) { }
 
   ngOnInit() {
