@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-<<<<<<< HEAD:src/app/auth.user.service.ts
 export class AuthUserService {
-=======
-export class UserService {
->>>>>>> f6161b596f1d1675f9f214d38f13b4067ef2b9bb:src/app/user.service.ts
   JWT_LOCALSTORAGE_KEY: 'jwt';
   user: {
     name: {
