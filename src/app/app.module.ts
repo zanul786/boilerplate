@@ -9,7 +9,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
-import { UserService } from './user.service';
+import { AuthUserService } from './auth.user.service';
 import { CartService } from './cart.service';
 import { SocketService } from './chat/socket.service';
 import { AuthModule } from './auth/auth.module';
@@ -82,7 +82,7 @@ const ROUTES = [
     NgbModule.forRoot()
   ],
   providers: [
-    UserService,
+    AuthUserService,
     PaymentService,
     CartService,
     SocketService,

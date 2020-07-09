@@ -15,7 +15,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 // Services
 import { PaymentService } from './payment.service';
-import { UserService } from './../user.service';
+import { AuthUserService } from './../auth.user.service';
 import { AuthService } from './../auth/auth.service';
 
 describe('PaymentComponent', () => {
@@ -30,21 +30,21 @@ describe('PaymentComponent', () => {
         BaseRequestOptions,
         HttpClient,
         PaymentService,
-        UserService,
+        AuthUserService,
         AuthService
       ],
-      declarations: [ PaymentComponent ],
+      declarations: [PaymentComponent],
       imports: [MaterialModule, FormsModule, RouterModule, BrowserModule, HttpClientModule,
-                  HttpClientTestingModule ]
+        HttpClientTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PaymentComponent);
     component = fixture.componentInstance;
     component.isSavedCardAvailable = true;
-    component.savedCards = [ {brand : 'visa', last4 : '4242', exp_month : '3', exp_year : '20' }];
+    component.savedCards = [{ brand: 'visa', last4: '4242', exp_month: '3', exp_year: '20' }];
 
     fixture.detectChanges();
   });
@@ -55,7 +55,7 @@ describe('PaymentComponent', () => {
 
   it('should see saved cards tab', () => {
     component.isLoggedIn = true;
-    const  savedElement = fixture.debugElement.query(By.css('mat-tab-label-0-0'));
+    const savedElement = fixture.debugElement.query(By.css('mat-tab-label-0-0'));
     const name = savedElement.nativeElement;
     expect(name.innerText).toEqual('saved cards');
   });

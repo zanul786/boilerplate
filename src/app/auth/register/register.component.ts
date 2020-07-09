@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BPAuthService } from '../bp-auth.service';
-import { UserService } from '../../user.service';
+import { AuthUserService } from '../../auth.user.service';
 import { AuthService } from 'angular4-social-login';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angular4-social-login';
 import { MatSnackBar } from '@angular/material';
@@ -22,7 +22,7 @@ export class RegisterComponent {
   constructor(public snackBar: MatSnackBar,
     private authService: BPAuthService,
     private socialAuthService: AuthService,
-    private userService: UserService,
+    private userService: AuthUserService,
     private route: ActivatedRoute,
     private router: Router) { }
   public socialSignIn(socialPlatform: string) {

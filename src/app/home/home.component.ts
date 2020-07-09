@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, SocialUser } from 'angular4-social-login';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../user.service';
+import { AuthUserService } from '../auth.user.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -10,7 +10,7 @@ import { UserService } from '../user.service';
 export class HomeComponent implements OnInit {
   public user: SocialUser;
   public loggedIn: boolean;
-  constructor( private router: Router, private userService: UserService, private authService: AuthService) { }
+  constructor(private router: Router, private userService: AuthUserService, private authService: AuthService) { }
 
   ngOnInit() {
     this.authService.authState.subscribe((user) => {

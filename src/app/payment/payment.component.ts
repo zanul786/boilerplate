@@ -12,7 +12,7 @@ import { NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 import { PaymentService } from './payment.service';
-import { UserService } from './../user.service';
+import { AuthUserService } from './../auth.user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -40,7 +40,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(private cd: ChangeDetectorRef,
     private paymentService: PaymentService,
-    private userService: UserService,
+    private userService: AuthUserService,
     private router: Router
   ) { }
 
@@ -107,9 +107,9 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
         this.paymentService
           .createCharge(chargeData)
           .subscribe(
-          res => { this.showMessageToUser(res); },
-          error => { this.stripePaymentError(error); },
-        );
+            res => { this.showMessageToUser(res); },
+            err => { this.stripePaymentError(err); },
+          );
       } else {
         const chargeData = {
           'currency': 'usd',
@@ -120,9 +120,9 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
         this.paymentService
           .chargeGuestCard(chargeData)
           .subscribe(
-          res => { this.showMessageToUser(res); },
-          error => { this.stripePaymentError(error); },
-        );
+            res => { this.showMessageToUser(res); },
+            err => { this.stripePaymentError(err); },
+          );
       }
 
     }
@@ -138,9 +138,9 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
     this.paymentService
       .createSavedCharge(chargeData)
       .subscribe(
-      res => { this.showMessageToUser(res); },
-      error => { this.stripePaymentError(error); },
-    );
+        res => { this.showMessageToUser(res); },
+        error => { this.stripePaymentError(error); },
+      );
   }
 
   async showMessageToUser(res) {

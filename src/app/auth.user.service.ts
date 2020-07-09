@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class UserService {
+export class AuthUserService {
   JWT_LOCALSTORAGE_KEY: 'jwt';
   user: {
     name: {
