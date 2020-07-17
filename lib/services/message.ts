@@ -8,9 +8,9 @@ const accountSid = process.env.ACCOUNTSID;
 const authToken = process.env.AUTHTOKEN;
 
 export class MessageService {
-  client: Twilio;
+  client;
   constructor() {
-    this.client = new Twilio(accountSid, authToken);
+    this.client = Twilio(accountSid, authToken);
   }
 
   public sendMessages = (number, message) => {
