@@ -3,7 +3,7 @@ import { BPAuthService } from '../bp-auth.service';
 import { AuthUserService } from '../../auth.user.service';
 import { AuthService } from 'angular4-social-login';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angular4-social-login';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-register',
