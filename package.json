@@ -19,9 +19,7 @@
   "engines": {
     "node": "8.9.0"
   },
-  "pre-commit": [
-    "tslint-pre"
-  ],
+  "pre-commit": [],
   "private": true,
   "dependencies": {
     "@angular/animations": "^8.2.14",
