@@ -6,7 +6,7 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -18,14 +18,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.css']
+  styleUrls: ['./payment.component.css'],
 })
-
 export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   saveThisCard = false;
   isSavedCardAvailable = false;
 
-  @ViewChild('cardInfo') cardInfo: ElementRef;
+  @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
 
   card: any;
   emailAddress: any;
@@ -38,11 +37,12 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   isLoggedIn: boolean;
   step = 0;
 
-  constructor(private cd: ChangeDetectorRef,
+  constructor(
+    private cd: ChangeDetectorRef,
     private paymentService: PaymentService,
     private userService: AuthUserService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.isLoggedIn = this.userService.isAuthenticated();
@@ -58,13 +58,13 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
         fontSmoothing: 'antialiased',
         fontSize: '19px',
         '::placeholder': {
-          color: '#aab7c4'
-        }
+          color: '#aab7c4',
+        },
       },
       invalid: {
         color: '#fa755a',
-        iconColor: '#fa755a'
-      }
+        iconColor: '#fa755a',
+      },
     };
 
     this.card = this.elements.create('card', { style });
@@ -75,7 +75,6 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   setStep(index: number) {
     this.step = index;
   }
-
 
   ngOnDestroy() {
     this.card.removeEventListener('change', this.cardHandler);
@@ -92,55 +91,61 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   async onSubmit(form: NgForm) {
-
-    const { token, error } = await this.paymentService.stripe.createToken(this.card);
+    const { token, error } = await this.paymentService.stripe.createToken(
+      this.card
+    );
     if (error) {
       Swal('Error!', error, 'error');
     } else {
       if (this.isLoggedIn) {
         const chargeData = {
-          'token': token,
-          'amount': 2000,
-          'currency': 'usd',
-          'saveThisCard': this.saveThisCard
+          token: token,
+          amount: 2000,
+          currency: 'usd',
+          saveThisCard: this.saveThisCard,
         };
-        this.paymentService
-          .createCharge(chargeData)
-          .subscribe(
-            res => { this.showMessageToUser(res); },
-            err => { this.stripePaymentError(err); },
-          );
+        this.paymentService.createCharge(chargeData).subscribe(
+          (res) => {
+            this.showMessageToUser(res);
+          },
+          (err) => {
+            this.stripePaymentError(err);
+          }
+        );
       } else {
         const chargeData = {
-          'currency': 'usd',
-          'amount': 2000,
-          'token': token,
-          'email': this.emailAddress
+          currency: 'usd',
+          amount: 2000,
+          token: token,
+          email: this.emailAddress,
         };
-        this.paymentService
-          .chargeGuestCard(chargeData)
-          .subscribe(
-            res => { this.showMessageToUser(res); },
-            err => { this.stripePaymentError(err); },
-          );
+        this.paymentService.chargeGuestCard(chargeData).subscribe(
+          (res) => {
+            this.showMessageToUser(res);
+          },
+          (err) => {
+            this.stripePaymentError(err);
+          }
+        );
       }
-
     }
   }
 
   async createSavedCharge(cardIndex) {
     const chargeData = {
-      'currency': 'usd',
-      'amount': 2000,
-      'source': this.savedCards[cardIndex].id
+      currency: 'usd',
+      amount: 2000,
+      source: this.savedCards[cardIndex].id,
     };
 
-    this.paymentService
-      .createSavedCharge(chargeData)
-      .subscribe(
-        res => { this.showMessageToUser(res); },
-        error => { this.stripePaymentError(error); },
-      );
+    this.paymentService.createSavedCharge(chargeData).subscribe(
+      (res) => {
+        this.showMessageToUser(res);
+      },
+      (error) => {
+        this.stripePaymentError(error);
+      }
+    );
   }
 
   async showMessageToUser(res) {
@@ -159,7 +164,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   async getSavedCardDetails() {
     if (this.isLoggedIn) {
-      this.paymentService.retrieveSavedCard().subscribe(cards => {
+      this.paymentService.retrieveSavedCard().subscribe((cards) => {
         if (cards && cards.length > 0) {
           this.isSavedCardAvailable = true;
           this.savedCards = cards;
