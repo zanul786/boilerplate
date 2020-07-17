@@ -21,7 +21,7 @@ export class ManagePaymentTokensComponent
   saveThisCard = false;
   isSavedCardAvailable = false;
 
-  @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
+  @ViewChild('cardInfo') cardInfo: ElementRef;
 
   card: any;
   elements: any;
