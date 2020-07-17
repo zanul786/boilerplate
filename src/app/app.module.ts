@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { RouterModule } from '@angular/router';
-import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -71,7 +70,6 @@ const ROUTES = [
     AuthModule,
     BrowserModule,
     FormsModule,
-    HttpModule,
     RouterModule,
     PaymentModule,
     ProfileModule,
