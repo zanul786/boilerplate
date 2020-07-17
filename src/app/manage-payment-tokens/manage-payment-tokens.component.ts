@@ -6,22 +6,22 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewInit,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-manage-payment-tokens',
   templateUrl: './manage-payment-tokens.component.html',
-  styleUrls: ['./manage-payment-tokens.component.css']
+  styleUrls: ['./manage-payment-tokens.component.css'],
 })
-export class ManagePaymentTokensComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ManagePaymentTokensComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   saveThisCard = false;
   isSavedCardAvailable = false;
 
-  @ViewChild('cardInfo') cardInfo: ElementRef;
+  @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
 
   card: any;
   elements: any;
@@ -34,8 +34,10 @@ export class ManagePaymentTokensComponent implements OnInit, AfterViewInit, OnDe
   isLoggedIn: boolean;
   step = 0;
 
-  constructor(private changeDetector: ChangeDetectorRef,
-    private paymentService: PaymentService) { }
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private paymentService: PaymentService
+  ) {}
 
   ngOnInit() {
     this.elements = this.paymentService.stripe.elements();
@@ -50,13 +52,13 @@ export class ManagePaymentTokensComponent implements OnInit, AfterViewInit, OnDe
         fontSmoothing: 'antialiased',
         fontSize: '19px',
         '::placeholder': {
-          color: '#aab7c4'
-        }
+          color: '#aab7c4',
+        },
       },
       invalid: {
         color: '#fa755a',
-        iconColor: '#fa755a'
-      }
+        iconColor: '#fa755a',
+      },
     };
 
     this.card = this.elements.create('card', { style });
@@ -80,41 +82,37 @@ export class ManagePaymentTokensComponent implements OnInit, AfterViewInit, OnDe
 
   async deleteCard(cardIndex) {
     const chargeData = {
-      'source': this.savedCards[cardIndex].id
+      source: this.savedCards[cardIndex].id,
     };
-    this.paymentService
-      .deleteCard(chargeData)
-      .subscribe(
-        res => {
-          Swal('Success!', 'Card Deleted Successfully!', 'success');
-          this.getSavedCardDetails();
-        }
-      );
+    this.paymentService.deleteCard(chargeData).subscribe((res) => {
+      Swal('Success!', 'Card Deleted Successfully!', 'success');
+      this.getSavedCardDetails();
+    });
   }
 
   setStep(index: number) {
     this.step = index;
   }
 
-
   async onSubmit(form: NgForm) {
-    const { token, error } = await this.paymentService.stripe.createToken(this.card);
+    const { token, error } = await this.paymentService.stripe.createToken(
+      this.card
+    );
     if (error) {
       Swal('Error!', error, 'error');
     } else {
       const chargeData = {
-        'token': token
+        token: token,
       };
-      this.paymentService.saveCard(chargeData).subscribe(cards => {
+      this.paymentService.saveCard(chargeData).subscribe((cards) => {
         Swal('Success!', 'Card Saved Successfully!', 'success');
         this.getSavedCardDetails();
       });
-
     }
   }
 
   async getSavedCardDetails() {
-    this.paymentService.retrieveSavedCard().subscribe(cards => {
+    this.paymentService.retrieveSavedCard().subscribe((cards) => {
       if (cards && cards.length > 0) {
         this.step = 0;
         this.isSavedCardAvailable = true;
