@@ -17,7 +17,7 @@
     "tslint-fix": "tslint --fix -p ."
   },
   "engines": {
-    "node": "8.9.0"
+    "node": "10.16.0"
   },
   "pre-commit": [],
   "private": true,
@@ -62,7 +62,7 @@
     "rxjs": "^6.6.0",
     "socket.io": "2.1.1",
     "standard-error": "^1.1.0",
-    "stripe": "^8.69.0",
+    "stripe": "^8.76.0",
     "sweetalert2": "^7.20.7",
     "tslib": "^1.10.0",
     "twilio": "^3.17.0",
@@ -93,5 +93,8 @@
     "ts-node": "^6.0.3",
     "tslint": "~5.9.1",
     "typescript": "~3.8.3"
+  },
+  "browser": {
+    "crypto": false
   }
 }

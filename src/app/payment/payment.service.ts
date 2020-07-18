@@ -2,16 +2,16 @@ import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 
 @Injectable()
 export class PaymentService {
   BASE_URL = `/api/payment`;
-  stripe = new Stripe(environment.stripePublishableKey, {
-    apiVersion: '2020-03-02',
-  });
+  // stripe = Stripe(environment.stripePublishableKey, {
+  //   apiVersion: '2020-03-02',
+  // });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createCharge = (chargeData) => {
     const PATH = `${this.BASE_URL}/charge/create`;
