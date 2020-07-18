@@ -1,6 +1,6 @@
 export const visibilityPlugin = (schema) => {
   schema.path('isDeleted', { type: Boolean, default: false });
-  schema.path('isPublished', { type: Boolean, default: true });
+  schema.path('isVisible', { type: Boolean, default: true });
 
   schema
     .pre('count', addFiltersIfNotPresent)
@@ -22,8 +22,8 @@ function addFiltersIfNotPresent(next) {
     return;
   }
 
-  if (typeof this._conditions.isPublished === 'undefined') {
-    this._conditions.isPublished = true;
+  if (typeof this._conditions.isVisible === 'undefined') {
+    this._conditions.isVisible = true;
   }
 
   if (typeof this._conditions.isDeleted === 'undefined') {
@@ -32,4 +32,3 @@ function addFiltersIfNotPresent(next) {
 
   next();
 }
-
