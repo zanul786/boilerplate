@@ -7,8 +7,14 @@ import { MaterialModule } from '../material.module';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { SocialLoginModule, AuthServiceConfig } from 'angular4-social-login';
-import { GoogleLoginProvider, FacebookLoginProvider } from 'angular4-social-login';
+import {
+  SocialLoginModule,
+  SocialAuthServiceConfig,
+} from 'angularx-social-login';
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider,
+} from 'angularx-social-login';
 // Services
 import { BPAuthService } from './bp-auth.service';
 import { HomeComponent } from '../home/home.component';
@@ -17,19 +23,20 @@ import { environment } from '../../environments/environment';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 // Configs
 
-const config = new AuthServiceConfig([
+const config = [
   {
     id: GoogleLoginProvider.PROVIDER_ID,
-    provider: new GoogleLoginProvider(environment.GOOGLE_ID)
+    provider: new GoogleLoginProvider(environment.GOOGLE_ID),
   },
   {
     id: FacebookLoginProvider.PROVIDER_ID,
-    provider: new FacebookLoginProvider(environment.FACEBOOK_ID)
-  }
-]);
+    provider: new FacebookLoginProvider(environment.FACEBOOK_ID),
+  },
+];
 export function provideConfig() {
   return config;
 }
@@ -37,25 +44,25 @@ export function provideConfig() {
 const ROUTES = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
   },
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'reset',
-    component: ResetPasswordComponent
+    component: ResetPasswordComponent,
   },
   {
     path: ':id/unsubscribe',
-    component: UnsubscribeComponent
-  }
+    component: UnsubscribeComponent,
+  },
 ];
 
 @NgModule({
@@ -64,17 +71,27 @@ const ROUTES = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatFormFieldModule,
     HttpClientModule,
     SocialLoginModule,
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES),
   ],
-  declarations: [RegisterComponent, LoginComponent, HomeComponent, ForgotPasswordComponent, ResetPasswordComponent, UnsubscribeComponent],
-  entryComponents: [
-    ForgotPasswordComponent
+  declarations: [
+    RegisterComponent,
+    LoginComponent,
+    HomeComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    UnsubscribeComponent,
   ],
-  providers: [BPAuthService, AuthGuard, {
-    provide: AuthServiceConfig,
-    useFactory: provideConfig
-  }]
+  entryComponents: [ForgotPasswordComponent],
+  providers: [
+    BPAuthService,
+    AuthGuard,
+    {
+      provide: 'SocialAuthServiceConfig',
+      useFactory: provideConfig,
+    },
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}

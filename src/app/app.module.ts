@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { RouterModule } from '@angular/router';
-import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -35,24 +34,24 @@ import { ReviewService } from './review.service';
 const ROUTES = [
   {
     path: 'about-us',
-    component: AboutUsComponent
+    component: AboutUsComponent,
   },
   {
     path: 'faq',
-    component: FaqComponent
+    component: FaqComponent,
   },
   {
     path: 'chat',
-    component: ChatComponent
+    component: ChatComponent,
   },
   {
     path: 'file',
-    component: FileUploadComponent
+    component: FileUploadComponent,
   },
   {
     path: 'review',
-    component: ReviewComponent
-  }
+    component: ReviewComponent,
+  },
 ];
 
 @NgModule({
@@ -71,7 +70,6 @@ const ROUTES = [
     AuthModule,
     BrowserModule,
     FormsModule,
-    HttpModule,
     RouterModule,
     PaymentModule,
     ProfileModule,
@@ -79,7 +77,7 @@ const ROUTES = [
     AmazingTimePickerModule,
     FileUploadModule,
     RouterModule.forRoot(ROUTES),
-    NgbModule.forRoot()
+    NgbModule,
   ],
   providers: [
     AuthUserService,
@@ -91,9 +89,9 @@ const ROUTES = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

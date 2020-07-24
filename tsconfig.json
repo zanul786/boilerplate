@@ -1,6 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "module": "esnext",
     "outDir": "./dist",
     "sourceMap": true,
     "allowJs": false,
@@ -8,7 +11,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -16,5 +19,8 @@
       "es2017",
       "dom"
     ]
+  },
+  "angularCompilerOptions": {
+    "preserveWhitespaces": false
   }
 }

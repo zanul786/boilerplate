@@ -1,13 +1,12 @@
-import * as Stripe from 'stripe';
 import { config } from './../config';
 
 import { User, Payment } from './../db/index';
 
 class StripeService {
-    stripe: Stripe;
+    stripe;
 
     constructor() {
-        this.stripe = new Stripe(config.STRIPE_SECRET_KEY);
+        this.stripe = require('stripe')(config.STRIPE_SECRET_KEY);
     }
 
     public createCustomer = async ({ loggerInUserDetails, chargeData }) => {

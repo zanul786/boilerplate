@@ -7,23 +7,22 @@ const URL = '/api/file/upload';
 @Component({
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.css']
+  styleUrls: ['./file-upload.component.css'],
 })
 export class FileUploadComponent implements OnInit {
   public uploader: FileUploader = null;
-
-  constructor() { }
+  filename: any;
+  constructor() {}
 
   ngOnInit() {
     this.setupFileUploader();
   }
 
-
   private setupFileUploader(): void {
     this.uploader = new FileUploader({
       url: URL,
       method: 'POST',
-      autoUpload: false
+      autoUpload: false,
     });
 
     this.uploader.onCompleteItem = (item, response, status) => {
@@ -38,5 +37,4 @@ export class FileUploadComponent implements OnInit {
   public upload(): void {
     this.uploader.uploadAll();
   }
-
 }
