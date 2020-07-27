@@ -15,12 +15,12 @@ const API_URL = `${environment.apiUrl}review`;
 
 @Injectable()
 export class ReviewService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  public getAll(data?: any): Observable<any> {
+  public getAll(data?: any): Observable<{ conversations: any[] }> {
     return this.http
       .get(API_URL, { params: data })
-      .pipe(catchError(this.handleError));
+      .catch(this.handleError);
   }
 
   public getOne(documentId: string): Observable<any> {
