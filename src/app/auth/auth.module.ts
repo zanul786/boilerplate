@@ -90,8 +90,20 @@ const ROUTES = [
     AuthGuard,
     {
       provide: 'SocialAuthServiceConfig',
-      useFactory: provideConfig,
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.GOOGLE_ID),
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(environment.FACEBOOK_ID),
+          },
+        ],
+      } as SocialAuthServiceConfig,
     },
   ],
 })
-export class AuthModule {}
+export class AuthModule { }
