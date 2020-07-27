@@ -17,10 +17,10 @@ const API_URL = `${environment.apiUrl}review`;
 export class ReviewService {
   constructor(private http: HttpClient) { }
 
-  public getAll(data?: any): Observable<{ conversations: any[] }> {
+  public getAll(data?: any): Observable<any> {
     return this.http
       .get(API_URL, { params: data })
-      .catch(this.handleError);
+      .pipe(catchError(this.handleError));
   }
 
   public getOne(documentId: string): Observable<any> {
