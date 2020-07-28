@@ -15,7 +15,7 @@ const API_URL = `${environment.apiUrl}review`;
 
 @Injectable()
 export class ReviewService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public getAll(data?: any): Observable<any> {
     return this.http
