@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BPAuthService } from '../bp-auth.service';
+import {UserService } from '../user-service.service';
 
 @Component({
   selector: 'app-unsubscribe',
@@ -11,13 +11,13 @@ export class UnsubscribeComponent implements OnInit {
   errors: string;
   constructor(
     private route: ActivatedRoute,
-    private bpAuthService: BPAuthService
+    private userService:UserService
   ) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       if (params['id']) {
-        this.bpAuthService.unsubscribe(params['id'])
+        this.userService.unsubscribe(params['id'])
           .subscribe((data: any) => {
             this.errors = null;
            });

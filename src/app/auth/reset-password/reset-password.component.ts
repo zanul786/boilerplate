@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BPAuthService } from '../bp-auth.service';
+import { UserService} from '../user-service.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-reset-password',
@@ -12,7 +12,7 @@ export class ResetPasswordComponent implements OnInit {
   resetForm: FormGroup;
   email: string;
   reset = false;
-  constructor(public snackBar: MatSnackBar, private fb: FormBuilder, private route: ActivatedRoute, private authService: BPAuthService) {
+  constructor(public snackBar: MatSnackBar, private fb: FormBuilder, private route: ActivatedRoute, private userService: UserService) {
     this.route.queryParams.subscribe(params => {
       this.email = params['email'];
     });
@@ -47,7 +47,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-    this.authService.resetPassword(this.resetForm.value).subscribe(
+    this.userService.resetPassword(this.resetForm.value).subscribe(
       (user) => {
         this.email = user.email;
         this.reset = true;
