@@ -63,7 +63,7 @@
     "rxjs": "^6.6.0",
     "socket.io": "2.1.1",
     "standard-error": "^1.1.0",
-    "stripe": "^8.76.0",
+    "stripe": "^8.106.0",
     "sweetalert2": "^7.20.7",
     "tslib": "^1.10.0",
     "twilio": "^3.17.0",
