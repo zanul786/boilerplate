@@ -16,6 +16,7 @@ import {
   FacebookLoginProvider,
 } from 'angularx-social-login';
 // Services
+import {UserService} from './user-service.service';
 import { BPAuthService } from './bp-auth.service';
 import { HomeComponent } from '../home/home.component';
 import { AuthGuard } from './auth-guard.service';
@@ -104,6 +105,7 @@ const ROUTES = [
         ],
       } as SocialAuthServiceConfig,
     },
+    UserService
   ],
 })
 export class AuthModule { }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BPAuthService } from '../bp-auth.service';
 import { AuthUserService } from '../../auth.user.service';
 import { SocialAuthService } from 'angularx-social-login';
+import {UserService} from '../user-service.service';
 import {
   FacebookLoginProvider,
   GoogleLoginProvider,
@@ -12,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,7 +28,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private userAuthService : UserService
   ) {}
 
   ngOnInit() {}
@@ -45,7 +48,7 @@ export class LoginComponent implements OnInit {
 
   sendResetPasswordLink(email) {
     if (email) {
-      this.authService.sendLink(email).subscribe(
+      this.userAuthService.sendLink(email).subscribe(
         (result) => {
           this.snackBar.open(
             'Reset Link is sent successfully, Please check your email!',
