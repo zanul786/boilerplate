@@ -1,5 +1,5 @@
 
-import { BPAuthService } from '../auth/bp-auth.service';
+import { UserService } from '../auth/user-service.service';
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 
@@ -15,7 +15,7 @@ export class ChangePasswordComponent implements OnInit {
   public repeatPassword = '';
   public errorMessage = '';
 
-  constructor(private authService: BPAuthService) {
+  constructor(private userService: UserService) {
   }
 
   ngOnInit() {
@@ -30,7 +30,7 @@ export class ChangePasswordComponent implements OnInit {
         'newPassword': this.password,
         'currentPassword': this.currentPassword
       };
-      this.authService.changePassword(passwordDetails)
+      this.userService.changePassword(passwordDetails)
         .subscribe(
           ({ token, user }) => {
             this.currentPassword = '';

@@ -12,7 +12,7 @@ import { EmailRouter } from './email';
 import { ChatRouter } from './chat';
 import { FileRouter } from './file';
 import { ReviewRouter } from './review';
-
+import {UserRouter} from './user'
 const middleware = new Middleware();
 
 export const api = express.Router();
@@ -29,6 +29,7 @@ api.use('/email', new EmailRouter().router);
 api.use('/chat', new ChatRouter().router);
 api.use('/file', new FileRouter().router);
 api.use('/review', new ReviewRouter().router);
+api.use('/user', new UserRouter().router);
 
 api.use((err, req, res, next) => {
   console.log(err);
