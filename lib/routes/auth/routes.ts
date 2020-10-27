@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jwt-simple';
 import * as jsonwt from 'jsonwebtoken';
 import { EmailService } from '../../services/email';
-import { mailchimpService } from '../../services/mailchimp';
+// import { mailchimpService } from '../../services/mailchimp';
 import * as dotenv from 'dotenv';
 dotenv.load();
 // Internal Dependencies
@@ -40,9 +40,9 @@ export class AuthRoutes {
       const hashedPassword = await bcrypt.hash(password, 8);
       const user = await User.create({ email, password: hashedPassword, name, oauth });
 
-      if (user.subscribedToNewsletter) {
-        await mailchimpService.registerUser(user);
-      }
+      // if (user.subscribedToNewsletter) {
+      //   await mailchimpService.registerUser(user);
+      // }
 
       res.json({
         token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET),
@@ -249,7 +249,7 @@ export class AuthRoutes {
     try {
       const id = req.params.id;
       const user = await User.findByIdAndUpdate(id, { subscribedToNewsletter: false });
-      await mailchimpService.unregisterUser(user);
+      // await mailchimpService.unregisterUser(user);
       res.json(user);
     } catch (error) {
       next(error);

@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jwt-simple';
 import * as jsonwt from 'jsonwebtoken';
 import { EmailService } from '../../services/email';
-import { mailchimpService } from '../../services/mailchimp';
+// import { mailchimpService } from '../../services/mailchimp';
 import * as dotenv from 'dotenv';
 dotenv.load();
 // Internal Dependencies
@@ -143,7 +143,7 @@ export class UserRoutes {
     try {
       const id = req.params.id;
       const user = await User.findByIdAndUpdate(id, { subscribedToNewsletter: false });
-      await mailchimpService.unregisterUser(user);
+      // await mailchimpService.unregisterUser(user);
       res.json(user);
     } catch (error) {
       next(error);
