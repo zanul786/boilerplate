@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import {CdkTableModule} from '@angular/cdk/table';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -67,7 +65,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    BrowserAnimationsModule
   ]
 })
 export class MaterialModule { }
