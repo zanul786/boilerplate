@@ -4,7 +4,8 @@ import { PaymentSchema } from './payment';
 import { ChatSchema } from './chat';
 import { MessageSchema } from './message';
 import { ReviewSchema } from './review';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 const PATH = process.env.DB_PATH || 'mongodb://localhost/test';
 
 mongoose.connect(PATH);
