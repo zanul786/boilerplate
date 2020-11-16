@@ -14,7 +14,11 @@ export const UserSchema = mongoose.Schema({
     enum: ['FACEBOOK', 'GOOGLE', 'LINKEDIN'],
     required: function () { return !this.password; }
   },
-  roles: [String],
+  roles: {
+    type: String,
+    enum : ['User', 'Admin'],
+    default: 'User'
+  },
   stripeCustomerId: {
     type: String
   },
