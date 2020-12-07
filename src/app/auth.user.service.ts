@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {BPAuthService} from './auth/bp-auth.service';
 
 @Injectable()
 export class AuthUserService {
@@ -11,7 +12,9 @@ export class AuthUserService {
     email: string;
   };
 
-  constructor() {}
+  constructor(
+    private bpAuthService: BPAuthService
+  ) {}
 
   setUser = ({ user, token }) => {
     this.user = user;
@@ -39,5 +42,24 @@ export class AuthUserService {
 
   isAuthenticated = (): boolean => {
     return !!this.getToken();
-  };
+  }
+  verifyToken = () => {
+    const promise = new Promise((resolve, reject) => {
+    this.bpAuthService.me()
+    .subscribe(user => {
+      if (user){
+        this.user = user;
+        resolve(true)
+      }else{
+        resolve(false)
+      }
+    },
+    error => {
+      reject(error)
+    });
+    
+  });
+  return promise;
+
+}
 }
