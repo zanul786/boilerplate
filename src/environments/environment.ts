@@ -11,5 +11,8 @@ export const environment = {
   paypalSandboxId : 'AXG7SxD3vnp1YfY77SRmSxWpM-CcSbkV0IjyK20xRuiIp5M78asYYQE13gWIvFWX7XpPGiqkVpkzeZJk',
   paypalEnvironment: 'sandbox',
   paypalLiveId: 'xxxxxxxxxxxxxx',
-  stripePublishableKey : 'pk_test_W9u8uhxx4LjCfikLb86saZrh'
+  stripePublishableKey : 'pk_test_W9u8uhxx4LjCfikLb86saZrh',
+  BUCKET_NAME: 'xxxxxxxxxxxxxx',
+  S3_USER_KEY: 'xxxxxxxxxxxxxx',
+  S3_USER_SECRET: 'xxxxxxxxxxxxxx',
 };

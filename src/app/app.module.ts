@@ -30,6 +30,8 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
+import { AwsUploadComponent } from './aws-upload/aws-upload.component';
+
 
 const ROUTES = [
   {
@@ -52,6 +54,10 @@ const ROUTES = [
     path: 'review',
     component: ReviewComponent,
   },
+  {
+    path : 'upload',
+    component : AwsUploadComponent,
+  }
 ];
 
 @NgModule({
@@ -64,6 +70,7 @@ const ROUTES = [
     ChatComponent,
     FileUploadComponent,
     ReviewComponent,
+    AwsUploadComponent,
   ],
   imports: [
     MaterialModule,
