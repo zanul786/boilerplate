@@ -31,6 +31,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
 import { AwsUploadComponent } from './aws-upload/aws-upload.component';
+import { StripeSubscriptionComponent } from './stripe-subscription/stripe-subscription.component';
 
 
 const ROUTES = [
@@ -71,6 +72,7 @@ const ROUTES = [
     FileUploadComponent,
     ReviewComponent,
     AwsUploadComponent,
+    StripeSubscriptionComponent,
   ],
   imports: [
     MaterialModule,
