@@ -12,7 +12,7 @@ import { AuthUserService } from './auth.user.service';
 import { CartService } from './cart.service';
 import { SocketService } from './chat/socket.service';
 import { AuthModule } from './auth/auth.module';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './token.interceptor';
 
@@ -32,6 +32,7 @@ import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
 import { AwsUploadComponent } from './aws-upload/aws-upload.component';
 import { StripeSubscriptionComponent } from './stripe-subscription/stripe-subscription.component';
+import { PaymentComponent } from './payment/payment.component';
 
 
 const ROUTES = [
@@ -58,6 +59,10 @@ const ROUTES = [
   {
     path : 'upload',
     component : AwsUploadComponent,
+  },
+  {
+    path : 'payment',
+    component : StripeSubscriptionComponent
   }
 ];
 
@@ -73,6 +78,7 @@ const ROUTES = [
     ReviewComponent,
     AwsUploadComponent,
     StripeSubscriptionComponent,
+    PaymentComponent,
   ],
   imports: [
     MaterialModule,
@@ -87,6 +93,7 @@ const ROUTES = [
     FileUploadModule,
     RouterModule.forRoot(ROUTES),
     NgbModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthUserService,

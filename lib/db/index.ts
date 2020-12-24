@@ -6,7 +6,7 @@ import { MessageSchema } from './message';
 import { ReviewSchema } from './review';
 import * as dotenv from 'dotenv';
 dotenv.config();
-const PATH = process.env.DB_PATH || 'mongodb://localhost/test';
+const PATH = process.env.DB_PATH || 'mongodb://localhost:27017/boilerplate';
 
 mongoose.connect(PATH);
 

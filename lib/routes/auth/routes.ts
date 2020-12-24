@@ -82,7 +82,6 @@ export class AuthRoutes {
       }
 
       const user = await User.findOne({ email });
-
       if (!user) {
         throw new StandardError({ message: 'Invalid email or password', code: status.CONFLICT });
       }

@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-
+import autoPopulateAllFields from './plugins/populateAll';
 export const UserSchema = mongoose.Schema({
   email: {
     type: String,
@@ -61,7 +61,15 @@ export const UserSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-}, { timestamps: true });
+},  {
+  timestamps: true,
+  toObject: {
+    virtuals: true,
+  },
+  toJSON: {
+    virtuals: true,
+  },
+});
 
 function isPasswordRequired() { return !this.oauth; }
 UserSchema.pre('save', function (next) {
@@ -79,6 +87,9 @@ UserSchema.pre('save', function (next) {
   if (lastName) {
     this.set('profile.name.last', lastName.trim());
   }
+  if (this.roles.length == 0) {
+    this.roles.push('user');
+  }
 
   next();
 });
@@ -95,3 +106,5 @@ UserSchema.virtual("isPaidUser").get(function () {
   const dateDifference = this.subscriptionActiveUntil - Date.now();
   return dateDifference / 1000 / 60 / 60 / 24 > 0 ? true : false;
 });
+
+UserSchema.plugin(autoPopulateAllFields);

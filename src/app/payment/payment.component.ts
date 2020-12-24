@@ -3,10 +3,11 @@ import {
   Component,
   AfterViewInit,
   OnInit,
+  Input,
   OnDestroy,
   ViewChild,
   ElementRef,
-  ChangeDetectorRef,
+  ChangeDetectorRef, Output, EventEmitter
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -14,6 +15,7 @@ import Swal from 'sweetalert2';
 import { PaymentService } from './payment.service';
 import { AuthUserService } from './../auth.user.service';
 import { Router } from '@angular/router';
+import { APP_CONST } from '../../../shared/constants/constants';
 
 @Component({
   selector: 'app-payment',
@@ -25,6 +27,7 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   isSavedCardAvailable = false;
 
   @ViewChild('cardInfo') cardInfo: ElementRef;
+  @Input() isCardEdit : Boolean;
 
   card: any;
   emailAddress: any;
@@ -36,39 +39,42 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   savedCardArray: any;
   isLoggedIn: boolean;
   step = 0;
-
+  @Output() isLoading = new EventEmitter();
+  @Output() successSub = new EventEmitter();
+  @Output() successReplace = new EventEmitter(); 
+  @Output() cancelCardReplace = new EventEmitter();
   constructor(
     private cd: ChangeDetectorRef,
     private paymentService: PaymentService,
     private userService: AuthUserService,
     private router: Router
-  ) {}
+  ) {
+
+  }
 
   ngOnInit() {
-    // this.isLoggedIn = this.userService.isAuthenticated();
-    // // this.elements = this.paymentService.stripe.elements();
-    // this.getSavedCardDetails();
+    this.elements = this.paymentService.stripe.elements();
   }
 
   ngAfterViewInit() {
-    // const style = {
-    //   base: {
-    //     lineHeight: '24px',
-    //     fontFamily: 'monospace',
-    //     fontSmoothing: 'antialiased',
-    //     fontSize: '19px',
-    //     '::placeholder': {
-    //       color: '#aab7c4',
-    //     },
-    //   },
-    //   invalid: {
-    //     color: '#fa755a',
-    //     iconColor: '#fa755a',
-    //   },
-    // };
-    // this.card = this.elements.create('card', { style });
-    // this.card.mount(this.cardInfo.nativeElement);
-    // this.card.addEventListener('change', this.cardHandler);
+    const style = {
+      base: {
+        lineHeight: '24px',
+        fontFamily: 'monospace',
+        fontSmoothing: 'antialiased',
+        fontSize: '19px',
+        '::placeholder': {
+          color: '#aab7c4',
+        },
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a',
+      },
+    };
+    this.card = this.elements.create('card', { style });
+    this.card.mount(this.cardInfo.nativeElement);
+    this.card.addEventListener('change', this.cardHandler);
   }
 
   setStep(index: number) {
@@ -76,8 +82,8 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.card.removeEventListener('change', this.cardHandler);
-    // this.card.destroy();
+    this.card.removeEventListener('change', this.cardHandler);
+    this.card.destroy();
   }
 
   onChange({ error }) {
@@ -89,92 +95,85 @@ export class PaymentComponent implements AfterViewInit, OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  async onSubmit(form: NgForm) {
-    // const { token, error } = await this.paymentService.stripe.createToken(
-    //   this.card
-    // );
-    // if (error) {
-    //   Swal('Error!', error, 'error');
-    // } else {
-    //   if (this.isLoggedIn) {
-    //     const chargeData = {
-    //       token: token,
-    //       amount: 2000,
-    //       currency: 'usd',
-    //       saveThisCard: this.saveThisCard,
-    //     };
-    //     this.paymentService.createCharge(chargeData).subscribe(
-    //       (res) => {
-    //         this.showMessageToUser(res);
-    //       },
-    //       (err) => {
-    //         this.stripePaymentError(err);
-    //       }
-    //     );
-    //   } else {
-    //     const chargeData = {
-    //       currency: 'usd',
-    //       amount: 2000,
-    //       token: token,
-    //       email: this.emailAddress,
-    //     };
-    //     this.paymentService.chargeGuestCard(chargeData).subscribe(
-    //       (res) => {
-    //         this.showMessageToUser(res);
-    //       },
-    //       (err) => {
-    //         this.stripePaymentError(err);
-    //       }
-    //     );
-    //   }
-    // }
+  async onSubmit() {
+    const { token, error } = await this.paymentService.stripe.createToken(
+      this.card
+    );
+    if (error) {
+      Swal('Error!', error.message, 'error');
+    } else {
+      if (this.isLoggedIn) {
+        this.isLoading.emit(true);
+        const chargeData = {
+          token: token,
+          amount: APP_CONST.PRICES.SUB_AMOUNT,
+          currency: 'usd'
+        };
+        this.paymentService.createCharge(chargeData).subscribe(
+          (res) => {
+            this.isLoading.emit(false);
+            this.showMessageToUser(res);
+          },
+          (err) => {
+            this.stripePaymentError(err);
+          }
+        );
+      } else {
+        const chargeData = {
+          currency: 'usd',
+          amount: APP_CONST.PRICES.SUB_AMOUNT,
+          token: token,
+          email: this.emailAddress,
+        };
+        this.paymentService.createSubscriptionCharge(chargeData).subscribe(
+          (res) => {
+            this.isLoading.emit(false);
+            this.successSub.emit(res);
+          },
+          (err) => {
+            this.stripePaymentError(err);
+          }
+        );
+      }
+    }
   }
 
-  // async createSavedCharge(cardIndex) {
-  //   const chargeData = {
-  //     currency: 'usd',
-  //     amount: 2000,
-  //     source: this.savedCards[cardIndex].id,
-  //   };
+  async showMessageToUser(res) {
+    if (res.status === 'active') {
 
-  //   this.paymentService.createSavedCharge(chargeData).subscribe(
-  //     (res) => {
-  //       this.showMessageToUser(res);
-  //     },
-  //     (error) => {
-  //       this.stripePaymentError(error);
-  //     }
-  //   );
-  // }
+      this.router.navigate(['']);
+    } else {
+      Swal('Error!', res.failureMessage, 'error');
+      this.router.navigate(['']);
+    }
+  }
 
-  // async showMessageToUser(res) {
-  //   if (res.status === 'succeeded') {
-  //     Swal('Success!', 'Payment Successful.', 'success');
-  //     this.router.navigate(['']);
-  //   } else {
-  //     Swal('Error!', res.failureMessage, 'error');
-  //     this.router.navigate(['']);
-  //   }
-  // }
+  async stripePaymentError({ error }) {
+    Swal('Error!', error.message, 'error');
+  }
 
-  // async stripePaymentError({ error }) {
-  //   Swal('Error!', error.message, 'error');
-  // }
+  handleReplaceCard = async ()=>{
+    this.isLoading.emit(true);
+    const { token, error } = await this.paymentService.stripe.createToken(
+      this.card
+    );
+    if (error) {
+      Swal('Error!', error.message, 'error');
+    } else {
+      const {stripeCustomerId , _id} = this.userService.getUser();
+      this.paymentService.changeSavedCard({card_token : token.id , customer_id : stripeCustomerId , _id}).subscribe(
+          (res) => {
+            this.isLoading.emit(false);
+          this.successReplace.emit(res);
+         },
+          (err) => {
+          this.stripePaymentError(err);
+          }
+      );
+    }
+  }
 
-  // async getSavedCardDetails() {
-  //   if (this.isLoggedIn) {
-  //     this.paymentService.retrieveSavedCard().subscribe((cards) => {
-  //       if (cards && cards.length > 0) {
-  //         this.isSavedCardAvailable = true;
-  //         this.savedCards = cards;
-  //       } else {
-  //         this.step = 1;
-  //         this.isSavedCardAvailable = false;
-  //       }
-  //     });
-  //   } else {
-  //     this.step = 1;
-  //     this.isSavedCardAvailable = false;
-  //   }
-  // }
+  handleCancelCard = ()=>{
+    this.cancelCardReplace.emit();
+  }
 }

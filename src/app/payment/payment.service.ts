@@ -1,18 +1,22 @@
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-// import Stripe from 'stripe';
+
+// import * as Stripe from 'stripe';
 
 @Injectable()
 export class PaymentService {
   BASE_URL = `/api/payment`;
-  // stripe = Stripe(environment.stripePublishableKey, {
-  //   apiVersion: '2020-03-02',
-  // });
+  stripe = Stripe(environment.stripePublishableKey);
 
   constructor(private http: HttpClient) { }
+  getPayments = () => {
+    const PATH = `${this.BASE_URL}`;
+    return this.http.get(PATH).pipe(map((res: any) => res));
+  }
 
+  
   createCharge = (chargeData) => {
     const PATH = `${this.BASE_URL}/charge/create`;
     return this.http.post(PATH, { chargeData }).pipe(map((res: any) => res));
@@ -45,8 +49,35 @@ export class PaymentService {
     return this.http.post(PATH, { chargeData }).pipe(map((res: any) => res));
   };
 
+  getUserCardDetails = (userId)=>{
+    const PATH = `${this.BASE_URL}/getUserCardDetails/${userId}`;
+    return this.http
+      .get(PATH)
+      .pipe(map((res: any) => res));
+  }
+
   deleteCard = (chargeData) => {
     const PATH = `${this.BASE_URL}/deleteCard`;
     return this.http.post(PATH, { chargeData }).pipe(map((res: any) => res));
   };
+
+  createSubscriptionCharge = (chargeData) => {
+    const PATH = `${this.BASE_URL}/subscription/create`;
+    return this.http.post(PATH, { chargeData })
+   
+  }
+
+  cancelSubscriptionRenewal = (subId?: string) => {
+    const params = new HttpParams().set('subId', subId);
+    const PATH = `${this.BASE_URL}/subscription/cancelRenewal`;
+    return this.http.put(PATH, { params })
+    
+  }
+
+  changeSavedCard = (cardDetails)=>{
+    const PATH = `${this.BASE_URL}/change/savedcard`;
+    return this.http.post(PATH, cardDetails)
+   
+  }
+
 }
