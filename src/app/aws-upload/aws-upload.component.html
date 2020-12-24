@@ -2,7 +2,9 @@
     <label for="activity_image">Choose File</label><br/>
     <input type="file" accept="image/*" id="activity_image" placeholder="Select an Image" (change)="handleAwsUpload($event)" /><br/>
     <ng-template [ngIf]="fileUpload.isStarted && !fileUpload.isCompleted" >
-        <mat-spinner></mat-spinner>
+        <div class="loader-spinner">
+            <mat-spinner></mat-spinner>
+        </div>
     </ng-template>
     <ng-template [ngIf]="fileUpload.isStarted && fileUpload.isCompleted" >
         <img [src]="fileUpload.file" alt="Uploaded Image" width="200px" height="200px" >

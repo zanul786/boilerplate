@@ -40,6 +40,7 @@ export class AwsUploadComponent implements OnInit {
       }
     } catch (error) {
       this.fileUpload.isCompleted = false;
+      this.fileUpload.isStarted = false;
       Swal({
         type: "error",
         title: ` ${error}!`,
