@@ -1,3 +1,71 @@
-.loader-spinner{
+
+.file-input-container { 
     margin-left: 50%;
+}
+span{
+    opacity: 0.49;
+    font-family: Futura-Medium;
+    font-size: 1rem;
+    color: #4b3c32;
+}
+
+label{
+    border-radius: 13px;
+    border: solid 2px #443635;
+    width: 10rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: Futura-Medium;
+    font-size: 1.1rem;
+    color: #443635;
+    margin-top: 0.5rem;
+}
+
+.aws_file { 
+    opacity: 0;
+    position: absolute;
+    left: -999px;
+    top: -99px;
+}
+
+.img-content { 
+    width: 50%;
+    height: 15rem;
+    background-color: #eee;
+    margin-top: 1rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+ 
+}
+
+img{
+    width: 100% !important;
+    height: auto;
+}
+
+
+.img-title { 
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    height: 2rem;
+}
+
+span:first-child { 
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+span:last-child{
+    margin-left: 1rem;
+    text-transform: lowercase;
+    cursor: pointer;
 }

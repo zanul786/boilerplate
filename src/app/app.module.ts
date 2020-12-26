@@ -31,7 +31,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
 import { AwsUploadComponent } from './aws-upload/aws-upload.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const ROUTES = [
   {
@@ -73,6 +73,7 @@ const ROUTES = [
     AwsUploadComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     MaterialModule,
     AuthModule,
     BrowserModule,

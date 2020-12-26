@@ -1,12 +1,16 @@
-<div class="aws-upload mt-5">
-    <label for="activity_image">Choose File</label><br/>
-    <input type="file" accept="image/*" id="activity_image" placeholder="Select an Image" (change)="handleAwsUpload($event)" /><br/>
+<div class="file-input-container mt-5">
+    <label for="aws_file">Choose File</label><br/>
+    <input type="file" accept="image/*" id="aws_file" class="aws_file" placeholder="Select an Image" (change)="handleAwsUpload($event)" /><br/>
     <ng-template [ngIf]="fileUpload.isStarted && !fileUpload.isCompleted" >
         <div class="loader-spinner">
             <mat-spinner></mat-spinner>
         </div>
     </ng-template>
     <ng-template [ngIf]="fileUpload.isStarted && fileUpload.isCompleted" >
-        <img [src]="fileUpload.file" alt="Uploaded Image" width="200px" height="200px" >
+        <div class="file-image-container">
+            <div class="img-content">
+                <img [src]="fileUpload.file" alt="Uploaded Image" width="200px" height="200px" >
+            </div>
+        </div>
     </ng-template>
 </div>
