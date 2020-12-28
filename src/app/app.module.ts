@@ -30,7 +30,7 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 const ROUTES = [
   {
     path: 'about-us',
@@ -66,6 +66,7 @@ const ROUTES = [
     ReviewComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     MaterialModule,
     AuthModule,
     BrowserModule,

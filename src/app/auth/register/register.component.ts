@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
   user: {
@@ -64,7 +64,15 @@ export class RegisterComponent {
   }
 
   submit = (form) => {
-    this.user = form.value;
+    this.user = {
+      name: {
+        first : form.value.first,
+        last : form.value.last,
+      },
+      email : form.value.email,
+      password : form.value.password,
+    };
+      
     this.authService.register(this.user).subscribe(
       ({ user, token }) => {
         this.success();
