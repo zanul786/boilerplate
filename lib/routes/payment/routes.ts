@@ -192,7 +192,7 @@ export class PaymentRoutes {
     public static async createSubscriptionCharge(req, res, next) {
         try {
             const userDetails = req.user;
-            const chargeData = req.body.chargeData;
+            var chargeData = req.body.chargeData;
             const email = new EmailService();
             let customer;
             if (!userDetails.stripeCustomerId) {
@@ -219,6 +219,8 @@ export class PaymentRoutes {
                     res.json(sub);
                 } catch (error) {
                     PaymentErrorHandlerService.PaymentErrorHandleError(error, next);
+                    await email.sendEmail({subject : 'Subscricption not made successfully' , email  : userDetails.email , data : `Something went wrong ${error.message}` })
+
                 }
             } else {
                 try {
@@ -236,6 +238,7 @@ export class PaymentRoutes {
                     res.json(sub);
                 } catch (error) {
                     PaymentErrorHandlerService.PaymentErrorHandleError(error, next);
+                    await email.sendEmail({subject : 'Subscricption not made successfully' , email  : userDetails.email , data : `Something went wrong ${error.message} ` })
                 }
             }
         } catch (error) {

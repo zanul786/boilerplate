@@ -53,22 +53,19 @@ export class EmailService {
     });
   };
 
-  public sendEmail = ({ subject, email, data }) => {
+  public sendEmail = async ({ subject, email, data }) => {
     const mailOptions = {
-      from: process.env.SUPPORT_EMAIL_FROM,
+      from: config.SENDGRID_USER_EMAIL,
       to: email,
       subject: subject,
       text: data,
     };
 
-    return new Promise((resolve, reject) => {
-      this.transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(info.response);
-      });
-    });
+    try {
+      await sgMail.send(mailOptions);
+    } catch (error) {
+      console.log(error.response.body, "Email Error");
+    }
   };
 
   public sendgridTemplate = async ({ data, client }) => {
