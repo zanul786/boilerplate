@@ -30,6 +30,10 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
+import { AwsUploadComponent } from './aws-upload/aws-upload.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AwsUploadDirective } from './aws-upload/aws-upload.directive';
+import { ProgessComponent } from './progess/progess.component';
 
 const ROUTES = [
   {
@@ -52,6 +56,10 @@ const ROUTES = [
     path: 'review',
     component: ReviewComponent,
   },
+  {
+    path : 'upload',
+    component : AwsUploadComponent,
+  }
 ];
 
 @NgModule({
@@ -64,8 +72,12 @@ const ROUTES = [
     ChatComponent,
     FileUploadComponent,
     ReviewComponent,
+    AwsUploadComponent,
+    AwsUploadDirective,
+    ProgessComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     MaterialModule,
     AuthModule,
     BrowserModule,
