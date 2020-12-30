@@ -9,7 +9,11 @@ class Config {
   CONTACT_FORM_TARGET: string;
   MAILCHIMP_KEY: string;
   MAILCHIMP_LIST_ID: string;
-
+  UPLOAD_PATH_FRONTEND_BUILD : string;
+  SFTP_HOST : string;
+  SFTP_PORT : string;
+  SFTP_USERNAME : string;
+  SFTP_PASSWORD : string;
   constructor() {
     this.STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
     this.GMAIL_USER = process.env.GMAIL_USER;
@@ -17,6 +21,11 @@ class Config {
     this.CONTACT_FORM_TARGET = process.env.CONTACT_FORM_TARGET;
     this.MAILCHIMP_KEY = process.env.MAILCHIMP_KEY;
     this.MAILCHIMP_LIST_ID = process.env.MAILCHIMP_LIST_ID;
+    this.UPLOAD_PATH_FRONTEND_BUILD = process.env.UPLOAD_PATH_FRONTEND_BUILD;
+    this.SFTP_HOST = process.env.SFTP_HOST;
+    this.SFTP_PORT = process.env.SFTP_PORT;
+    this.SFTP_USERNAME = process.env.SFTP_USERNAME;
+    this.SFTP_PASSWORD = process.env.SFTP_PASSWORD;
   }
 
 }
