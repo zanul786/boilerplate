@@ -32,6 +32,8 @@ import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
 import { AwsUploadComponent } from './aws-upload/aws-upload.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AwsUploadDirective } from './aws-upload/aws-upload.directive';
+import { ProgessComponent } from './progess/progess.component';
 
 const ROUTES = [
   {
@@ -71,6 +73,8 @@ const ROUTES = [
     FileUploadComponent,
     ReviewComponent,
     AwsUploadComponent,
+    AwsUploadDirective,
+    ProgessComponent,
   ],
   imports: [
     BrowserAnimationsModule,

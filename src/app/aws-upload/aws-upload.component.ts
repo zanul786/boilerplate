@@ -6,47 +6,78 @@ import { AwsUploadService } from '../aws-upload.service';
 @Component({
   selector: 'app-aws-upload',
   templateUrl: './aws-upload.component.html',
-  styleUrls: ['./aws-upload.component.css']
+  styleUrls: ['./aws-upload.component.scss']
 })
 export class AwsUploadComponent implements OnInit {
-  fileUpload = {
-    file : null,
-    isCompleted : false,
-    isStarted : false
-  }
 
+  files: any[] = [];
+  
   constructor(private awsUploadService : AwsUploadService) { }
 
   ngOnInit(): void {
   }
+  /**
+   * on file drop handler
+   */
+  onFileDropped($event) {
+    this.prepareFilesList($event);
+  }
 
-  handleAwsUpload = async (event)=>{
-    try {
-      if (event.target.files.length) {
-        this.fileUpload.file = event.target.files[0];
-        this.fileUpload.isCompleted = false,
-        this.fileUpload.isStarted = true;
-      }
-      const uploadDetails = await this.awsUploadService.uploadToS3(this.fileUpload.file);
-      if(uploadDetails){
-        this.fileUpload.file = uploadDetails.Location;
-        this.fileUpload.isCompleted = true;
-        console.log(this.fileUpload.file);
-        Swal({
-          type: "success",
-          title: "Successfully uploaded to aws",
-          text: 'Successfully uploaded to aws',
-        });
-      }
-    } catch (error) {
-      this.fileUpload.isCompleted = false;
-      this.fileUpload.isStarted = false;
-      Swal({
-        type: "error",
-        title: ` ${error}!`,
-        text: 'Something went wrong',
-      });
-      throw error
+    /**
+   * handle file from browsing
+   */
+  fileBrowseHandler(files) {
+    this.prepareFilesList(files);
+  }
+
+  prepareFilesList(files: Array<any>) {
+    for (const item of files) {
+      item.progress = 0;
+      item.isUploadCompleted = false;
+      item.uploadLocation = '';
+      this.files.push(item);
     }
+  }
+
+
+  async uploadFilesSimulator  () {
+    try {
+      for(let i = 0 ; i < this.files.length ; i++){
+        this.awsUploadService.uploadToS3Percent(this.files[i] , (evt)=>{
+        if(!this.files[i].isUploadCompleted){
+          this.files[i].progress = (evt.loaded * 100) / evt.total;
+          console.log((evt.loaded * 100) / evt.total);
+          if(this.files[i].progress == 100){
+            this.files[i].isUploadCompleted = true;
+          }
+        }
+      }).then((data)=>{
+          const {Location} = data;
+          this.files[i].uploadLocation= Location;
+      }).catch((error)=>{
+        this.files[i].isUploadCompleted= false;
+        throw error
+      })
+      }
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) {
+      return "0 Bytes";
+    }
+    const k = 1024;
+    const dm = decimals <= 0 ? 0 : decimals;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+  }
+
+  
+  deleteFile(index){
+    this.files = this.files.filter((ele ,  i)=> i !== index);
   }
 }
