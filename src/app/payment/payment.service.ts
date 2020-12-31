@@ -16,7 +16,11 @@ export class PaymentService {
     return this.http.get(PATH).pipe(map((res: any) => res));
   }
 
-  
+  getPaymentsById = (id)=>{
+    const PATH = `${this.BASE_URL}/getPaymentDetails/${id}`;
+    return this.http.get(PATH).pipe(map((res: any) => res));
+  }
+
   createCharge = (chargeData) => {
     const PATH = `${this.BASE_URL}/charge/create`;
     return this.http.post(PATH, { chargeData }).pipe(map((res: any) => res));
@@ -68,10 +72,8 @@ export class PaymentService {
   }
 
   cancelSubscriptionRenewal = (subId?: string) => {
-    const params = new HttpParams().set('subId', subId);
     const PATH = `${this.BASE_URL}/subscription/cancelRenewal`;
-    return this.http.put(PATH, { params })
-    
+    return this.http.put(PATH, { subId }) 
   }
 
   changeSavedCard = (cardDetails)=>{

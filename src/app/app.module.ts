@@ -33,7 +33,10 @@ import { ReviewService } from './review.service';
 import { AwsUploadComponent } from './aws-upload/aws-upload.component';
 import { StripeSubscriptionComponent } from './stripe-subscription/stripe-subscription.component';
 import { PaymentComponent } from './payment/payment.component';
-
+import { AdminUserComponent } from './admin-user/admin-user.component';
+import { AdminUserService } from './admin-user/admin-user.service';
+import { AdminUserDetailComponent } from './admin-user/admin-user-detail/admin-user-detail.component';
+import { CommonModule } from '@angular/common';  
 
 const ROUTES = [
   {
@@ -57,6 +60,14 @@ const ROUTES = [
     component: ReviewComponent,
   },
   {
+    path : 'admin/user',
+    component : AdminUserComponent,
+  },
+  {
+    path : 'admin/user/:id',
+    component : AdminUserDetailComponent,
+  },
+  {
     path : 'upload',
     component : AwsUploadComponent,
   },
@@ -70,6 +81,7 @@ const ROUTES = [
   declarations: [
     AppComponent,
     AboutUsComponent,
+    AdminUserDetailComponent,
     FaqComponent,
     OfficeHoursComponent,
     MinutesToHourPipe,
@@ -79,8 +91,10 @@ const ROUTES = [
     AwsUploadComponent,
     StripeSubscriptionComponent,
     PaymentComponent,
+    AdminUserComponent,
   ],
   imports: [
+    CommonModule,
     MaterialModule,
     AuthModule,
     BrowserModule,
@@ -102,6 +116,7 @@ const ROUTES = [
     SocketService,
     ChatService,
     ReviewService,
+    AdminUserService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

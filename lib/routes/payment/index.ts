@@ -6,6 +6,7 @@ export class PaymentRouter {
     constructor() {
         this.router = express.Router();
         this.router.get('/', PaymentRoutes.getPayments);
+        this.router.get('/getPaymentDetails/:id' , PaymentRoutes.getPaymentsById);
         this.router.get('/getUserCardDetails/:userId' , PaymentRoutes.getUserCardDetails)
         this.router.post('/change/savedcard' , PaymentRoutes.changeSavedCard);
         this.router.post('/charge/create', PaymentRoutes.createCharge);

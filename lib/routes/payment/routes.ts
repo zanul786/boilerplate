@@ -23,6 +23,18 @@ export class PaymentRoutes {
         res.json(paymentClone);
     }
 
+    public static async getPaymentsById(req , res , next){
+        const {id} = req.params;
+        const userDetails = await User.findById(id);
+        const payments = await Payment.find({user : userDetails._id});
+        const paymentClone = JSON.parse(JSON.stringify(payments));
+        for (let i = 0; i < paymentClone.length; i++) {
+            const data = await stripeService.getCardDetails(paymentClone[i].stripeCustomerId, paymentClone[i].cardToken)
+            paymentClone[i]['cardDetails'] = data
+        }
+        res.json(paymentClone);
+    }
+
     public static async getUserCardDetails(req , res, next){
         const {defaultCardToken , stripeCustomerId} = await User.findById(req.params.userId);
         if(defaultCardToken && stripeCustomerId){
@@ -251,11 +263,12 @@ export class PaymentRoutes {
         try {
             let userDetails = req.user;
             const email = new EmailService();
-            if (req.query.subId) { // The case when admin cancels renewal
-                const subsciber = await UsersHelpers.findAll({ 'subscriptionId': req.query.subId });
+            console.log(req.body)
+            if (req.body.subId) { // The case when admin cancels renewal
+                const subsciber = await UsersHelpers.findAll({ 'subscriptionId': req.body.subId });
                 userDetails = subsciber[0];
             }
-            const subscriptionId = req.query.subId || req.user.subscriptionId;
+            const subscriptionId = req.body.subId || req.user.subscriptionId;
             try {
                 const sub = await stripeService.cancelSubscription(subscriptionId);
                 userDetails.subscriptionCancellationRequested = true;
@@ -269,5 +282,4 @@ export class PaymentRoutes {
             PaymentErrorHandlerService.PaymentErrorHandleError(error, next);
         }
     }
-
 }
