@@ -263,7 +263,6 @@ export class PaymentRoutes {
         try {
             let userDetails = req.user;
             const email = new EmailService();
-            console.log(req.body)
             if (req.body.subId) { // The case when admin cancels renewal
                 const subsciber = await UsersHelpers.findAll({ 'subscriptionId': req.body.subId });
                 userDetails = subsciber[0];

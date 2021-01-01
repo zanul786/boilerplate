@@ -17,7 +17,7 @@ import * as moment from "moment";
 export class StripeSubscriptionComponent implements OnInit {
 
   userData;
-  dataSource;
+  dataSource = [];
   activeTab = 'payment';
   subscriptionStart;
   subscriptionEnd;
@@ -118,8 +118,11 @@ export class StripeSubscriptionComponent implements OnInit {
   }
 
   cancelRenewal = () => {
-    this.paymentService.cancelSubscriptionRenewal(this.userData._id).subscribe(data => {
+    this.paymentService.cancelSubscriptionRenewal().subscribe(data => {
       localStorage.setItem("user" , JSON.stringify({...this.userData , subscriptionCancellationRequested : true }))
+      this.bpAuthService.me().subscribe((user) => {
+        this.userData = user;
+      });
       Swal('Success!', 'Renewal Cancelled', 'success');
     });
   }
