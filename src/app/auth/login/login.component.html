@@ -1,25 +1,42 @@
-<mat-card class="card">
-  <mat-card-header>
-    <mat-card-subtitle>Please enter your email and password.</mat-card-subtitle>
-  </mat-card-header>
-  <form class="login-form" #user="ngForm" name="user" (ngSubmit)="submit(user)">
-    <mat-form-field class="col-xs-12">
-      <input name="email" ngModel matInput type="text" placeholder="email">
-    </mat-form-field>
+<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+  <div class="container">
+    <div class="card login-card">
+      <div class="row no-gutters">
+        <div class="col-md-5">
+          <img src="/assets/images/login.svg" alt="login" class="login-card-img">
+        </div>
+        <div class="col-md-7">
+          <div class="card-body">
+            <div class="brand-wrapper">
+              <img src="/assets/images/brand_logo.png" alt="logo" class="logo">
+            </div>
+            <p class="login-card-description">Sign into your account</p>
+            <form #user="ngForm" name="user" (ngSubmit)="submit(user)" >
+                <div class="form-group">
+                  <label for="email" class="sr-only">Email</label>
+                  <input type="email" ngModel name="email" id="email" class="form-control" placeholder="Email address">
+                </div>
+                <div class="form-group mb-4">
+                  <label for="password" class="sr-only">Password</label>
+                  <input type="password" ngModel name="password" id="password" class="form-control" placeholder="***********">
+                </div>
+                <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
+             </form>
+              <a (click)="openDialog()" class="forgot-password-link">Forgot password?</a>
+              <p class="login-card-footer-text">Don't have an account? <a routerLink="/register" class="text-reset">Register here</a></p>
+              <div class="login-btns">
+                <button type="button" class="btn btn-block btn-google" (click)="socialSignIn('google')" >
+                    SIGN IN WITH GOOGLE 
+                </button>
+                <button type="button" class="btn btn-block btn-facebook" (click)="socialSignIn('facebook')" >
+                  SIGN IN WITH FACEBOOK 
+              </button>
+              </div>
 
-    <mat-form-field class="col-xs-12">
-      <input name="password" ngModel matInput type="password" placeholder="Password">
-    </mat-form-field>
-    <div>
-      <button mat-raised-button color="primary">Login</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <a routerLink="/register">Don't have an account? Register here. </a>
-    <a (click)="openDialog()"> Forgot Password.</a>
+  </div>
+</main>
 
-  </form>
-  <p>or</p>
-  <b class="text-center">Login using Social</b>
-  <hr>
-  <button mat-raised-button color="accent" (click)="socialSignIn('facebook')">Sign in with Facebook</button>
-  <button mat-raised-button color="accent" (click)="socialSignIn('google')">Google</button>
-</mat-card>

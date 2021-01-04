@@ -12,6 +12,11 @@ class Config {
   STRIPE_PRICEID : string;
   SENDGRID_API_KEY : string;
   SENDGRID_USER_EMAIL : string;
+  UPLOAD_PATH_FRONTEND_BUILD : string;
+  SFTP_HOST : string;
+  SFTP_PORT : string;
+  SFTP_USERNAME : string;
+  SFTP_PASSWORD : string;
   constructor() {
     this.STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
     this.GMAIL_USER = process.env.GMAIL_USER;
@@ -22,6 +27,11 @@ class Config {
     this.STRIPE_PRICEID = process.env.STRIPE_PRICEID;
     this.SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
     this.SENDGRID_USER_EMAIL = process.env.SENDGRID_USER_EMAIL;
+    this.UPLOAD_PATH_FRONTEND_BUILD = process.env.UPLOAD_PATH_FRONTEND_BUILD;
+    this.SFTP_HOST = process.env.SFTP_HOST;
+    this.SFTP_PORT = process.env.SFTP_PORT;
+    this.SFTP_USERNAME = process.env.SFTP_USERNAME;
+    this.SFTP_PASSWORD = process.env.SFTP_PASSWORD;
   }
 
 }
