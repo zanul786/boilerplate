@@ -11,7 +11,6 @@ export class UserRouter {
     this.router.get('/me', UserRoutes.me);
     this.router.put('/:id/unsubscribe', UserRoutes.unsubscribe);
     this.router.post('/changePassword', UserRoutes.changePassword);
-
   }
 }
 

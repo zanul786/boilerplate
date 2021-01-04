@@ -1,13 +1,21 @@
 import * as mongoose from 'mongoose';
 
 export const PaymentSchema = mongoose.Schema({
+    type: {
+        type: String,
+        enum: ['refund', 'subscription']
+    },
     email: {
         type: String,
         required: true
     },
+    cardToken: {
+        type: String,
+        required: false
+    },
     chargeId: {
         type: String,
-        required: true
+        required: function () { return this.type !== 'subscription'; }
     },
     amount: {
         type: Number,
@@ -15,26 +23,24 @@ export const PaymentSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        required: true
     },
     stripeCustomerId: {
         type: String,
     },
     transactionId: {
         type: String,
-        required: true
     },
+
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        index: true
     },
     currency: {
         type: String,
         required: true
     },
-    paypalPayerId: {
-        type: String,
-    },
+
     failureCode: {
         type: String
     },
@@ -44,6 +50,21 @@ export const PaymentSchema = mongoose.Schema({
     gateWay: {
         type: String,
         required: true
+    },
+    subscriptionId: {
+        type: String,
+        required: false
     }
+}, {
+    timestamps: true,
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
+});
 
-}, { timestamps: true });
+
+PaymentSchema.index({ 'orderId': 1 });
+

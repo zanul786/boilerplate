@@ -1,8 +1,10 @@
 import * as StandardError from 'standard-error';
+import { EmailService } from './../../services/email';
 
 export class PaymentErrorHandlerService {
 
-    public static PaymentErrorHandleError = ( error, next) => {
+    public static PaymentErrorHandleError = ( error, next , userEmail?) => {
+        const email = new EmailService();
         switch (error.type) {
             case 'StripeCardError':
                 // A declined card error
@@ -25,7 +27,7 @@ export class PaymentErrorHandlerService {
                 next(new StandardError({ message: error.message, code: error.statusCode }));
                 break;
             case 'StripeAuthenticationError':
-                // You probably used an incorrect API key
+                // You probably used an incorrect API key.
                 next(new StandardError({ message: error.message, code: error.statusCode }));
                 break;
             default:

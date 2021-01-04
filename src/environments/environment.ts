@@ -11,7 +11,7 @@ export const environment = {
   paypalSandboxId : 'AXG7SxD3vnp1YfY77SRmSxWpM-CcSbkV0IjyK20xRuiIp5M78asYYQE13gWIvFWX7XpPGiqkVpkzeZJk',
   paypalEnvironment: 'sandbox',
   paypalLiveId: 'xxxxxxxxxxxxxx',
-  stripePublishableKey : 'pk_test_W9u8uhxx4LjCfikLb86saZrh',
+  stripePublishableKey : 'pk_test_51I1SRRBmOF177dL8ieemvQmYogEfrnCIk16BoH7jEWmIAI7mAuezi2qb95WqKUnvVQf0cGBjokxkIcFhLyUikCDU00WLjVVIoT',
   BUCKET_NAME: 'boilerplate-s3-upload',
   S3_USER_KEY: 'AKIAWJO53WPWLMBXMCUZ',
   S3_USER_SECRET: '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',

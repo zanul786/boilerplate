@@ -5,6 +5,10 @@ export class PaymentRouter {
     router: express.Router;
     constructor() {
         this.router = express.Router();
+        this.router.get('/', PaymentRoutes.getPayments);
+        this.router.get('/getPaymentDetails/:id' , PaymentRoutes.getPaymentsById);
+        this.router.get('/getUserCardDetails/:userId' , PaymentRoutes.getUserCardDetails)
+        this.router.post('/change/savedcard' , PaymentRoutes.changeSavedCard);
         this.router.post('/charge/create', PaymentRoutes.createCharge);
         this.router.post('/charge/savedCard', PaymentRoutes.chargeSavedCard);
         this.router.get('/getSavedCard', PaymentRoutes.retrieveSavedCard);
@@ -12,6 +16,8 @@ export class PaymentRouter {
         this.router.post('/savePayPalPayment', PaymentRoutes.savePayPalPayment);
         this.router.post('/saveCard', PaymentRoutes.saveCard);
         this.router.post('/deleteCard', PaymentRoutes.deleteCard);
+        this.router.post('/subscription/create', PaymentRoutes.createSubscriptionCharge);
+        this.router.put('/subscription/cancelRenewal', PaymentRoutes.cancelRenewal);
     }
 }
 

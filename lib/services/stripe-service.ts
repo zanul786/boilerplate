@@ -1,12 +1,15 @@
 import { config } from './../config';
-
 import { User, Payment } from './../db/index';
+import Stripe from 'stripe';
+import { APP_CONST } from '../../shared/constants/constants';
 
 class StripeService {
     stripe;
 
     constructor() {
-        this.stripe = require('stripe')(config.STRIPE_SECRET_KEY);
+        this.stripe = new Stripe(config.STRIPE_SECRET_KEY, {
+            apiVersion: "2020-08-27",
+        });
     }
 
     public createCustomer = async ({ loggerInUserDetails, chargeData }) => {
@@ -83,6 +86,66 @@ class StripeService {
             'failureCode': charge.failure_code, // When status is success, it will be NULL.
             'failureMessage': charge.failure_message, // When status is success, it will be NULL.
             'gateWay': 'stride'
+        });
+        return payment;
+    }
+
+    public createSubscription = async (customer) => {
+        return await this.stripe.subscriptions.create({
+            customer: customer.stripeCustomerId,
+            items: [
+                { price: config.STRIPE_PRICEID },
+            ],
+            metadata: {
+                name: customer.fullName,
+                email: customer.email
+            }
+        });
+    }
+
+    public constructEvent = async (body, stripeSignature) => {
+        return this.stripe.webhooks.constructEvent(
+            body,
+            stripeSignature,
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+    }
+
+    public getCardDetails = async (customerId, cardToken) => {
+        return this.stripe.customers.retrieveSource(customerId, cardToken)
+    }
+
+    public cancelSubscription = async subscriptionId => {
+        return await this.stripe.subscriptions.update(subscriptionId, {
+            cancel_at_period_end: true
+        });
+    }
+
+    public addNewCard = async ({customer_id , card_token})=>{
+        return await this.stripe.customers.createSource(
+             customer_id ,
+            {source: card_token}
+          );
+    }    
+
+    public updateDefaultCard = async ({customer_id , card_id})=>{
+       return await this.stripe.customers.update(
+            customer_id,
+            {default_source : card_id}
+          );
+    }
+
+    public createSubscriptionPayment = async ({ loggerInUserDetails, sub }, cardToken?) => {
+        const payment = await Payment.create({
+            type: 'subscription',
+            amount: APP_CONST.PRICES.SUB_AMOUNT,
+            stripeCustomerId: sub.customer,
+            subscriptionId: sub.id,
+            user: loggerInUserDetails._id || null,
+            email: loggerInUserDetails.email,
+            currency: 'gbp',
+            cardToken: cardToken ? cardToken : null,
+            gateWay: 'stripe',
         });
         return payment;
     }

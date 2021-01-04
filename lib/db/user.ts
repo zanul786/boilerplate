@@ -1,9 +1,23 @@
 import * as mongoose from 'mongoose';
-
+import autoPopulateAllFields from './plugins/populateAll';
 export const UserSchema = mongoose.Schema({
   email: {
     type: String,
     required: true
+  },
+  name: {
+    first: {
+      type: String,
+      required: true
+    },
+    last: {
+      type: String,
+      required: true
+    }
+  },
+  subscribedToNewsletter: {
+    type: Boolean,
+    default: true
   },
   password: {
     type: String,
@@ -26,21 +40,36 @@ export const UserSchema = mongoose.Schema({
     type: String
   },
   cardTokens: [String],
-  name: {
-    first: {
-      type: String,
-      required: true
-    },
-    last: {
-      type: String,
-      required: true
-    }
+  renewalDate: {
+    type: Date,
+    required: false,
   },
-  subscribedToNewsletter: {
+  subscribedOn: {
+    type: Number,
+    required: false,
+  },
+  subscriptionActiveUntil: {
+    type: Number,
+    default: 1578883746, // Use 1578883746 for 13th Jan 2020 & use 1607827746 for dec 2020
+    set: (d) => d * 1000,
+  },
+  subscriptionId: {
+    type: String,
+    required: false,
+  },
+  subscriptionCancellationRequested: {
     type: Boolean,
-    default: true
-  }
-}, { timestamps: true });
+    default: false,
+  },
+},  {
+  timestamps: true,
+  toObject: {
+    virtuals: true,
+  },
+  toJSON: {
+    virtuals: true,
+  },
+});
 
 function isPasswordRequired() { return !this.oauth; }
 UserSchema.pre('save', function (next) {
@@ -58,6 +87,9 @@ UserSchema.pre('save', function (next) {
   if (lastName) {
     this.set('profile.name.last', lastName.trim());
   }
+  if (this.roles.length == 0) {
+    this.roles.push('user');
+  }
 
   next();
 });
@@ -69,3 +101,16 @@ UserSchema.virtual('fullName').get(function () {
 UserSchema.virtual('isAdmin').get(function () {
   return this.roles.includes('Admin');
 });
+
+UserSchema.virtual("isPaidUser").get(function () {
+  const dateDifference = this.subscriptionActiveUntil - Date.now();
+  return dateDifference / 1000 / 60 / 60 / 24 > 0 ? true : false;
+});
+
+UserSchema.index({
+  email: "text",
+  "name.first": "text",
+  "name.last": "text",
+});
+
+UserSchema.plugin(autoPopulateAllFields);

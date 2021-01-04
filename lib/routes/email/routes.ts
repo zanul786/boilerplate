@@ -7,13 +7,18 @@ import { EmailService } from '../../services/email';
 
 
 export class EmailRoutes {
-  public static async contactForm (req: express.Request, res: express.Response, next) {
+  public static async contactForm(
+    req: express.Request,
+    res: express.Response,
+    next
+  ) {
     try {
-        const emailService = new EmailService();
-        emailService.contactFormSubmission({ lead: req.body.lead });
-        res.sendStatus(status.OK);
+      const { name, email, message } = req.body;
+      const emailService = new EmailService();
+      await emailService.contactFormSubmission({ name, email, message });
+      res.json({ data: "Mail sended successfully" });
     } catch (error) {
-        next(error);
+      next(error);
     }
   }
 }

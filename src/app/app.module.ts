@@ -12,7 +12,7 @@ import { AuthUserService } from './auth.user.service';
 import { CartService } from './cart.service';
 import { SocketService } from './chat/socket.service';
 import { AuthModule } from './auth/auth.module';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './token.interceptor';
 
@@ -31,9 +31,12 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ReviewComponent } from './review/review.component';
 import { ReviewService } from './review.service';
 import { AwsUploadComponent } from './aws-upload/aws-upload.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AwsUploadDirective } from './aws-upload/aws-upload.directive';
-import { ProgessComponent } from './progess/progess.component';
+import { StripeSubscriptionComponent } from './stripe-subscription/stripe-subscription.component';
+import { PaymentComponent } from './payment/payment.component';
+import { AdminUserComponent } from './admin-user/admin-user.component';
+import { AdminUserService } from './admin-user/admin-user.service';
+import { AdminUserDetailComponent } from './admin-user/admin-user-detail/admin-user-detail.component';
+import { CommonModule } from '@angular/common';  
 
 const ROUTES = [
   {
@@ -57,8 +60,20 @@ const ROUTES = [
     component: ReviewComponent,
   },
   {
+    path : 'admin/user',
+    component : AdminUserComponent,
+  },
+  {
+    path : 'admin/user/:id',
+    component : AdminUserDetailComponent,
+  },
+  {
     path : 'upload',
     component : AwsUploadComponent,
+  },
+  {
+    path : 'payment',
+    component : StripeSubscriptionComponent
   }
 ];
 
@@ -66,6 +81,7 @@ const ROUTES = [
   declarations: [
     AppComponent,
     AboutUsComponent,
+    AdminUserDetailComponent,
     FaqComponent,
     OfficeHoursComponent,
     MinutesToHourPipe,
@@ -73,11 +89,12 @@ const ROUTES = [
     FileUploadComponent,
     ReviewComponent,
     AwsUploadComponent,
-    AwsUploadDirective,
-    ProgessComponent,
+    StripeSubscriptionComponent,
+    PaymentComponent,
+    AdminUserComponent,
   ],
   imports: [
-    BrowserAnimationsModule,
+    CommonModule,
     MaterialModule,
     AuthModule,
     BrowserModule,
@@ -90,6 +107,7 @@ const ROUTES = [
     FileUploadModule,
     RouterModule.forRoot(ROUTES),
     NgbModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthUserService,
@@ -98,6 +116,7 @@ const ROUTES = [
     SocketService,
     ChatService,
     ReviewService,
+    AdminUserService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
