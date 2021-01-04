@@ -107,4 +107,10 @@ UserSchema.virtual("isPaidUser").get(function () {
   return dateDifference / 1000 / 60 / 60 / 24 > 0 ? true : false;
 });
 
+UserSchema.index({
+  email: "text",
+  "name.first": "text",
+  "name.last": "text",
+});
+
 UserSchema.plugin(autoPopulateAllFields);

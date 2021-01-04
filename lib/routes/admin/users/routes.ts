@@ -16,8 +16,13 @@ export class adminUsersRoutes {
       next: express.NextFunction
     ) => {
       try {
-        const allUsers  = await adminUsersHelpers.findAll();
-        res.json(allUsers);
+        const { page = 1, limit = 5, searchValue = "" } = req.query;
+        const  data  = await adminUsersHelpers.findAll({
+        page,
+        limit,
+        searchValue,
+        });
+        res.json({ data });
       } catch (error) {
         next(error);
       }
