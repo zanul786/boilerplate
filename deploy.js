@@ -4,7 +4,7 @@ const shell = require('shelljs');
 const {config} = require('./server/lib/config.js');
 let sftpClient = require('ssh2-sftp-client');
 var Client = require('ssh2').Client;
-
+const fs = require('fs');
 (async function(){ 
      sshFrontendData()
 })()
@@ -50,7 +50,7 @@ var Client = require('ssh2').Client;
         host: config.SFTP_HOST,
         port: config.SFTP_PORT,
         username: config.SFTP_USERNAME,
-        password: config.SFTP_PASSWORD
+        privateKey: fs.readFileSync(`${config.SSH_KEY_Path}`)
         }).then(() => {
         return sftp.uploadDir('dist' , `${config.UPLOAD_PATH_FRONTEND_BUILD}/dist`);;
         }).then((data) => {
@@ -74,12 +74,12 @@ var Client = require('ssh2').Client;
           host: config.SFTP_HOST,
           port: config.SFTP_PORT,
           username: config.SFTP_USERNAME,
-          password: config.SFTP_PASSWORD
+         privateKey: fs.readFileSync(`${config.SSH_KEY_Path}`)
           }).then(()=>{
-            return sftp.chmod(`${config.UPLOAD_PATH_FRONTEND_BUILD}dist` , 755);
+            // return sftp.chmod(`${config.UPLOAD_PATH_FRONTEND_BUILD}dist` , 755);
           }).then((data) => {
           console.log(data);
-          return sftp.rmdir(`${config.UPLOAD_PATH_FRONTEND_BUILD}dist` , true);;
+      //     return sftp.rmdir(`${config.UPLOAD_PATH_FRONTEND_BUILD}dist` , true);;
           }).then((data) => {
             console.log(data);
             return sftp.mkdir(`${config.UPLOAD_PATH_FRONTEND_BUILD}dist`, true);
@@ -97,7 +97,8 @@ var Client = require('ssh2').Client;
     shell.exec('npm run build'); 
     shell.exec(`exit`);
     console.log('Frontend Build completed');
-     removeDistInSftp();
+    uploadDistToServer();
+    //  removeDistInSftp();
   }
 
   function sshStream(options) {
@@ -105,7 +106,7 @@ var Client = require('ssh2').Client;
       host: config.SFTP_HOST,
       port: config.SFTP_PORT,
       username: config.SFTP_USERNAME,
-      password: config.SFTP_PASSWORD
+       privateKey: fs.readFileSync(`${config.SSH_KEY_Path}`)
   };
     const conn = new ssh();
     return new Promise((resolve, reject) => {

@@ -17,6 +17,7 @@ class Config {
   SFTP_PORT : string;
   SFTP_USERNAME : string;
   SFTP_PASSWORD : string;
+  SSH_KEY_Path:string;
   constructor() {
     this.STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
     this.GMAIL_USER = process.env.GMAIL_USER;
@@ -32,6 +33,7 @@ class Config {
     this.SFTP_PORT = process.env.SFTP_PORT;
     this.SFTP_USERNAME = process.env.SFTP_USERNAME;
     this.SFTP_PASSWORD = process.env.SFTP_PASSWORD;
+    this.SSH_KEY_Path = process.env.SSH_KEY_Path;
   }
 
 }
