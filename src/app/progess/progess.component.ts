@@ -1,15 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: 'app-progess',
-  templateUrl: './progess.component.html',
-  styleUrls: ['./progess.component.scss']
+  selector: "app-progess",
+  templateUrl: "./progess.component.html",
+  styleUrls: ["./progess.component.scss"],
 })
-export class ProgessComponent implements OnInit {
+export class ProgressComponent implements OnInit {
   @Input() progress = 0;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

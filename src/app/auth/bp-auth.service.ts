@@ -33,7 +33,7 @@ export class BPAuthService {
     if (user.oauth) {
       route = '/loginOauth';
     } else {
-      route = '/login';
+      route = 'login';
     }
     const PATH = `${this.BASE_URL}/${route}`;
     return this.http.post(PATH, { user }).pipe(

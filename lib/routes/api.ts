@@ -13,6 +13,7 @@ import { ChatRouter } from './chat';
 import { FileRouter } from './file';
 import { ReviewRouter } from './review';
 import {UserRouter} from './user'
+import { AwsRouter } from './aws';
 const middleware = new Middleware();
 
 export const api = express.Router();
@@ -30,7 +31,7 @@ api.use('/chat', new ChatRouter().router);
 api.use('/file', new FileRouter().router);
 api.use('/review', new ReviewRouter().router);
 api.use('/user', new UserRouter().router);
-
+api.use("/aws", new AwsRouter().router);
 api.use((err, req, res, next) => {
   console.log(err);
   res.status(err.code || status.INTERNAL_SERVER_ERROR).send(err);
